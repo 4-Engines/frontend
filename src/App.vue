@@ -1,16 +1,16 @@
 <template>
-  <v-app>
-    <v-app-bar app color="black" clipped-left>
+  <v-app theme="blue">
+    <v-app-bar color="primary">
       <router-link to="/">
         <img class="mr-3" src="../public/logo.png" height="30" />
       </router-link>
       <v-app-bar-title>Sistema de gestión del automotor</v-app-bar-title>
       <v-spacer />
 
-      <v-btn to="/login">
+      <!-- <v-btn to="/login">
         <v-icon left>mdi-lock</v-icon>
         Ingresar
-      </v-btn>
+      </v-btn> -->
     </v-app-bar>
     <v-main>
       <v-container fluid>

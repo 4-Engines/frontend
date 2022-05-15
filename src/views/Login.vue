@@ -1,9 +1,11 @@
 <template>
   <v-row justify="center">
     <v-col sm="8" md="4">
-      <v-card class="mt-4 mb-2">
-        <v-card-title>Ingreso</v-card-title>
-        <v-card-text>
+      <div class="text-center mt-3">
+        <img src="../../public/logo.png" width="200">
+        <div class="font-weight-bold">Sistema de gestión del automotor</div>
+      </div>
+      <div class="mt-10 mb-2">
           <v-alert v-if="errorMessage.length > 0" type="error">{{
             errorMessage
           }}</v-alert>
@@ -19,25 +21,22 @@
           ></v-text-field>
 
           <v-text-field
-            class="mt-2"
+            class="password-input mt-4"
             label="Contraseña"
             :type="showPassword ? 'text' : 'password'"
             hide-details="auto"
             :error="errorMessage.length > 0"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             v-model="pass"
-            @click:append="showPassword = !showPassword"
+            @click:append-inner="showPassword = !showPassword"
             variant="outlined"
           >
           </v-text-field>
 
-          <v-btn class="mt-4" color="black" @click="login">Ingresar</v-btn>
-        </v-card-text>
-      </v-card>
-      
-      <div>
-        ¿Olvidaste tu contraseña?
+          <v-btn class="mt-4" color="primary" block size="x-large" @click="login">Ingresar</v-btn>
+      </div>
 
+      <div class="text-center">
         <v-dialog v-model="showDialog">
           <template #activator="{ props }">
             <a
@@ -45,7 +44,7 @@
               class="white--text"
               v-bind="props"
               @click.prevent="recuperarMail = ''"
-              >Recuperar contraseña</a
+              >¿Olvidaste tu contraseña?</a
             >
           </template>
 
@@ -81,11 +80,6 @@
           </v-card>
         </v-dialog>
       </div>
-
-      <div>
-        ¿No tenés cuenta?
-        <router-link to="/registro" class="white--text">Registrate</router-link>
-      </div>
     </v-col></v-row
   >
 
@@ -107,3 +101,9 @@ const showDialog = ref(false);
 
 function login() {}
 </script>
+
+<style>
+.password-input .mdi {
+  cursor: pointer;
+}
+</style>

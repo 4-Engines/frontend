@@ -5,6 +5,8 @@ import { loadFonts } from './plugins/webfontloader'
 import router from './router'
 import { createPinia } from 'pinia'
 
+import './styles/style.css'
+
 loadFonts()
 
 createApp(App)
