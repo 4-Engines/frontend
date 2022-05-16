@@ -11,6 +11,8 @@
         <v-icon left>mdi-lock</v-icon>
         Ingresar
       </v-btn> -->
+      <div v-if="store.isLoggedIn">{{ store.user.name }}</div>
+      <v-btn @click="logout">Salir</v-btn>
     </v-app-bar>
     <v-main>
       <v-container fluid>
@@ -25,16 +27,23 @@
   </v-app>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+import { useRouter } from "vue-router";
+import { useStore } from "./store";
 
-export default defineComponent({
-  name: "App",
+const store = useStore();
+const router = useRouter();
 
-  data() {
-    return {
-      //
-    };
-  },
-});
+function logout() {
+  store.$patch({
+    isLoggedIn: false,
+    user: {
+      name: '',
+      mail: '',
+      rol: -1
+    }
+  })
+
+  router.push('/')
+}
 </script>
