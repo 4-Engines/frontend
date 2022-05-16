@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center">
+  <v-row v-if="!store.isLoggedIn" justify="center">
     <v-col sm="8" md="4">
       <div class="text-center mt-3">
         <img src="../../public/logo.png" width="200">
@@ -90,6 +90,11 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "../store";
+
+const store = useStore();
+const router = useRouter();
 
 const errorMessage = ref("");
 const user = ref("");
@@ -99,7 +104,18 @@ const recuperarMail = ref("");
 const snackbar = ref(false);
 const showDialog = ref(false);
 
-function login() {}
+function login() {
+  store.$patch({
+    isLoggedIn: true,
+    user: {
+      name: 'Roberto Juarroz',
+      rol: 1,
+      mail: 'rjuarroz@gmail.com'
+    }
+  })
+
+  router.replace('/home')
+}
 </script>
 
 <style>

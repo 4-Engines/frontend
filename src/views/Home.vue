@@ -1,0 +1,3 @@
+<template>
+Página principal
+</template>
