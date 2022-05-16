@@ -1,9 +1,18 @@
 import { defineStore } from 'pinia'
+import { User } from '../types/User'
 
-export const useStore = defineStore('main', {
+interface Store {
+    isLoggedIn: boolean,
+    user: User
+}
+
+export const useStore = defineStore<string, Store>('main', {
     state: () => ({
+        isLoggedIn: false,
         user: {
-            name: 'Carlos'
+            name: '',
+            mail: '',
+            rol: -1
         }
     })
 })
