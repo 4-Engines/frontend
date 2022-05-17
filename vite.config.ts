@@ -13,7 +13,14 @@ export default defineConfig({
     vuetify({
       autoImport: true,
     }),
-    VitePWA({})
+    VitePWA({
+      manifest: {
+        name: 'Sistema de gestión del automotor',
+        short_name: 'SiGeA',
+        background_color: '#1867C0',
+        lang: 'es'
+      }
+    })
   ],
   define: { 'process.env': {} },
   resolve: {

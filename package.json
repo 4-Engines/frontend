@@ -1,5 +1,6 @@
 {
   "name": "four-engines-frontend",
+  "displayName": "Sistema de gestión del automotor",
   "version": "0.0.0",
   "private": true,
   "scripts": {
