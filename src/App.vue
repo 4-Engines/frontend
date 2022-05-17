@@ -1,4 +1,6 @@
 <template>
+  <reload-p-w-a />
+  
   <v-app theme="blue">
     <v-app-bar color="primary">
       <router-link to="/">
@@ -30,6 +32,7 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
 import { useStore } from "./store";
+import ReloadPWA from "./components/ReloadPWA.vue";
 
 const store = useStore();
 const router = useRouter();

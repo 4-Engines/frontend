@@ -3246,7 +3246,7 @@
   dependencies:
     "workbox-core" "6.5.3"
 
-"workbox-precaching@6.5.3":
+"workbox-precaching@^6.5.3", "workbox-precaching@6.5.3":
   "integrity" "sha512-sjNfgNLSsRX5zcc63H/ar/hCf+T19fRtTqvWh795gdpghWb5xsfEkecXEvZ8biEi1QD7X/ljtHphdaPvXDygMQ=="
   "resolved" "https://registry.npmjs.org/workbox-precaching/-/workbox-precaching-6.5.3.tgz"
   "version" "6.5.3"
