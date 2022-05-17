@@ -1,11 +1,43 @@
 <template>
   <reload-p-w-a />
-  
   <v-app theme="blue">
-    <v-app-bar color="primary">
-      <router-link to="/">
+    <v-navigation-drawer v-if="store.isLoggedIn" v-model="drawer">
+      <v-list>
+        <v-list-item :title="store.user.name" :subtitle="store.user.mail">
+          <template #prepend>
+            <v-list-item-avatar start>
+              <v-avatar color="secondary"></v-avatar>
+            </v-list-item-avatar>
+          </template>
+        </v-list-item>
+      </v-list>
+      <v-divider />
+      <v-list>
+        <v-list-item
+          :to="item.to"
+          v-for="item of menuComputed"
+          :key="item.title"
+        >
+          <v-list-item-avatar start>
+            <v-icon :icon="item.icon"></v-icon>
+          </v-list-item-avatar>
+          {{ item.title }}
+        </v-list-item>
+        <v-list-item @click="logout">
+          <v-list-item-avatar start>
+            <v-icon icon="mdi-lock-open"></v-icon>
+          </v-list-item-avatar>
+          Salir
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-app-bar color="primary" prominent>
+      <v-app-bar-nav-icon v-if="store.isLoggedIn" @click="drawer = !drawer" />
+
+      <!--  <router-link to="/">
         <img class="mr-3" src="../public/logo.png" height="30" />
-      </router-link>
+      </router-link> -->
       <v-app-bar-title>Sistema de gestión del automotor</v-app-bar-title>
       <v-spacer />
 
@@ -13,9 +45,9 @@
         <v-icon left>mdi-lock</v-icon>
         Ingresar
       </v-btn> -->
-      <div v-if="store.isLoggedIn">{{ store.user.name }}</div>
-      <v-btn @click="logout">Salir</v-btn>
+      <!-- <v-btn @click="logout">Salir</v-btn> -->
     </v-app-bar>
+
     <v-main>
       <v-container fluid>
         <!-- <router-view v-slot="{ Component }">
@@ -33,20 +65,41 @@
 import { useRouter } from "vue-router";
 import { useStore } from "./store";
 import ReloadPWA from "./components/ReloadPWA.vue";
+import { ref } from "vue";
+import { computed } from "@vue/reactivity";
 
 const store = useStore();
 const router = useRouter();
+
+const drawer = ref(false);
+
+const menuComputed = computed(() => {
+  const menu = [
+    {
+      title: "Inicio",
+      to: "/home",
+      icon: "mdi-home",
+    },
+    {
+      title: "Autos",
+      to: "/autos",
+      icon: "mdi-car",
+    },
+  ];
+
+  return menu;
+});
 
 function logout() {
   store.$patch({
     isLoggedIn: false,
     user: {
-      name: '',
-      mail: '',
-      rol: -1
-    }
-  })
+      name: "",
+      mail: "",
+      rol: -1,
+    },
+  });
 
-  router.push('/')
+  router.push("/");
 }
 </script>
