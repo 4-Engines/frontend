@@ -23,9 +23,9 @@ export default defineConfig({
       manifest: {
         name: 'Sistema de gestión del automotor',
         short_name: 'SiGeA',
-        background_color: '#1867C0',
+        background_color: '#ffffff',
         lang: 'es',
-        theme_color: "#ffffff",
+        theme_color: "#1867C0",
         start_url: "/",
         display: "standalone",
         icons: [
