@@ -9,7 +9,7 @@
           </template>
           <template #prepend>
             <v-list-item-avatar start>
-              <v-avatar color="primary"></v-avatar>
+              <v-avatar color="primary">{{ avatarLabel }}</v-avatar>
             </v-list-item-avatar>
           </template>
         </v-list-item>
@@ -92,6 +92,14 @@ onMounted(() => {
     showInstallPromotion.value = true;
   });
 });
+
+const avatarLabel = computed(() => {
+  if (!store.isLoggedIn) {
+    return ''
+  }
+
+  return `${store.user.name.charAt(0)}${store.user.last_name.charAt(0)}`
+})
 
 const menuComputed = computed(() => {
   const menu = [
