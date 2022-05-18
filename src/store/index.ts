@@ -11,6 +11,7 @@ export const useStore = defineStore<string, Store>('main', {
         isLoggedIn: false,
         user: {
             name: '',
+            last_name: '',
             mail: '',
             rol: -1
         }

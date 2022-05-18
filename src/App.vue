@@ -3,10 +3,13 @@
   <v-app theme="blue">
     <v-navigation-drawer v-if="store.isLoggedIn" v-model="drawer">
       <v-list>
-        <v-list-item :title="store.user.name" :subtitle="store.user.mail">
+        <v-list-item :subtitle="store.user.mail">
+          <template #title>
+            {{ store.user.name }} {{ store.user.last_name }}
+          </template>
           <template #prepend>
             <v-list-item-avatar start>
-              <v-avatar color="secondary"></v-avatar>
+              <v-avatar color="primary"></v-avatar>
             </v-list-item-avatar>
           </template>
         </v-list-item>
@@ -31,9 +34,9 @@
         </v-list-item>
       </v-list>
 
-      <v-alert v-if="showInstallPromotion" title="SiGeA">
-        Instalá nuestra aplicación. No va a ocupar lugar en tu teléfono.
-        <v-btn @click="installApp">Instalar</v-btn>
+      <v-alert color="primary" style="border-radius: 0;" density="compact" v-if="!showInstallPromotion">
+        <p>Instalá nuestra aplicación. No va a ocupar lugar en tu teléfono.</p>
+        <v-btn color="white" class="mt-2" @click="installApp">Instalar</v-btn>
       </v-alert>
     </v-navigation-drawer>
 

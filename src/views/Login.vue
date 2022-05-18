@@ -108,7 +108,8 @@ function login() {
   store.$patch({
     isLoggedIn: true,
     user: {
-      name: 'Roberto Juarroz',
+      name: 'Roberto',
+      last_name: 'Juarroz',
       rol: 1,
       mail: 'rjuarroz@gmail.com'
     }

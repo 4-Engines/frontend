@@ -25,7 +25,7 @@ export default defineConfig({
         short_name: 'SiGeA',
         background_color: '#ffffff',
         lang: 'es',
-        theme_color: "#1867C0",
+        theme_color: "#124B8D",
         start_url: "/",
         display: "standalone",
         icons: [
