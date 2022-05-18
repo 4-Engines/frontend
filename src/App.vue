@@ -34,7 +34,12 @@
         </v-list-item>
       </v-list>
 
-      <v-alert color="primary" style="border-radius: 0;" density="compact" v-if="showInstallPromotion">
+      <v-alert
+        color="primary"
+        style="border-radius: 0"
+        density="compact"
+        v-if="showInstallPromotion"
+      >
         <p>Instalá nuestra aplicación. No va a ocupar lugar en tu teléfono.</p>
         <v-btn color="white" class="mt-2" @click="installApp">Instalar</v-btn>
       </v-alert>
@@ -78,28 +83,30 @@ import { computed } from "@vue/reactivity";
 
 const store = useStore();
 const router = useRouter();
-const deferredPrompt = ref<Event>();
+const deferredPrompt = ref();
 const showInstallPromotion = ref(false);
 const drawer = ref(false);
 
 onMounted(() => {
   window.addEventListener("beforeinstallprompt", (e) => {
-    // Prevent the mini-infobar from appearing on mobile
     e.preventDefault();
-    // Stash the event so it can be triggered later.
     deferredPrompt.value = e;
-    // Update UI notify the user they can install the PWA
     showInstallPromotion.value = true;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    showInstallPromotion.value = true;
+    deferredPrompt.value = null;
   });
 });
 
 const avatarLabel = computed(() => {
   if (!store.isLoggedIn) {
-    return ''
+    return "";
   }
 
-  return `${store.user.name.charAt(0)}${store.user.last_name.charAt(0)}`
-})
+  return `${store.user.name.charAt(0)}${store.user.last_name.charAt(0)}`;
+});
 
 const menuComputed = computed(() => {
   const menu = [
@@ -119,7 +126,6 @@ const menuComputed = computed(() => {
 });
 
 function installApp() {
-  // @ts-ignore
   deferredPrompt.value.prompt();
 }
 
