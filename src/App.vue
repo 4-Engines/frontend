@@ -30,6 +30,11 @@
           Salir
         </v-list-item>
       </v-list>
+
+      <v-alert v-if="showInstallPromotion" title="SiGeA">
+        Instalá nuestra aplicación. No va a ocupar lugar en tu teléfono.
+        <v-btn @click="installApp">Instalar</v-btn>
+      </v-alert>
     </v-navigation-drawer>
 
     <v-app-bar color="primary" prominent>
@@ -65,13 +70,25 @@
 import { useRouter } from "vue-router";
 import { useStore } from "./store";
 import ReloadPWA from "./components/ReloadPWA.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { computed } from "@vue/reactivity";
 
 const store = useStore();
 const router = useRouter();
-
+const deferredPrompt = ref<Event>();
+const showInstallPromotion = ref(false);
 const drawer = ref(false);
+
+onMounted(() => {
+  window.addEventListener("beforeinstallprompt", (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt.value = e;
+    // Update UI notify the user they can install the PWA
+    showInstallPromotion.value = true;
+  });
+});
 
 const menuComputed = computed(() => {
   const menu = [
@@ -89,6 +106,11 @@ const menuComputed = computed(() => {
 
   return menu;
 });
+
+function installApp() {
+  // @ts-ignore
+  deferredPrompt.value.prompt();
+}
 
 function logout() {
   store.$patch({
