@@ -34,7 +34,7 @@
         </v-list-item>
       </v-list>
 
-      <v-alert color="primary" style="border-radius: 0;" density="compact" v-if="!showInstallPromotion">
+      <v-alert color="primary" style="border-radius: 0;" density="compact" v-if="showInstallPromotion">
         <p>Instalá nuestra aplicación. No va a ocupar lugar en tu teléfono.</p>
         <v-btn color="white" class="mt-2" @click="installApp">Instalar</v-btn>
       </v-alert>
