@@ -1,23 +1,23 @@
 <template>
-  <div v-if="offlineReady || needRefresh" class="flex flex-wrap" role="alert">
-    <div class="message mt-1">
-      <span v-if="offlineReady">Aplicación lista para trabajar offline</span>
-      <span v-else>Nuevo contenido disponible, tocá en recargar para actualizar.</span>
-    </div>
-    <div class="buttons flex align-middle mt-2 md:mt-0">
-      <button v-if="needRefresh" @click="updateServiceWorker()" class="button">
+  <v-snackbar v-model="showReload" vertical>
+    <span v-if="offlineReady">Aplicación lista para trabajar offline</span>
+    <span v-else
+      >Nuevo contenido disponible, tocá en recargar para actualizar.</span
+    >
+
+    <template v-slot:actions>
+      <v-btn color="blue" variant="text" @click="updateServiceWorker">
         Recargar
-      </button>
-      <button @click="close" class="button">
-        Cerrar
-      </button>
-    </div>
-  </div>
+      </v-btn>
+      <v-btn color="blue" variant="text" @click="close"> Cerrar </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useRegisterSW } from "virtual:pwa-register/vue";
+import { computed } from "@vue/reactivity";
 const { updateServiceWorker } = useRegisterSW();
 
 export default defineComponent({
@@ -28,7 +28,15 @@ export default defineComponent({
       offlineReady.value = false;
       needRefresh.value = false;
     };
-    return { offlineReady, needRefresh, updateServiceWorker, close };
+
+    const showReload = computed(() => offlineReady.value || needRefresh.value);
+    return {
+      offlineReady,
+      needRefresh,
+      updateServiceWorker,
+      close,
+      showReload,
+    };
   },
   methods: {
     async close() {
