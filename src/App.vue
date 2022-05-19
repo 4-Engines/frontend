@@ -1,5 +1,6 @@
 <template>
   <reload-p-w-a />
+
   <v-app theme="blue">
     <v-navigation-drawer v-if="store.isLoggedIn" v-model="drawer">
       <v-list>
@@ -33,41 +34,25 @@
           Salir
         </v-list-item>
       </v-list>
-
-      <v-alert
-        color="primary"
-        style="border-radius: 0"
-        density="compact"
-        v-if="showInstallPromotion"
-      >
-        <p>Instalá nuestra aplicación. No va a ocupar lugar en tu teléfono.</p>
-        <v-btn color="white" class="mt-2" @click="installApp">Instalar</v-btn>
-      </v-alert>
     </v-navigation-drawer>
 
     <v-app-bar color="primary" prominent>
       <v-app-bar-nav-icon v-if="store.isLoggedIn" @click="drawer = !drawer" />
-
-      <!--  <router-link to="/">
-        <img class="mr-3" src="../public/logo.png" height="30" />
-      </router-link> -->
       <v-app-bar-title>Sistema de gestión del automotor</v-app-bar-title>
-      <v-spacer />
-
-      <!-- <v-btn to="/login">
-        <v-icon left>mdi-lock</v-icon>
-        Ingresar
-      </v-btn> -->
-      <!-- <v-btn @click="logout">Salir</v-btn> -->
     </v-app-bar>
 
     <v-main>
       <v-container fluid>
-        <!-- <router-view v-slot="{ Component }">
-          <transition name="fade">
-            <component :is="Component" />
-          </transition>
-        </router-view> -->
+        <v-alert color="primary" class="mb-3">
+          <div class="d-flex flex-row align-center justify-space-between">
+            <div>
+              Instalá nuestra aplicación. No va a ocupar lugar en tu teléfono.
+            </div>
+
+            <v-btn color="white" @click="installApp"> Instalar </v-btn>
+          </div>
+        </v-alert>
+
         <router-view />
       </v-container>
     </v-main>
