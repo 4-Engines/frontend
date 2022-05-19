@@ -38,21 +38,14 @@
 
     <v-app-bar color="primary" prominent>
       <v-app-bar-nav-icon v-if="store.isLoggedIn" @click="drawer = !drawer" />
-      <v-app-bar-title>Sistema de gestión del automotor</v-app-bar-title>
+      <v-app-bar-title>
+        <span class="d-block d-sm-none">SiGeA</span>
+        <span class="d-none d-sm-block">Sistema de gestión del automotor</span>
+      </v-app-bar-title>
     </v-app-bar>
 
     <v-main>
       <v-container fluid>
-        <v-alert color="info" class="mb-3" density="compact">
-          <div class="mb-2">
-            Instalá nuestra aplicación. No va a ocupar lugar en tu teléfono.
-          </div>
-
-          <div class="text-right">
-            <v-btn color="white" @click="installApp">Instalar</v-btn>
-          </div>
-        </v-alert>
-
         <router-view />
       </v-container>
     </v-main>

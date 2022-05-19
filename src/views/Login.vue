@@ -1,7 +1,7 @@
 <template>
   <v-row v-if="!store.isLoggedIn" justify="center">
     <v-col sm="8" md="4">
-      <div class="text-center mt-3">
+      <div class="text-center">
         <img src="../../public/logo.png" width="200">
         <div class="font-weight-bold">Sistema de gestión del automotor</div>
       </div>
