@@ -1,12 +1,12 @@
 <template>
-  <v-snackbar v-model="showReload" vertical>
+  <v-snackbar v-model="showReload" fixed>
     <span v-if="offlineReady">Aplicación lista para trabajar offline</span>
     <span v-else
       >Nuevo contenido disponible, tocá en recargar para actualizar.</span
     >
 
     <template v-slot:actions>
-      <v-btn color="blue" variant="text" @click="updateServiceWorker">
+      <v-btn v-if="!offlineReady" color="blue" variant="text" @click="updateServiceWorker">
         Recargar
       </v-btn>
       <v-btn color="blue" variant="text" @click="close"> Cerrar </v-btn>
@@ -29,7 +29,7 @@ export default defineComponent({
       needRefresh.value = false;
     };
 
-    const showReload = computed(() => offlineReady.value || needRefresh.value);
+    const showReload = computed(() => offlineReady.value || needRefresh.value || true);
     return {
       offlineReady,
       needRefresh,

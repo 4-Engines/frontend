@@ -43,13 +43,13 @@
 
     <v-main>
       <v-container fluid>
-        <v-alert color="info" class="mb-3">
-          <div class="d-flex flex-row align-center justify-space-between">
-            <div>
-              Instalá nuestra aplicación. No va a ocupar lugar en tu teléfono.
-            </div>
+        <v-alert color="info" class="mb-3" density="compact">
+          <div class="mb-2">
+            Instalá nuestra aplicación. No va a ocupar lugar en tu teléfono.
+          </div>
 
-            <v-btn color="white" @click="installApp"> Instalar </v-btn>
+          <div class="text-right">
+            <v-btn color="white" @click="installApp">Instalar</v-btn>
           </div>
         </v-alert>
 
