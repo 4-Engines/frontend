@@ -42,6 +42,10 @@
         <span class="d-block d-sm-none">SiGeA</span>
         <span class="d-none d-sm-block">Sistema de gestión del automotor</span>
       </v-app-bar-title>
+
+      <v-spacer />
+
+      <v-btn v-if="showInstallPromotion" @click="installApp">Instalar App</v-btn>
     </v-app-bar>
 
     <v-main>
@@ -73,7 +77,7 @@ onMounted(() => {
   });
 
   window.addEventListener("appinstalled", () => {
-    showInstallPromotion.value = true;
+    showInstallPromotion.value = false;
     deferredPrompt.value = null;
   });
 });
