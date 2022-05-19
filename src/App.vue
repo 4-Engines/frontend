@@ -21,6 +21,7 @@
           :to="item.to"
           v-for="item of menuComputed"
           :key="item.title"
+          @click="drawer = false"
         >
           <v-list-item-avatar start>
             <v-icon :icon="item.icon" />

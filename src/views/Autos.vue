@@ -1,8 +1,11 @@
 <template>
-Autos
+  <h2>Autos</h2>
 
-<v-btn>Agregar nuevo auto</v-btn>
+  <p>Desde acá vas a poder administrar los autos que tengas.</p>
+
+  <div class="mt-5 text-right">
+    <v-btn color="primary">Agregar nuevo auto</v-btn>
+  </div>
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>

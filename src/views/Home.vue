@@ -1,3 +1,3 @@
 <template>
-Página principal
+<h2>Inicio</h2>
 </template>
