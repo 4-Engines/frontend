@@ -23,13 +23,13 @@
           :key="item.title"
         >
           <v-list-item-avatar start>
-            <v-icon :icon="item.icon"></v-icon>
+            <v-icon :icon="item.icon" />
           </v-list-item-avatar>
           {{ item.title }}
         </v-list-item>
         <v-list-item @click="logout">
           <v-list-item-avatar start>
-            <v-icon icon="mdi-lock-open"></v-icon>
+            <v-icon icon="mdi-lock-open" />
           </v-list-item-avatar>
           Salir
         </v-list-item>
