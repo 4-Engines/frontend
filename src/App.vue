@@ -139,7 +139,7 @@ function toggleTheme() {
   store.theme = isLightTheme.value ? "dark" : "light";
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", isLightTheme.value ? "#9D51FB" : "#124B8D");
+    ?.setAttribute("content", isLightTheme.value ? "#124B8D" : "#2A2A2A");
 }
 
 function logout() {
