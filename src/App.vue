@@ -15,7 +15,9 @@
           </template>
         </v-list-item>
       </v-list>
+
       <v-divider />
+      
       <v-list>
         <v-list-item
           :to="item.to"
