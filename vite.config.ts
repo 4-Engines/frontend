@@ -5,11 +5,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 const path = require('path')
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
     vuetify({
       autoImport: true,
     }),
@@ -25,7 +23,7 @@ export default defineConfig({
         short_name: 'SiGeA',
         background_color: '#ffffff',
         lang: 'es',
-        theme_color: "???",
+        theme_color: "#124B8D",
         start_url: "/",
         display: "standalone",
         icons: [
