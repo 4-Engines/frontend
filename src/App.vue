@@ -52,11 +52,7 @@
       >
       <v-btn
         title="Cambiar theme"
-        :icon="
-          store.theme === 'blue'
-            ? 'mdi-brightness-4'
-            : 'mdi-white-balance-sunny'
-        "
+        icon="mdi-theme-light-dark"
         @click="toggleTheme"
       />
     </v-app-bar>
