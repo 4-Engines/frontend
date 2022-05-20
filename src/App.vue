@@ -23,12 +23,26 @@
           :to="item.to"
           v-for="item of menuComputed"
           :key="item.title"
+          active-color="primary"
         >
           <v-list-item-avatar start>
             <v-icon :icon="item.icon" />
           </v-list-item-avatar>
           {{ item.title }}
         </v-list-item>
+
+        <v-list-item @click="toggleTheme">
+          <v-list-item-avatar start>
+            <v-icon icon="mdi-weather-night" />
+          </v-list-item-avatar>
+          <v-list-item-header>
+          <v-list-item-title>Modo oscuro</v-list-item-title>
+          </v-list-item-header>
+          <v-list-item-action end>
+            <v-switch color="indigo-lighten-3" hide-details :model-value="!isLightTheme" />
+          </v-list-item-action>
+        </v-list-item>
+
         <v-list-item @click="logout">
           <v-list-item-avatar start>
             <v-icon icon="mdi-lock-open" />
@@ -50,11 +64,6 @@
       <v-btn v-if="showInstallPromotion" @click="installApp"
         >Instalar App</v-btn
       >
-      <v-btn
-        title="Cambiar theme"
-        icon="mdi-theme-light-dark"
-        @click="toggleTheme"
-      />
     </v-app-bar>
 
     <v-main>
@@ -92,7 +101,7 @@ onMounted(() => {
 
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", store.theme === "blue" ? "#124B8D" : "#9D51FB");
+    ?.setAttribute("content", isLightTheme.value ? "#124B8D" : "#9D51FB");
 });
 
 const avatarLabel = computed(() => {
@@ -102,6 +111,8 @@ const avatarLabel = computed(() => {
 
   return `${store.user.name.charAt(0)}${store.user.last_name.charAt(0)}`;
 });
+
+const isLightTheme = computed(() => store.theme === "blue");
 
 const menuComputed = computed(() => {
   const menu = [
@@ -125,11 +136,10 @@ function installApp() {
 }
 
 function toggleTheme() {
-  const isLightTheme = store.theme === "blue";
-  store.theme = isLightTheme ? "dark" : "blue";
+  store.theme = isLightTheme.value ? "dark" : "blue";
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", isLightTheme ? "#9D51FB" : "#124B8D");
+    ?.setAttribute("content", isLightTheme.value ? "#9D51FB" : "#124B8D");
 }
 
 function logout() {
