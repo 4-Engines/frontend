@@ -1,12 +1,11 @@
 <template>
   <v-snackbar v-model="showReload" fixed>
     <span v-if="offlineReady">Aplicación lista para trabajar offline</span>
-    <span v-else
-      >Nuevo contenido disponible.</span
-    >
+    <span v-else>Nuevo contenido disponible.</span>
 
     <template v-slot:actions>
-      <v-btn v-if="!offlineReady" color="blue" variant="text" @click="updateServiceWorker">
+      <v-btn v-if="offlineReady" color="blue" variant="text" @click="close">Cerrar</v-btn>
+      <v-btn v-else color="blue" variant="text" @click="updateServiceWorker">
         Recargar
       </v-btn>
     </template>
