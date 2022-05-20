@@ -104,7 +104,7 @@ onMounted(() => {
     ?.setAttribute("content", isLightTheme.value ? "#124B8D" : "#2A2A2A");
 
   if (store.isLoggedIn) {
-    router.replace("/inicio");
+    router.replace("/home");
   }
 });
 
