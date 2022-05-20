@@ -1,7 +1,7 @@
 <template>
   <reload-p-w-a />
 
-  <v-app theme="blue">
+  <v-app :theme="theme">
     <v-navigation-drawer v-if="store.isLoggedIn" v-model="drawer">
       <v-list>
         <v-list-item :subtitle="store.user.mail">
@@ -36,7 +36,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar color="primary" prominent>
+    <v-app-bar color="primary">
       <v-app-bar-nav-icon v-if="store.isLoggedIn" @click="drawer = !drawer" />
       <v-app-bar-title>
         <span class="d-block d-sm-none">SiGeA</span>
@@ -46,6 +46,7 @@
       <v-spacer />
 
       <v-btn v-if="showInstallPromotion" @click="installApp">Instalar App</v-btn>
+      <v-btn title="Cambiar theme" :icon="theme === 'blue' ? 'mdi-brightness-4' : 'mdi-white-balance-sunny'" @click="toggleTheme"/>
     </v-app-bar>
 
     <v-main>
@@ -68,6 +69,7 @@ const router = useRouter();
 const deferredPrompt = ref();
 const showInstallPromotion = ref(false);
 const drawer = ref(false);
+const theme = ref('blue');
 
 onMounted(() => {
   window.addEventListener("beforeinstallprompt", (e) => {
@@ -109,6 +111,10 @@ const menuComputed = computed(() => {
 
 function installApp() {
   deferredPrompt.value.prompt();
+}
+
+function toggleTheme() {
+  theme.value = theme.value === 'blue' ? 'dark' : 'blue'
 }
 
 function logout() {
