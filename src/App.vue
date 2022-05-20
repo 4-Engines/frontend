@@ -52,7 +52,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar color="primary">
+    <v-app-bar :color="isLightTheme ? 'primary' : '#1E1E1E'">
       <v-app-bar-nav-icon v-if="store.isLoggedIn" @click="drawer = !drawer" />
       <v-app-bar-title>
         <span class="d-block d-sm-none">SiGeA</span>
@@ -101,7 +101,7 @@ onMounted(() => {
 
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", isLightTheme.value ? "#124B8D" : "#9D51FB");
+    ?.setAttribute("content", isLightTheme.value ? "#124B8D" : "#2A2A2A");
 });
 
 const avatarLabel = computed(() => {
@@ -112,7 +112,7 @@ const avatarLabel = computed(() => {
   return `${store.user.name.charAt(0)}${store.user.last_name.charAt(0)}`;
 });
 
-const isLightTheme = computed(() => store.theme === "blue");
+const isLightTheme = computed(() => store.theme === "light");
 
 const menuComputed = computed(() => {
   const menu = [
@@ -136,7 +136,7 @@ function installApp() {
 }
 
 function toggleTheme() {
-  store.theme = isLightTheme.value ? "dark" : "blue";
+  store.theme = isLightTheme.value ? "dark" : "light";
   document
     .querySelector('meta[name="theme-color"]')
     ?.setAttribute("content", isLightTheme.value ? "#9D51FB" : "#124B8D");

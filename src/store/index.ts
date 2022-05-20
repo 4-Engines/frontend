@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import type { User } from '../types/User'
 
-type Theme = 'blue' | 'dark'
+type Theme = 'light' | 'dark'
 interface Store {
     theme: Theme,
     isLoggedIn: boolean,
@@ -10,7 +10,7 @@ interface Store {
 
 export const useStore = defineStore<string, Store>('main', {
     state: () => ({
-        theme: 'blue',
+        theme: 'light',
         isLoggedIn: false,
         user: null
     }),
