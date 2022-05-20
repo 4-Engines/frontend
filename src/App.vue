@@ -1,10 +1,10 @@
 <template>
   <reload-p-w-a />
 
-  <v-app :theme="theme">
+  <v-app :theme="store.theme">
     <v-navigation-drawer v-if="store.isLoggedIn" v-model="drawer">
       <v-list>
-        <v-list-item :subtitle="store.user.mail">
+        <v-list-item v-if="store.user" :subtitle="store.user.mail">
           <template #title>
             {{ store.user.name }} {{ store.user.last_name }}
           </template>
@@ -17,7 +17,7 @@
       </v-list>
 
       <v-divider />
-      
+
       <v-list>
         <v-list-item
           :to="item.to"
@@ -47,8 +47,18 @@
 
       <v-spacer />
 
-      <v-btn v-if="showInstallPromotion" @click="installApp">Instalar App</v-btn>
-      <v-btn title="Cambiar theme" :icon="theme === 'blue' ? 'mdi-brightness-4' : 'mdi-white-balance-sunny'" @click="toggleTheme"/>
+      <v-btn v-if="showInstallPromotion" @click="installApp"
+        >Instalar App</v-btn
+      >
+      <v-btn
+        title="Cambiar theme"
+        :icon="
+          store.theme === 'blue'
+            ? 'mdi-brightness-4'
+            : 'mdi-white-balance-sunny'
+        "
+        @click="toggleTheme"
+      />
     </v-app-bar>
 
     <v-main>
@@ -71,7 +81,6 @@ const router = useRouter();
 const deferredPrompt = ref();
 const showInstallPromotion = ref(false);
 const drawer = ref(false);
-const theme = ref('blue');
 
 onMounted(() => {
   window.addEventListener("beforeinstallprompt", (e) => {
@@ -84,10 +93,14 @@ onMounted(() => {
     showInstallPromotion.value = false;
     deferredPrompt.value = null;
   });
+
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute("content", store.theme === "blue" ? "#124B8D" : "#9D51FB");
 });
 
 const avatarLabel = computed(() => {
-  if (!store.isLoggedIn) {
+  if (!store.isLoggedIn || !store.user) {
     return "";
   }
 
@@ -116,7 +129,11 @@ function installApp() {
 }
 
 function toggleTheme() {
-  theme.value = theme.value === 'blue' ? 'dark' : 'blue'
+  const isLightTheme = store.theme === "blue";
+  store.theme = isLightTheme ? "dark" : "blue";
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute("content", isLightTheme ? "#9D51FB" : "#124B8D");
 }
 
 function logout() {
@@ -128,6 +145,8 @@ function logout() {
       rol: -1,
     },
   });
+
+  drawer.value = false;
 
   router.push("/");
 }

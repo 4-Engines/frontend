@@ -1,19 +1,18 @@
 import { defineStore } from 'pinia'
-import { User } from '../types/User'
+import type { User } from '../types/User'
 
+type Theme = 'blue' | 'dark'
 interface Store {
+    theme: Theme,
     isLoggedIn: boolean,
-    user: User
+    user: User | null
 }
 
 export const useStore = defineStore<string, Store>('main', {
     state: () => ({
+        theme: 'blue',
         isLoggedIn: false,
-        user: {
-            name: '',
-            last_name: '',
-            mail: '',
-            rol: -1
-        }
-    })
+        user: null
+    }),
+    persist: true
 })
