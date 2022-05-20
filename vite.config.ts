@@ -19,12 +19,14 @@ export default defineConfig({
       includeAssets: ["/favicon.png"],
       strategies: "injectManifest",
       manifest: {
+        id: "/",
+        start_url: "/",
         name: 'Sistema de gestión del automotor',
         short_name: 'SiGeA',
+        description: "Aplicación oficial de 4Engines para la gestion de autopartes",
         background_color: '#ffffff',
         lang: 'es',
         theme_color: "#124B8D",
-        start_url: "/",
         display: "standalone",
         icons: [
           {
@@ -41,7 +43,7 @@ export default defineConfig({
             src: "icon-512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable",
+            purpose: "maskable",
           },
         ],
       },
