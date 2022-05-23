@@ -2,38 +2,47 @@
   <v-row v-if="!store.isLoggedIn" justify="center">
     <v-col sm="8" md="4">
       <div class="text-center">
-        <img src="../../public/logo.png" width="200">
+        <img src="@/assets/logo.png" width="200" />
         <div class="font-weight-bold">Sistema de gestión del automotor</div>
       </div>
       <div class="mt-10 mb-2">
-          <v-alert v-if="errorMessage.length > 0" type="error">{{
-            errorMessage
-          }}</v-alert>
+        <v-alert v-if="errorMessage.length > 0" type="error">{{
+          errorMessage
+        }}</v-alert>
 
-          <v-text-field
-            label="Usuario"
-            autofocus
-            autocomplete="off"
-            hide-details="auto"
-            :error="errorMessage.length > 0"
-            v-model="user"
-            variant="outlined"
-          ></v-text-field>
+        <v-text-field
+          label="Usuario"
+          autofocus
+          autocomplete="off"
+          hide-details="auto"
+          :error="errorMessage.length > 0"
+          v-model="user"
+          variant="outlined"
+          :disabled="loading"
+        />
 
-          <v-text-field
-            class="password-input mt-4"
-            label="Contraseña"
-            :type="showPassword ? 'text' : 'password'"
-            hide-details="auto"
-            :error="errorMessage.length > 0"
-            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            v-model="pass"
-            @click:append-inner="showPassword = !showPassword"
-            variant="outlined"
-          >
-          </v-text-field>
+        <v-text-field
+          class="password-input mt-4"
+          label="Contraseña"
+          :type="showPassword ? 'text' : 'password'"
+          hide-details="auto"
+          :error="errorMessage.length > 0"
+          :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          v-model="pass"
+          @click:append-inner="showPassword = !showPassword"
+          variant="outlined"
+          :disabled="loading"
+        />
 
-          <v-btn class="mt-4" color="primary" block size="x-large" @click="login">Ingresar</v-btn>
+        <v-btn
+          :disabled="loading"
+          class="mt-4"
+          color="primary"
+          block
+          size="x-large"
+          @click="login"
+          >Ingresar</v-btn
+        >
       </div>
 
       <div class="text-center">
@@ -83,15 +92,20 @@
     </v-col></v-row
   >
 
-  <v-snackbar v-model="snackbar" :timeout="4000" right bottom>
+  <v-snackbar v-model="snackbar" timeout="2000" bottom left>
     ¡Se envió un mail a tu casilla de correo!
+  </v-snackbar>
+
+  <v-snackbar v-model="loginErrorSnackbar" timeout="2000" bottom left>
+    Ocurrió un error al intentar ingresar al sistema
   </v-snackbar>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from "../store";
+import { useStore } from "@/store";
+import { loginUser } from "@/services/User.service";
 
 const store = useStore();
 const router = useRouter();
@@ -102,20 +116,38 @@ const pass = ref("");
 const showPassword = ref(false);
 const recuperarMail = ref("");
 const snackbar = ref(false);
+const loginErrorSnackbar = ref(false);
 const showDialog = ref(false);
+const loading = ref(false);
 
-function login() {
-  store.$patch({
-    isLoggedIn: true,
-    user: {
-      name: 'Roberto',
-      last_name: 'Juarroz',
-      rol: 1,
-      mail: 'rjuarroz@gmail.com'
-    }
-  })
+async function login() {
+  loginErrorSnackbar.value = false;
+  loading.value = true;
 
-  router.replace('/home')
+  try {
+    // const response = await loginUser({
+    //   username: user.value,
+    //   password: pass.value
+    // });
+
+    // console.log(response);
+
+    store.$patch({
+      isLoggedIn: true,
+      user: {
+        name: 'Roberto',
+        last_name: 'Juarroz',
+        rol: 1,
+        mail: 'rjuarroz@gmail.com'
+      }
+    })
+
+    router.replace('/home')
+  } catch (error) {
+    loginErrorSnackbar.value = true;
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 
