@@ -4,8 +4,8 @@
     <span v-else>Nuevo contenido disponible.</span>
 
     <template v-slot:actions>
-      <v-btn v-if="offlineReady" color="light" variant="text" @click="close">Cerrar</v-btn>
-      <v-btn v-else color="light" variant="text" @click="updateServiceWorker">
+      <v-btn v-if="offlineReady" color="primary" variant="text" @click="close">Cerrar</v-btn>
+      <v-btn v-else color="primary" variant="text" @click="updateServiceWorker">
         Recargar
       </v-btn>
     </template>
