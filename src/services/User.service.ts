@@ -1,11 +1,26 @@
-async function loginUser(username: string, password: string): Promise<void> { }
+import { axios } from "@/plugins/axios";
 
-async function createUser(username: string, password: string, email: string, name: string, lastname: string): Promise<void> { }
+async function loginUser(data: {
+    username: string;
+    password: string;
+}): Promise<void> {
+    return axios.post("/login", data);
+}
+
+async function createUser(data: {
+    username: string;
+    password: string;
+    lastname: string;
+    name: string;
+    phone: string;
+    email: string;
+}): Promise<void> {
+    return axios.post("/create-user", {
+        ...data,
+        rol: 1
+    })
+}
 
 async function logoutUser(): Promise<void> { }
 
-export {
-    loginUser,
-    createUser,
-    logoutUser
-}
+export { loginUser, createUser, logoutUser };
