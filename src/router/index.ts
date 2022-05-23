@@ -1,12 +1,14 @@
 import { createRouter, createWebHashHistory} from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
-import { useStore } from '../store';
+import { useStore } from '@/store';
 
-import Login from '../views/Login.vue'
-import NotFound from '../views/NotFound.vue'
-import Autos from '../views/Autos.vue'
-import Auto from '../views/Auto.vue'
-import Home from '../views/Home.vue'
+import Login from '@/views/Login.vue'
+import NotFound from '@/views/NotFound.vue'
+import Autos from '@/views/Autos.vue'
+import Auto from '@/views/Auto.vue'
+import Home from '@/views/Home.vue'
+import ActivarCuenta from '@/views/ActivarCuenta.vue'
+import RegistroCliente from '@/views/RegistroCliente.vue'
 
 const routes: RouteRecordRaw[] = [
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
@@ -25,6 +27,14 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/autos/:id',
         component: Auto
+    },
+    {
+        path: '/activar-cuenta/:id',
+        component: ActivarCuenta
+    },
+    {
+        path: '/registro',
+        component: RegistroCliente
     }
 ]
 
