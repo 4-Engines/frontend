@@ -39,7 +39,7 @@
           <v-list-item-title>Modo oscuro</v-list-item-title>
           </v-list-item-header>
           <v-list-item-action end>
-            <v-switch color="indigo-lighten-3" hide-details :model-value="!isLightTheme" />
+            <v-switch color="indigo-lighten-2" hide-details :model-value="!isLightTheme" />
           </v-list-item-action>
         </v-list-item>
 
