@@ -4,7 +4,7 @@
   <v-app :theme="store.theme">
     <v-navigation-drawer v-if="store.isLoggedIn" v-model="drawer">
       <v-list>
-        <v-list-item v-if="store.user" :subtitle="store.user.mail">
+        <v-list-item v-if="store.user" :subtitle="store.rolLabel">
           <template #title>
             {{ store.user.name }} {{ store.user.last_name }}
           </template>
