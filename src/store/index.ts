@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
-import type { User } from '../types/User'
+import type { User } from '@/types/User'
+import { Rol } from '@/types/Enums'
 
 type Theme = 'light' | 'dark'
 interface Store {
@@ -14,5 +15,10 @@ export const useStore = defineStore<string, Store>('main', {
         isLoggedIn: false,
         user: null
     }),
+    getters: {
+        isCliente: (state) => state.user?.rol === Rol.Cliente,
+        isEmpleado: (state) => state.user?.rol === Rol.Empleado,
+        isAdmin: (state) => state.user?.rol === Rol.Admin
+    },
     persist: true
 })
