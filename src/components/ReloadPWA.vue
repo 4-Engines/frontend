@@ -24,9 +24,7 @@ import { useRegisterSW } from 'virtual:pwa-register/vue';
 import { computed } from 'vue';
 
 const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW();
-const showReload = computed(
-  () => offlineReady.value || needRefresh.value || true
-);
+const showReload = computed(() => offlineReady.value || needRefresh.value);
 
 function close() {
   offlineReady.value = false;
