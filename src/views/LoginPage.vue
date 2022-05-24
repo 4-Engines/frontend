@@ -11,27 +11,27 @@
         }}</v-alert>
 
         <v-text-field
+          v-model="form.username"
           label="Usuario"
           autofocus
           autocomplete="off"
           hide-details="auto"
           :error="errorMessage.length > 0"
-          v-model="form.username"
           variant="outlined"
           :disabled="loading"
         />
 
         <v-text-field
+          v-model="form.password"
           class="password-input mt-4"
           label="Contraseña"
           :type="showPassword ? 'text' : 'password'"
           hide-details="auto"
           :error="errorMessage.length > 0"
           :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          v-model="form.password"
-          @click:append-inner="showPassword = !showPassword"
           variant="outlined"
           :disabled="loading"
+          @click:append-inner="showPassword = !showPassword"
         />
 
         <v-btn
@@ -41,7 +41,7 @@
           block
           size="x-large"
           @click="login"
-          >{{ loading ? "Ingresando al sistema..." : "Ingresar" }}</v-btn
+          >{{ loading ? 'Ingresando al sistema...' : 'Ingresar' }}</v-btn
         >
       </div>
 
@@ -67,11 +67,11 @@
 
             <v-card-text class="mb-2">
               <v-text-field
+                v-model="recuperarMail"
                 label="Ingresá tu dirección de mail"
                 autocomplete="off"
                 hide-details="auto"
                 type="mail"
-                v-model="recuperarMail"
                 autofocus
                 variant="outlined"
               ></v-text-field>
@@ -107,17 +107,17 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "@/store";
-import { loginUser } from "@/services/User.service";
+import { reactive, ref } from 'vue';
+// import { useRouter } from 'vue-router';
+import { useStore } from '@/store';
+import { loginUser } from '@/services/User.service';
 
 const store = useStore();
-const router = useRouter();
+// const router = useRouter();
 
-const errorMessage = ref("");
+const errorMessage = ref('');
 const showPassword = ref(false);
-const recuperarMail = ref("");
+const recuperarMail = ref('');
 const snackbar = ref(false);
 const loginErrorSnackbar = ref(false);
 const showDialog = ref(false);
@@ -126,7 +126,7 @@ const loading = ref(false);
 const form = reactive({
   username: '',
   password: ''
-})
+});
 
 async function login() {
   loginErrorSnackbar.value = false;

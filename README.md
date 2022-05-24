@@ -1,6 +1,6 @@
 # 4Engines
 
-Frontend de la aplicación __Sistema de gestión de talleres de autos__.
+Frontend de la aplicación **Sistema de gestión de talleres de autos**.
 
 ## Tecnologías
 

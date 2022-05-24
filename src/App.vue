@@ -10,7 +10,9 @@
           </template>
           <template #prepend>
             <v-list-item-avatar start>
-              <v-avatar color="primary">{{ avatarLabel }}</v-avatar>
+              <v-avatar color="primary">
+                {{ avatarLabel }}
+              </v-avatar>
             </v-list-item-avatar>
           </template>
         </v-list-item>
@@ -20,9 +22,9 @@
 
       <v-list>
         <v-list-item
-          :to="item.to"
           v-for="item of menuComputed"
           :key="item.title"
+          :to="item.to"
           active-color="primary"
         >
           <v-list-item-avatar start>
@@ -36,10 +38,14 @@
             <v-icon icon="mdi-weather-night" />
           </v-list-item-avatar>
           <v-list-item-header>
-          <v-list-item-title>Modo oscuro</v-list-item-title>
+            <v-list-item-title>Modo oscuro</v-list-item-title>
           </v-list-item-header>
           <v-list-item-action end>
-            <v-switch color="indigo-lighten-2" hide-details :model-value="!isLightTheme" />
+            <v-switch
+              color="indigo-lighten-2"
+              hide-details
+              :model-value="!isLightTheme"
+            />
           </v-list-item-action>
         </v-list-item>
 
@@ -61,9 +67,9 @@
 
       <v-spacer />
 
-      <v-btn v-if="showInstallPromotion" @click="installApp"
-        >Instalar App</v-btn
-      >
+      <v-btn v-if="showInstallPromotion" @click="installApp">
+        Instalar App
+      </v-btn>
     </v-app-bar>
 
     <v-main>
@@ -75,11 +81,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from "vue-router";
-import { useStore } from "./store";
-import ReloadPWA from "./components/ReloadPWA.vue";
-import { onMounted, ref } from "vue";
-import { computed } from "@vue/reactivity";
+import { useRouter } from 'vue-router';
+import { useStore } from './store';
+import ReloadPWA from './components/ReloadPWA.vue';
+import { onMounted, ref } from 'vue';
+import { computed } from 'vue';
 
 const store = useStore();
 const router = useRouter();
@@ -88,73 +94,73 @@ const showInstallPromotion = ref(false);
 const drawer = ref(false);
 
 onMounted(() => {
-  window.addEventListener("beforeinstallprompt", (e) => {
+  window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt.value = e;
     showInstallPromotion.value = true;
   });
 
-  window.addEventListener("appinstalled", () => {
+  window.addEventListener('appinstalled', () => {
     showInstallPromotion.value = false;
     deferredPrompt.value = null;
   });
 
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", isLightTheme.value ? "#124B8D" : "#2A2A2A");
+    ?.setAttribute('content', isLightTheme.value ? '#124B8D' : '#2A2A2A');
 
   if (store.isLoggedIn) {
-    router.replace("/home");
+    router.replace('/home');
   }
 });
 
 const avatarLabel = computed(() => {
   if (!store.isLoggedIn || !store.user) {
-    return "";
+    return '';
   }
 
   return `${store.user.name.charAt(0)}${store.user.last_name.charAt(0)}`;
 });
 
-const isLightTheme = computed(() => store.theme === "light");
+const isLightTheme = computed(() => store.theme === 'light');
 
 const menuComputed = computed(() => {
   const menu = [
     {
-      title: "Inicio",
-      to: "/home",
-      icon: "mdi-home",
-    },
+      title: 'Inicio',
+      to: '/home',
+      icon: 'mdi-home'
+    }
   ];
 
   if (store.isCliente) {
     menu.push({
-      title: "Mis autos",
-      to: "/mis-autos",
-      icon: "mdi-car"
-    })
+      title: 'Mis autos',
+      to: '/mis-autos',
+      icon: 'mdi-car'
+    });
   }
 
   if (store.isEmpleado) {
     menu.push({
-      title: "Autos",
-      to: "/autos",
-      icon: "mdi-car",
-    },)
+      title: 'Autos',
+      to: '/autos',
+      icon: 'mdi-car'
+    });
 
     menu.push({
-      title: "Nuevo cliente",
-      to: "/registro",
-      icon: "mdi-account"
-    })
+      title: 'Nuevo cliente',
+      to: '/registro',
+      icon: 'mdi-account'
+    });
   }
 
   if (store.isAdmin) {
     menu.push({
-      title: "Nuevo empleado",
-      to: "/nuevo-empleado",
-      icon: "mdi-account",
-    })
+      title: 'Nuevo empleado',
+      to: '/nuevo-empleado',
+      icon: 'mdi-account'
+    });
   }
 
   return menu;
@@ -165,24 +171,24 @@ function installApp() {
 }
 
 function toggleTheme() {
-  store.theme = isLightTheme.value ? "dark" : "light";
+  store.theme = isLightTheme.value ? 'dark' : 'light';
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", isLightTheme.value ? "#124B8D" : "#2A2A2A");
+    ?.setAttribute('content', isLightTheme.value ? '#124B8D' : '#2A2A2A');
 }
 
 function logout() {
   store.$patch({
     isLoggedIn: false,
     user: {
-      name: "",
-      mail: "",
-      rol: -1,
-    },
+      name: '',
+      mail: '',
+      rol: -1
+    }
   });
 
   drawer.value = false;
 
-  router.push("/");
+  router.push('/');
 }
 </script>

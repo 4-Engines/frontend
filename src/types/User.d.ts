@@ -1,33 +1,27 @@
-import { Rol } from "./Enums"
-import type { Taller } from "./Taller"
+import { Rol } from './Enums';
+import type { Taller } from './Taller';
 
 interface BaseUser {
-    id: string,
-    name: string,
-    last_name: string,
-    mail: string,
+  id: string;
+  name: string;
+  last_name: string;
+  mail: string;
 }
 
 type Cliente = BaseUser & {
-    rol: Rol.Cliente
-}
+  rol: Rol.Cliente;
+};
 
 type Empleado = BaseUser & {
-    rol: Rol.Empleado,
-    taller: Taller,
-}
+  rol: Rol.Empleado;
+  taller: Taller;
+};
 
 type Admin = BaseUser & {
-    rol: Rol.Admin,
-    taller: Taller
-}
+  rol: Rol.Admin;
+  taller: Taller;
+};
 
-type User = Cliente | Empleado | Admin
+type User = Cliente | Empleado | Admin;
 
-export {
-    Rol,
-    User,
-    Cliente,
-    Empleado,
-    Admin
-}
+export { Rol, User, Cliente, Empleado, Admin };
