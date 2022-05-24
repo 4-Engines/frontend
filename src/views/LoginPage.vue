@@ -53,7 +53,6 @@
         <v-dialog v-model="showDialog">
           <template #activator="{ props }">
             <a
-              v-if="!loading"
               href="#"
               class="white--text"
               v-bind="props"
