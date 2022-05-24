@@ -4,7 +4,7 @@ async function loginUser(data: {
     username: string;
     password: string;
 }): Promise<void> {
-    return axios.post("/login", data);
+    return axios.post("/login", data)
 }
 
 async function createUser(data: {
@@ -21,6 +21,8 @@ async function createUser(data: {
     })
 }
 
-async function logoutUser(): Promise<void> { }
+async function logoutUser(): Promise<void> {
+    return axios.get("/logout")
+}
 
 export { loginUser, createUser, logoutUser };

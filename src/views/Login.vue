@@ -16,7 +16,7 @@
           autocomplete="off"
           hide-details="auto"
           :error="errorMessage.length > 0"
-          v-model="user"
+          v-model="form.username"
           variant="outlined"
           :disabled="loading"
         />
@@ -28,7 +28,7 @@
           hide-details="auto"
           :error="errorMessage.length > 0"
           :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          v-model="pass"
+          v-model="form.password"
           @click:append-inner="showPassword = !showPassword"
           variant="outlined"
           :disabled="loading"
@@ -41,7 +41,7 @@
           block
           size="x-large"
           @click="login"
-          >Ingresar</v-btn
+          >{{ loading ? "Ingresando al sistema..." : "Ingresar" }}</v-btn
         >
       </div>
 
@@ -49,6 +49,7 @@
         <v-dialog v-model="showDialog">
           <template #activator="{ props }">
             <a
+              v-if="!loading"
               href="#"
               class="white--text"
               v-bind="props"
@@ -102,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "@/store";
 import { loginUser } from "@/services/User.service";
@@ -111,8 +112,6 @@ const store = useStore();
 const router = useRouter();
 
 const errorMessage = ref("");
-const user = ref("");
-const pass = ref("");
 const showPassword = ref(false);
 const recuperarMail = ref("");
 const snackbar = ref(false);
@@ -120,29 +119,30 @@ const loginErrorSnackbar = ref(false);
 const showDialog = ref(false);
 const loading = ref(false);
 
+const form = reactive({
+  username: '',
+  password: ''
+})
+
 async function login() {
   loginErrorSnackbar.value = false;
   loading.value = true;
 
   try {
-    // const response = await loginUser({
-    //   username: user.value,
-    //   password: pass.value
-    // });
-
-    // console.log(response);
+    /* const response = await loginUser(form);
+    console.log(response); */
 
     store.$patch({
       isLoggedIn: true,
       user: {
-        name: 'Roberto',
-        last_name: 'Juarroz',
+        name: "Roberto",
+        last_name: "Juarroz",
         rol: 1,
-        mail: 'rjuarroz@gmail.com'
-      }
-    })
+        mail: "rjuarroz@gmail.com",
+      },
+    });
 
-    router.replace('/home')
+    router.replace("/home");
   } catch (error) {
     loginErrorSnackbar.value = true;
   } finally {
