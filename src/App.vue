@@ -129,15 +129,15 @@ const menuComputed = computed(() => {
     {
       title: 'Inicio',
       to: '/home',
-      icon: 'mdi-home'
-    }
+      icon: 'mdi-home',
+    },
   ];
 
   if (store.isCliente) {
     menu.push({
       title: 'Mis autos',
       to: '/mis-autos',
-      icon: 'mdi-car'
+      icon: 'mdi-car',
     });
   }
 
@@ -145,13 +145,13 @@ const menuComputed = computed(() => {
     menu.push({
       title: 'Autos',
       to: '/autos',
-      icon: 'mdi-car'
+      icon: 'mdi-car',
     });
 
     menu.push({
       title: 'Nuevo cliente',
       to: '/registro',
-      icon: 'mdi-account'
+      icon: 'mdi-account',
     });
   }
 
@@ -159,7 +159,7 @@ const menuComputed = computed(() => {
     menu.push({
       title: 'Nuevo empleado',
       to: '/nuevo-empleado',
-      icon: 'mdi-account'
+      icon: 'mdi-account',
     });
   }
 
@@ -183,8 +183,8 @@ function logout() {
     user: {
       name: '',
       mail: '',
-      rol: -1
-    }
+      rol: -1,
+    },
   });
 
   drawer.value = false;

@@ -8,7 +8,7 @@ export const useStore = defineStore('main', {
   state: () => ({
     theme: 'light' as Theme,
     isLoggedIn: false,
-    user: null as User | null
+    user: null as User | null,
   }),
   getters: {
     isCliente: (state) => state.user?.rol === Rol.Cliente,
@@ -28,7 +28,7 @@ export const useStore = defineStore('main', {
       }
 
       return '';
-    }
+    },
   },
-  persist: true
+  persist: true,
 });

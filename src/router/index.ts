@@ -14,37 +14,37 @@ const routes: RouteRecordRaw[] = [
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
   {
     path: '/',
-    component: Login
+    component: Login,
   },
   {
     path: '/home',
-    component: Home
+    component: Home,
   },
   {
     path: '/mis-autos',
-    component: Autos
+    component: Autos,
   },
   {
     path: '/autos',
-    component: Autos
+    component: Autos,
   },
   {
     path: '/autos/:id',
-    component: Auto
+    component: Auto,
   },
   {
     path: '/confirm/:id',
-    component: ActivarCuenta
+    component: ActivarCuenta,
   },
   {
     path: '/registro',
-    component: RegistroCliente
-  }
+    component: RegistroCliente,
+  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
 });
 
 router.beforeEach((to, from) => {

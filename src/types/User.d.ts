@@ -4,8 +4,10 @@ import type { Taller } from './Taller';
 interface BaseUser {
   id: string;
   name: string;
-  last_name: string;
+  lastname: string;
   mail: string;
+  username: string;
+  phone: number;
 }
 
 type Cliente = BaseUser & {

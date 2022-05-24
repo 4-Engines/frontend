@@ -3,22 +3,47 @@
     <v-col sm="8" md="6">
       <v-card class="mt-4 mb-2">
         <v-card-title>Nuevo cliente</v-card-title>
-        <v-card-subtitle
+        <v-card-subtitle v-if="!store.isLoggedIn"
           >Si ya estás registrado hace click&nbsp;<router-link to="/login"
             >acá</router-link
-          >&nbsp;para iniciar sesión</v-card-subtitle
+          >&nbsp;para iniciar sesión.</v-card-subtitle
         >
         <form name="registro-form" @submit.prevent>
           <v-card-text>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  v-model="form.name"
+                  autofocus
+                  label="Nombre"
+                  autocomplete="off"
+                  hide-details="auto"
+                  variant="outlined"
+                  :rules="[rules.required]"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  v-model="form.lastname"
+                  label="Apellido"
+                  autocomplete="off"
+                  hide-details="auto"
+                  variant="outlined"
+                  :rules="[rules.required]"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
             <v-text-field
               v-model="form.email"
+              class="mt-4"
               label="Mail"
-              autofocus
               autocomplete="off"
               hide-details="auto"
               type="email"
               variant="outlined"
               required
+              :rules="[rules.required, rules.email]"
             ></v-text-field>
 
             <v-text-field
@@ -28,42 +53,31 @@
               autocomplete="off"
               hide-details="auto"
               variant="outlined"
+              :rules="[rules.required]"
             ></v-text-field>
 
             <v-text-field
               v-model="form.password"
-              class="mt-4"
+              class="password-input mt-4"
               label="Contraseña"
               :type="showPassword ? 'text' : 'password'"
               hide-details="auto"
-              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               variant="outlined"
-              @click:append="showPassword = !showPassword"
-            ></v-text-field>
+              @click:append-inner="showPassword = !showPassword"
+              :rules="[rules.required]"
+            />
 
             <v-text-field
-              v-model="form.name"
+              v-model="repeatPassword"
               class="mt-4"
-              label="Nombre"
-              autocomplete="off"
+              label="Repetir contraseña"
+              :type="showPassword ? 'text' : 'password'"
               hide-details="auto"
               variant="outlined"
+              :rules="[rules.required]"
             ></v-text-field>
 
-            <v-text-field
-              v-model="form.lastname"
-              class="mt-4"
-              label="Apellido"
-              autocomplete="off"
-              hide-details="auto"
-              variant="outlined"
-            ></v-text-field>
-          </v-card-text>
-
-          <v-divider />
-
-          <v-card-text>
-            <!-- <a href="#">Ver términos y condiciones</a> -->
             <v-switch
               v-model="aceptoTerminos"
               color="primary"
@@ -79,8 +93,12 @@
             </v-switch>
           </v-card-text>
 
+          <v-divider />
+
           <v-card-actions>
-            <v-btn type="submit" color="primary" dark @click="handleSubmit">
+            <v-btn to="/" color="dark">Cancelar</v-btn>
+            <v-spacer />
+            <v-btn type="submit" color="primary" @click="handleSubmit">
               Registrate
             </v-btn>
 
@@ -117,7 +135,10 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
-// import { createUser } from '@/services/User.service';
+import { useStore } from '@/store';
+import { createUser } from '@/services/User.service';
+
+const store = useStore();
 
 const form = reactive({
   username: '',
@@ -125,15 +146,25 @@ const form = reactive({
   lastname: '',
   name: '',
   phone: '',
-  email: ''
+  email: '',
 });
 const showPassword = ref(false);
+const repeatPassword = ref('');
 const aceptoTerminos = ref(false);
 const dialog = ref(false);
+const rules = {
+  required: (value: string) => !!value || 'Campo requerido',
+  email: (value: string) => {
+    const pattern =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return pattern.test(value) || 'Dirección de mail inválida';
+  },
+};
 
 async function handleSubmit() {
-  /* try {
-    const response = await createUser(form);
-  } catch (error) {} */
+  try {
+    const { data } = await createUser(form);
+    console.log(data[0].msj);
+  } catch (error) {}
 }
 </script>

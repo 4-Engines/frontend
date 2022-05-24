@@ -1,3 +1,11 @@
 .v-theme--dark a {
-  color: #eee;
+  color: #EEE;
+}
+
+.v-theme--dark .v-snackbar__content {
+  color: #FFF;
+}
+
+.password-input .mdi {
+  cursor: pointer;
 }

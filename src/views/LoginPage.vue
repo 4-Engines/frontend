@@ -45,7 +45,7 @@
         >
       </div>
 
-      <div class="text-center">
+      <div v-if="!loading" class="text-center">
         ¿No tenés cuenta? <router-link to="/registro">Registrate</router-link>
       </div>
 
@@ -53,6 +53,7 @@
         <v-dialog v-model="showDialog">
           <template #activator="{ props }">
             <a
+              v-if="!loading"
               href="#"
               class="white--text"
               v-bind="props"
@@ -106,13 +107,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
-// import { useRouter } from 'vue-router';
+import { onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { loginUser } from '@/services/User.service';
 
 const store = useStore();
-// const router = useRouter();
+const router = useRouter();
 
 const errorMessage = ref('');
 const showPassword = ref(false);
@@ -124,7 +125,13 @@ const loading = ref(false);
 
 const form = reactive({
   username: '',
-  password: ''
+  password: '',
+});
+
+onMounted(() => {
+  if (store.isLoggedIn) {
+    router.replace('/home');
+  }
 });
 
 async function login() {
@@ -132,20 +139,24 @@ async function login() {
   loading.value = true;
 
   try {
-    const response = await loginUser(form);
-    console.log(response);
+    const {
+      data: [user],
+    } = await loginUser(form);
 
-    /* store.$patch({
+    store.$patch({
       isLoggedIn: true,
       user: {
-        name: "Roberto",
-        last_name: "Juarroz",
-        rol: 1,
-        mail: "rjuarroz@gmail.com",
+        name: 'Roberto',
+        lastname: 'Juarroz',
+        rol: user.rol,
+        mail: 'rjuarroz@gmail.com',
+        id: '456987',
+        phone: 111654968,
+        username: 'rjuarroz',
       },
     });
 
-    router.replace("/home"); */
+    router.replace('/home');
   } catch (error) {
     loginErrorSnackbar.value = true;
   } finally {
@@ -153,9 +164,3 @@ async function login() {
   }
 }
 </script>
-
-<style>
-.password-input .mdi {
-  cursor: pointer;
-}
-</style>
