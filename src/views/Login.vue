@@ -129,10 +129,10 @@ async function login() {
   loading.value = true;
 
   try {
-    /* const response = await loginUser(form);
-    console.log(response); */
+    const response = await loginUser(form);
+    console.log(response);
 
-    store.$patch({
+    /* store.$patch({
       isLoggedIn: true,
       user: {
         name: "Roberto",
@@ -142,7 +142,7 @@ async function login() {
       },
     });
 
-    router.replace("/home");
+    router.replace("/home"); */
   } catch (error) {
     loginErrorSnackbar.value = true;
   } finally {

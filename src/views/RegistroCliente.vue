@@ -1,5 +1,5 @@
 <template>
-  <h2>Registro</h2>
+  <h2>Nuevo cliente</h2>
 </template>
 
 <script lang="ts" setup>

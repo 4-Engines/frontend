@@ -21,6 +21,10 @@ const routes: RouteRecordRaw[] = [
         component: Home
     },
     {
+        path: '/mis-autos',
+        component: Autos
+    },
+    {
         path: '/autos',
         component: Autos
     },
@@ -29,7 +33,7 @@ const routes: RouteRecordRaw[] = [
         component: Auto
     },
     {
-        path: '/activar-cuenta/:id',
+        path: '/confirm/:id',
         component: ActivarCuenta
     },
     {

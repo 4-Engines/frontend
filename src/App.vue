@@ -125,12 +125,37 @@ const menuComputed = computed(() => {
       to: "/home",
       icon: "mdi-home",
     },
-    {
+  ];
+
+  if (store.isCliente) {
+    menu.push({
+      title: "Mis autos",
+      to: "/mis-autos",
+      icon: "mdi-car"
+    })
+  }
+
+  if (store.isEmpleado) {
+    menu.push({
       title: "Autos",
       to: "/autos",
       icon: "mdi-car",
-    },
-  ];
+    },)
+
+    menu.push({
+      title: "Nuevo cliente",
+      to: "/registro",
+      icon: "mdi-account"
+    })
+  }
+
+  if (store.isAdmin) {
+    menu.push({
+      title: "Nuevo empleado",
+      to: "/nuevo-empleado",
+      icon: "mdi-account",
+    })
+  }
 
   return menu;
 });
