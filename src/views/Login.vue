@@ -46,6 +46,10 @@
       </div>
 
       <div class="text-center">
+        ¿No tenés cuenta? <router-link to="/registro">Registrate</router-link>
+      </div>
+
+      <div class="text-center">
         <v-dialog v-model="showDialog">
           <template #activator="{ props }">
             <a

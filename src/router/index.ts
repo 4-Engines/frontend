@@ -50,7 +50,7 @@ const router = createRouter({
 router.beforeEach((to, from) => {
     const store = useStore();
 
-    if (to.path !== '/' && !store.isLoggedIn) {
+    if (to.path !== '/' && to.path !== '/registro' && !store.isLoggedIn) {
         return '/'
     }
 })

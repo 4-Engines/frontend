@@ -1,51 +1,58 @@
 <template>
-  <h2>Nuevo cliente</h2>
-  
     <v-row justify="center">
       <v-col sm="8" md="6">
         <v-card class="mt-4 mb-2">
-          <v-card-title>Registro</v-card-title>
-          <v-card-subtitle>Si ya estás registrado hace click <router-link to="/login">acá</router-link> para iniciar sesión</v-card-subtitle>
+          <v-card-title>Nuevo cliente</v-card-title>
+          <v-card-subtitle>Si ya estás registrado hace click&nbsp;<router-link to="/login">acá</router-link>&nbsp;para iniciar sesión</v-card-subtitle>
           <form name="registro-form" @submit.prevent>
             <v-card-text>
               <v-text-field
                 label="Mail"
+                autofocus
                 autocomplete="off"
                 hide-details="auto"
                 v-model="form.email"
                 type="email"
+                variant="outlined"
                 required
               ></v-text-field>
 
               <v-text-field
+                class="mt-4"
                 label="Usuario"
                 autocomplete="off"
                 hide-details="auto"
                 v-model="form.username"
+                variant="outlined"
               ></v-text-field>
 
               <v-text-field
-                class="mt-2"
+                class="mt-4"
                 label="Contraseña"
                 :type="showPassword ? 'text' : 'password'"
                 hide-details="auto"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 v-model="form.password"
+                variant="outlined"
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
 
               <v-text-field
+                class="mt-4"
                 label="Nombre"
                 autocomplete="off"
                 hide-details="auto"
                 v-model="form.name"
+                variant="outlined"
               ></v-text-field>
 
               <v-text-field
+                class="mt-4"
                 label="Apellido"
                 autocomplete="off"
                 hide-details="auto"
                 v-model="form.lastname"
+                variant="outlined"
               ></v-text-field>
             </v-card-text>
 
@@ -54,14 +61,16 @@
 
             <v-card-text>
               <!-- <a href="#">Ver términos y condiciones</a> -->
-              <v-checkbox
+              <v-switch
+                color="primary"
                 v-model="aceptoTerminos"
                 label="Acepto términos y condiciones"
+                hide-details
               >
                 <template #label>
                   <div>He leído y aceptado los <a href="#" @click.stop>términos y condiciones</a></div>
                 </template>
-              </v-checkbox>
+              </v-switch>
             </v-card-text>
 
             <v-card-actions>
@@ -77,7 +86,7 @@
                   <v-card-text
                     ><p>
                       Te enviamos un mail a
-                      <strong>{{ form.mail }}</strong> para que continues con el
+                      <strong>{{ form.email }}</strong> para que continues con el
                       registro.
                     </p>
                     <p>
@@ -101,7 +110,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { createUser } from "@/services/User.service";
 
 const form = reactive({
@@ -113,8 +122,10 @@ const form = reactive({
   email: "",
 });
 const showPassword = ref(false);
+const aceptoTerminos = ref(false);
+const dialog = ref(false);
 
-async function register() {
+async function handleSubmit() {
   try {
     const response = await createUser(form);
   } catch (error) {}
