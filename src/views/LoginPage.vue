@@ -6,7 +6,7 @@
         <div class="font-weight-bold">Sistema de gestión del automotor</div>
       </div>
       <div class="mt-10 mb-2">
-        <v-alert v-if="errorMessage.length > 0" type="error">
+        <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
           {{ errorMessage }}
         </v-alert>
 
@@ -50,7 +50,7 @@
         ¿No tenés cuenta? <router-link to="/registro"> Registrate </router-link>
       </div>
 
-      <div class="text-center">
+      <!-- <div class="text-center">
         <v-dialog v-model="showDialog">
           <template #activator="{ props }">
             <a
@@ -95,17 +95,13 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-      </div>
+      </div> -->
     </v-col>
   </v-row>
 
-  <v-snackbar v-model="snackbar" timeout="2000" bottom left>
+  <!-- <v-snackbar v-model="snackbar" timeout="2000" bottom left>
     ¡Se envió un mail a tu casilla de correo!
-  </v-snackbar>
-
-  <v-snackbar v-model="loginErrorSnackbar" timeout="2000" bottom left>
-    Ocurrió un error al intentar ingresar al sistema
-  </v-snackbar>
+  </v-snackbar> -->
 </template>
 
 <script setup lang="ts">
@@ -119,10 +115,9 @@ const router = useRouter();
 
 const errorMessage = ref('');
 const showPassword = ref(false);
-const recuperarMail = ref('');
-const snackbar = ref(false);
-const loginErrorSnackbar = ref(false);
-const showDialog = ref(false);
+// const recuperarMail = ref('');
+// const snackbar = ref(false);
+// const showDialog = ref(false);
 const loading = ref(false);
 
 const form = reactive({
@@ -137,30 +132,34 @@ onMounted(() => {
 });
 
 async function login() {
-  loginErrorSnackbar.value = false;
   loading.value = true;
+  errorMessage.value = '';
 
   try {
-    const {
-      data: [user],
-    } = await loginUser(form);
+    if (form.username === '') {
+      throw Error('El campo Usuario no puede estar vacío');
+    }
+
+    if (form.password === '') {
+      throw Error('El campo Contraseña no puede estar vacío');
+    }
+
+    const { data } = await loginUser(form);
+
+    if (data[0].status === 'error') {
+      throw Error(
+        data[0].msj || 'Ocurrió un error al intentar ingresar al sistema'
+      );
+    }
 
     store.$patch({
       isLoggedIn: true,
-      user: {
-        name: 'Roberto',
-        lastname: 'Juarroz',
-        rol: user.rol,
-        mail: 'rjuarroz@gmail.com',
-        id: '456987',
-        phone: 111654968,
-        username: 'rjuarroz',
-      },
+      user: data[0].user,
     });
 
     router.replace('/home');
-  } catch (error) {
-    loginErrorSnackbar.value = true;
+  } catch (error: any) {
+    errorMessage.value = error.message;
   } finally {
     loading.value = false;
   }

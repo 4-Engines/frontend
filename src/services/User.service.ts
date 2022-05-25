@@ -1,9 +1,10 @@
 import { axios } from '@/plugins/axios';
+import { User } from '@/types/User';
 import { AxiosResponse } from 'axios';
 
 type DefaultResponse = [
   {
-    msj: string;
+    message: string;
     status: string;
   },
   number
@@ -12,8 +13,8 @@ type DefaultResponse = [
 type LoginResponse = [
   {
     msj: string;
-    rol: number;
     status: string;
+    user: User;
   },
   number
 ];
@@ -43,7 +44,7 @@ async function logoutUser(): Promise<void> {
   return axios.get('/logout');
 }
 
-async function confirmUser(id: string): Promise<void> {
+async function confirmUser(id: string): Promise<AxiosResponse<DefaultResponse>> {
   return axios.get(`/confirm/${id}`);
 }
 

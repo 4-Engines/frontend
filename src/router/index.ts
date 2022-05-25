@@ -33,7 +33,7 @@ const routes: RouteRecordRaw[] = [
     component: Auto,
   },
   {
-    path: '/confirm/:id',
+    path: '/activar/:id',
     component: ActivarCuenta,
   },
   {
@@ -47,10 +47,10 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   const store = useStore();
 
-  if (to.path !== '/' && to.path !== '/registro' && !store.isLoggedIn) {
+  if (to.path !== '/' && to.path !== '/registro' && to.path.indexOf("/activar") < 0 && !store.isLoggedIn) {
     return '/';
   }
 });

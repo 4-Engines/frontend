@@ -9,3 +9,11 @@
 .password-input .mdi {
   cursor: pointer;
 }
+
+.v-switch .v-label {
+  white-space: unset;
+}
+
+.v-card-subtitle {
+  display: block;
+}
