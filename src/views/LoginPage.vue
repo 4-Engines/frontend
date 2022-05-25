@@ -6,9 +6,9 @@
         <div class="font-weight-bold">Sistema de gestión del automotor</div>
       </div>
       <div class="mt-10 mb-2">
-        <v-alert v-if="errorMessage.length > 0" type="error">{{
-          errorMessage
-        }}</v-alert>
+        <v-alert v-if="errorMessage.length > 0" type="error">
+          {{ errorMessage }}
+        </v-alert>
 
         <v-text-field
           v-model="form.username"
@@ -41,12 +41,13 @@
           block
           size="x-large"
           @click="login"
-          >{{ loading ? 'Ingresando al sistema...' : 'Ingresar' }}</v-btn
         >
+          {{ loading ? 'Ingresando al sistema...' : 'Ingresar' }}
+        </v-btn>
       </div>
 
       <div v-if="!loading" class="text-center">
-        ¿No tenés cuenta? <router-link to="/registro">Registrate</router-link>
+        ¿No tenés cuenta? <router-link to="/registro"> Registrate </router-link>
       </div>
 
       <div class="text-center">
@@ -74,13 +75,13 @@
                 type="mail"
                 autofocus
                 variant="outlined"
-              ></v-text-field>
+              />
             </v-card-text>
 
             <v-card-actions class="justify-end flex-column-reverse flex-sm-row">
-              <v-btn text class="mt-3 mt-sm-0" @click="showDialog = false"
-                >Cancelar</v-btn
-              >
+              <v-btn text class="mt-3 mt-sm-0" @click="showDialog = false">
+                Cancelar
+              </v-btn>
 
               <v-btn
                 color="primary"
@@ -88,14 +89,15 @@
                   showDialog = false;
                   snackbar = true;
                 "
-                >Recuperar contraseña</v-btn
               >
+                Recuperar contraseña
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </div>
-    </v-col></v-row
-  >
+    </v-col>
+  </v-row>
 
   <v-snackbar v-model="snackbar" timeout="2000" bottom left>
     ¡Se envió un mail a tu casilla de correo!

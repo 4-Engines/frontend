@@ -9,7 +9,7 @@
     "dev": "vite",
     "preview": "vite preview",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
-    "format": "prettier src  --write"
+    "format": "prettier src --write"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
@@ -23,9 +23,12 @@
     "webfontloader": "^1.0.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.18.2",
     "@types/webfontloader": "^1.0.0",
+    "@typescript-eslint/parser": "^5.26.0",
     "@vitejs/plugin-vue": "^2.3.3",
     "@vuetify/vite-plugin": "^1.0.0-alpha.0",
+    "babel-eslint": "^10.1.0",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-vue": "^9.0.1",
@@ -36,6 +39,7 @@
     "vite": "^2.9.9",
     "vite-plugin-pwa": "^0.12.0",
     "vue-cli-plugin-vuetify": "~2.4.8",
+    "vue-eslint-parser": "^9.0.2",
     "vue-tsc": "^0.34.7",
     "vuetify-loader": "^2.0.0-alpha.0",
     "workbox-precaching": "^6.5.3"

@@ -6,7 +6,7 @@
       <v-list>
         <v-list-item v-if="store.user" :subtitle="store.rolLabel">
           <template #title>
-            {{ store.user.name }} {{ store.user.last_name }}
+            {{ store.user.name }} {{ store.user.lastname }}
           </template>
           <template #prepend>
             <v-list-item-avatar start>
@@ -119,7 +119,7 @@ const avatarLabel = computed(() => {
     return '';
   }
 
-  return `${store.user.name.charAt(0)}${store.user.last_name.charAt(0)}`;
+  return `${store.user.name.charAt(0)}${store.user.lastname.charAt(0)}`;
 });
 
 const isLightTheme = computed(() => store.theme === 'light');

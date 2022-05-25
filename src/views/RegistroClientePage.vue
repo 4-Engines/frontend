@@ -35,18 +35,6 @@
             </v-row>
 
             <v-text-field
-              v-model="form.email"
-              class="mt-4"
-              label="Mail"
-              autocomplete="off"
-              hide-details="auto"
-              type="email"
-              variant="outlined"
-              required
-              :rules="[rules.required, rules.email]"
-            ></v-text-field>
-
-            <v-text-field
               v-model="form.username"
               class="mt-4"
               label="Usuario"
@@ -57,6 +45,17 @@
             ></v-text-field>
 
             <v-text-field
+              v-model="form.email"
+              class="mt-4"
+              label="Mail"
+              autocomplete="off"
+              hide-details="auto"
+              type="email"
+              variant="outlined"
+              :rules="[rules.required, rules.email]"
+            ></v-text-field>
+
+            <v-text-field
               v-model="form.password"
               class="password-input mt-4"
               label="Contraseña"
@@ -64,8 +63,8 @@
               hide-details="auto"
               :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               variant="outlined"
-              @click:append-inner="showPassword = !showPassword"
               :rules="[rules.required]"
+              @click:append-inner="showPassword = !showPassword"
             />
 
             <v-text-field
@@ -75,7 +74,7 @@
               :type="showPassword ? 'text' : 'password'"
               hide-details="auto"
               variant="outlined"
-              :rules="[rules.required]"
+              :rules="[rules.required, rules.sameAsPassword]"
             ></v-text-field>
 
             <v-switch
@@ -159,12 +158,16 @@ const rules = {
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return pattern.test(value) || 'Dirección de mail inválida';
   },
+  sameAsPassword: (value: string) =>
+    value === form.password || 'Las contraseñas ingresadas no coinciden',
 };
 
 async function handleSubmit() {
   try {
     const { data } = await createUser(form);
     console.log(data[0].msj);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 }
 </script>

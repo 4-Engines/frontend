@@ -1,15 +1,21 @@
 module.exports = {
-  parser: 'babel-eslint',
+  parser: 'vue-eslint-parser',
   env: {
     node: true,
+  },
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+    requireConfigFile: false,
+    ecmaVersion: 2020,
+    sourceType: 'module',
   },
   extends: [
     // add more generic rulesets here, such as:
     'eslint:recommended',
     'plugin:vue/vue3-recommended',
+    'plugin:vue/vue3-essential', // This option doesn't impose formatting rules
+    'plugin:vue/vue3-strongly-recommended', // This option imposes formatting rules on your code to improve readability
     'prettier',
-    // 'plugin:vue/vue3-essential', // This option doesn't impose formatting rules
-    // 'plugin:vue/vue3-strongly-recommended', // This option imposes formatting rules on your code to improve readability
   ],
   rules: {
     // override/add rules settings here, such as:
