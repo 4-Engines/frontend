@@ -73,6 +73,17 @@
               ></v-text-field>
 
               <v-text-field
+                v-model.number="form.phone"
+                class="mt-4"
+                label="Teléfono"
+                autocomplete="off"
+                hide-details="auto"
+                type="text"
+                variant="outlined"
+                :rules="[rules.required, rules.onlyNumbers]"
+              ></v-text-field>
+
+              <v-text-field
                 v-model="form.password"
                 class="password-input mt-4"
                 label="Contraseña"
@@ -181,6 +192,8 @@ const rules = {
   },
   sameAsPassword: (value: string) =>
     value === form.password || 'Las contraseñas ingresadas no coinciden',
+  onlyNumbers: (value: string | number) =>
+    /^\d+$/.test(value.toString()) || 'Solo se admiten números',
 };
 
 async function handleSubmit() {
@@ -191,11 +204,10 @@ async function handleSubmit() {
     if (data[1] === 200) {
       userCreated.value = true;
     } else {
-      errorMessage.value = 'Ocurrió un error al ingresar';
+      throw Error(data[0].msj || 'Ocurrió un error al ingresar');
     }
-  } catch (error) {
-    console.log(error);
-    errorMessage.value = 'Ocurrió un error al ingresar';
+  } catch (error: any) {
+    errorMessage.value = error.message;
   } finally {
     loading.value = false;
   }

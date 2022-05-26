@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 
 type DefaultResponse = [
   {
-    message: string;
+    msj: string;
     status: string;
   },
   number
