@@ -201,8 +201,10 @@ async function handleSubmit() {
   loading.value = true;
   try {
     const { data } = await createUser(form);
+
     if (data[1] === 200) {
       userCreated.value = true;
+      console.log(data[0].id);
     } else {
       throw Error(data[0].msj || 'Ocurrió un error al ingresar');
     }

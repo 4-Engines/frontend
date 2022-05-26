@@ -1,6 +1,6 @@
 import { axios } from '@/plugins/axios';
 import type { AxiosResponse } from 'axios';
-import type { DefaultResponse, LoginResponse } from '@/types/Response';
+import type { CreateUserResponse, DefaultResponse, LoginResponse } from '@/types/Response';
 
 async function loginUser(data: {
   username: string;
@@ -16,7 +16,7 @@ async function createUser(data: {
   lastname: string;
   phone: string;
   email: string;
-}): Promise<AxiosResponse<DefaultResponse>> {
+}): Promise<AxiosResponse<CreateUserResponse>> {
   return axios.post('/create-user', data);
 }
 

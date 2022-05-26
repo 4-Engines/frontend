@@ -1,23 +1,23 @@
 import { User } from "./User";
 
-type DefaultResponse = [
+type DefaultResponse<T = {}> = [
     {
         msj: string;
         status: string;
-    },
+    } & T,
     number
 ];
 
-type LoginResponse = [
-    {
-        msj: string;
-        status: string;
-        user: User;
-    },
-    number
-];
+type LoginResponse = DefaultResponse<{
+    user: User;
+}>;
+
+type CreateUserResponse = DefaultResponse<{
+    id: string
+}>
 
 export {
     DefaultResponse,
-    LoginResponse
+    LoginResponse,
+    CreateUserResponse,
 }
