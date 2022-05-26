@@ -18,7 +18,8 @@
                 primero.
               </p>
               <p>
-                Te enviamos un mail a {{ form.email }} para que puedas hacerlo.
+                Te enviamos un mail a <strong>{{ form.email }}</strong> para que
+                puedas hacerlo.
               </p>
             </v-alert>
           </v-card-text>
@@ -133,7 +134,6 @@
 
             <v-card-actions>
               <v-btn to="/" color="dark" :disabled="loading">Cancelar</v-btn>
-              <v-spacer />
               <v-btn
                 :disabled="loading"
                 type="submit"

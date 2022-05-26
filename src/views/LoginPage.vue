@@ -15,7 +15,6 @@
             v-model="form.username"
             label="Usuario o dirección de mail"
             autofocus
-            autocomplete="off"
             hide-details="auto"
             :error="errorMessage.length > 0"
             variant="outlined"
@@ -27,6 +26,7 @@
             class="password-input mt-4"
             label="Contraseña"
             :type="showPassword ? 'text' : 'password'"
+            autocomplete="off"
             hide-details="auto"
             :error="errorMessage.length > 0"
             :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -148,6 +148,12 @@ async function login() {
     }
 
     const { data } = await loginUser(form);
+
+    // @ts-ignore
+    if (data.error) {
+      // @ts-ignore
+      throw Error(data.error);
+    }
 
     if (data[0].status === 'error') {
       throw Error(
