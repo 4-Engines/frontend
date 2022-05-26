@@ -14,7 +14,7 @@
     </v-alert>
     <v-row>
       <v-col sm="2">
-        <v-btn color="primary" block>Ingresar</v-btn>
+        <v-btn color="primary" block to="/">Ingresar</v-btn>
       </v-col>
     </v-row>
   </template>
@@ -47,7 +47,7 @@ onMounted(async () => {
 
     if (data[0].status === 'error') {
       throw Error(
-        data[0].message || 'Ocurrió un error al intentar activar la cuenta'
+        data[0].msj || 'Ocurrió un error al intentar activar la cuenta'
       );
     }
 

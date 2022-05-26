@@ -7,7 +7,7 @@ interface BaseUser {
   lastname: string;
   mail: string;
   username: string;
-  phone: number;
+  phone: string;
 }
 
 type Cliente = BaseUser & {

@@ -7,6 +7,7 @@ import NotFound from '@/views/NotFoundPage.vue';
 import Autos from '@/views/AutosPage.vue';
 import Auto from '@/views/AutoPage.vue';
 import Home from '@/views/HomePage.vue';
+import MisDatos from '@/views/MisDatosPage.vue';
 import ActivarCuenta from '@/views/ActivarCuentaPage.vue';
 import RegistroCliente from '@/views/RegistroClientePage.vue';
 
@@ -23,6 +24,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/mis-autos',
     component: Autos,
+  },
+  {
+    path: '/mis-datos',
+    component: MisDatos,
   },
   {
     path: '/autos',

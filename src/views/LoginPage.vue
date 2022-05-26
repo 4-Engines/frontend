@@ -6,44 +6,47 @@
         <div class="font-weight-bold">Sistema de gestión del automotor</div>
       </div>
       <div class="mt-10 mb-2">
-        <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
-          {{ errorMessage }}
-        </v-alert>
+        <form @submit.prevent>
+          <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
+            {{ errorMessage }}
+          </v-alert>
 
-        <v-text-field
-          v-model="form.username"
-          label="Usuario"
-          autofocus
-          autocomplete="off"
-          hide-details="auto"
-          :error="errorMessage.length > 0"
-          variant="outlined"
-          :disabled="loading"
-        />
+          <v-text-field
+            v-model="form.username"
+            label="Usuario"
+            autofocus
+            autocomplete="off"
+            hide-details="auto"
+            :error="errorMessage.length > 0"
+            variant="outlined"
+            :disabled="loading"
+          />
 
-        <v-text-field
-          v-model="form.password"
-          class="password-input mt-4"
-          label="Contraseña"
-          :type="showPassword ? 'text' : 'password'"
-          hide-details="auto"
-          :error="errorMessage.length > 0"
-          :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          variant="outlined"
-          :disabled="loading"
-          @click:append-inner="showPassword = !showPassword"
-        />
+          <v-text-field
+            v-model="form.password"
+            class="password-input mt-4"
+            label="Contraseña"
+            :type="showPassword ? 'text' : 'password'"
+            hide-details="auto"
+            :error="errorMessage.length > 0"
+            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            variant="outlined"
+            :disabled="loading"
+            @click:append-inner="showPassword = !showPassword"
+          />
 
-        <v-btn
-          :disabled="loading"
-          class="mt-4"
-          color="primary"
-          block
-          size="x-large"
-          @click="login"
-        >
-          {{ loading ? 'Ingresando al sistema...' : 'Ingresar' }}
-        </v-btn>
+          <v-btn
+            :disabled="loading"
+            class="mt-4"
+            color="primary"
+            block
+            size="x-large"
+            type="submit"
+            @click="login"
+          >
+            {{ loading ? 'Ingresando al sistema...' : 'Ingresar' }}
+          </v-btn>
+        </form>
       </div>
 
       <div v-if="!loading" class="text-center">

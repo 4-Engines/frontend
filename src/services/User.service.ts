@@ -20,8 +20,10 @@ async function createUser(data: {
   return axios.post('/create-user', data);
 }
 
-async function logoutUser(): Promise<void> {
-  return axios.get('/logout');
+async function logoutUser(id: string): Promise<AxiosResponse<DefaultResponse>> {
+  return axios.post('/logout', {
+    id
+  });
 }
 
 async function confirmUser(id: string): Promise<AxiosResponse<DefaultResponse>> {

@@ -78,20 +78,29 @@
       </v-container>
     </v-main>
   </v-app>
+
+  <v-overlay
+    :model-value="loading"
+    class="align-center justify-center text-center"
+  >
+    <v-progress-circular indeterminate size="64"></v-progress-circular>
+    <p class="mt-3">Cerrando sesión...</p>
+  </v-overlay>
 </template>
 
 <script lang="ts" setup>
+import { onMounted, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from './store';
-import ReloadPWA from './components/ReloadPWA.vue';
-import { onMounted, ref } from 'vue';
-import { computed } from 'vue';
+import { useStore } from '@/store';
+import ReloadPWA from '@/components/ReloadPWA.vue';
+import { logoutUser } from '@/services/User.service';
 
 const store = useStore();
 const router = useRouter();
 const deferredPrompt = ref();
 const showInstallPromotion = ref(false);
 const drawer = ref(false);
+const loading = ref(false);
 
 onMounted(() => {
   window.addEventListener('beforeinstallprompt', (e) => {
@@ -137,7 +146,7 @@ const menuComputed = computed(() => {
     menu.push({
       title: 'Mis autos',
       to: '/mis-autos',
-      icon: 'mdi-car',
+      icon: 'mdi-car-key',
     });
   }
 
@@ -151,7 +160,7 @@ const menuComputed = computed(() => {
     menu.push({
       title: 'Nuevo cliente',
       to: '/registro',
-      icon: 'mdi-account',
+      icon: 'mdi-person-add',
     });
   }
 
@@ -159,9 +168,15 @@ const menuComputed = computed(() => {
     menu.push({
       title: 'Nuevo empleado',
       to: '/nuevo-empleado',
-      icon: 'mdi-account',
+      icon: 'mdi-account-plus',
     });
   }
+
+  // menu.push({
+  //   title: 'Mis datos',
+  //   to: '/mis-datos',
+  //   icon: 'mdi-account-circle',
+  // });
 
   return menu;
 });
@@ -177,18 +192,30 @@ function toggleTheme() {
     ?.setAttribute('content', isLightTheme.value ? '#124B8D' : '#2A2A2A');
 }
 
-function logout() {
-  store.$patch({
-    isLoggedIn: false,
-    user: {
-      name: '',
-      mail: '',
-      rol: -1,
-    },
-  });
+async function logout() {
+  if (store.user) {
+    loading.value = true;
 
-  drawer.value = false;
+    try {
+      const { data } = await logoutUser(store.user.id);
 
-  router.push('/');
+      if (data[0].status === 'error') {
+        throw Error(data[0].msj || 'Ocurrió un error al cerrar la sesión');
+      }
+
+      store.$patch({
+        isLoggedIn: false,
+        user: null,
+      });
+
+      drawer.value = false;
+
+      router.push('/');
+    } catch (error: any) {
+      console.log(error.message);
+    } finally {
+      loading.value = false;
+    }
+  }
 }
 </script>
