@@ -3,7 +3,7 @@
     <v-col sm="8" md="6">
       <v-card class="mt-4 mb-2">
         <v-card-title>Nuevo cliente</v-card-title>
-        <v-card-subtitle v-if="!store.isLoggedIn"
+        <v-card-subtitle v-if="!store.isLoggedIn && !userCreated"
           >Si ya estás registrado hace click
           <router-link to="/login">acá</router-link> para iniciar
           sesión.</v-card-subtitle
@@ -15,8 +15,10 @@
               <v-divider class="my-2" />
               <p>
                 Para poder operar con nosotros tenés que activar la cuenta
-                primero. Te enviamos un mail a {{ form.email }} para que puedas
-                hacerlo.
+                primero.
+              </p>
+              <p>
+                Te enviamos un mail a {{ form.email }} para que puedas hacerlo.
               </p>
             </v-alert>
           </v-card-text>
@@ -31,6 +33,7 @@
                 <v-col cols="12" md="6">
                   <v-text-field
                     v-model="form.name"
+                    :disabled="loading"
                     autofocus
                     label="Nombre"
                     autocomplete="off"
@@ -42,6 +45,7 @@
                 <v-col cols="12" md="6">
                   <v-text-field
                     v-model="form.lastname"
+                    :disabled="loading"
                     label="Apellido"
                     autocomplete="off"
                     hide-details="auto"
@@ -53,6 +57,7 @@
 
               <v-text-field
                 v-model="form.username"
+                :disabled="loading"
                 class="mt-4"
                 label="Usuario"
                 autocomplete="off"
@@ -63,6 +68,7 @@
 
               <v-text-field
                 v-model="form.email"
+                :disabled="loading"
                 class="mt-4"
                 label="Mail"
                 autocomplete="off"
@@ -74,6 +80,7 @@
 
               <v-text-field
                 v-model.number="form.phone"
+                :disabled="loading"
                 class="mt-4"
                 label="Teléfono"
                 autocomplete="off"
@@ -85,6 +92,7 @@
 
               <v-text-field
                 v-model="form.password"
+                :disabled="loading"
                 class="password-input mt-4"
                 label="Contraseña"
                 :type="showPassword ? 'text' : 'password'"
@@ -97,6 +105,7 @@
 
               <v-text-field
                 v-model="repeatPassword"
+                :disabled="loading"
                 class="mt-4"
                 label="Repetir contraseña"
                 :type="showPassword ? 'text' : 'password'"
@@ -123,9 +132,14 @@
             <v-divider />
 
             <v-card-actions>
-              <v-btn to="/" color="dark">Cancelar</v-btn>
+              <v-btn to="/" color="dark" :disabled="loading">Cancelar</v-btn>
               <v-spacer />
-              <v-btn type="submit" color="primary" @click="handleSubmit">
+              <v-btn
+                :disabled="loading"
+                type="submit"
+                color="primary"
+                @click="handleSubmit"
+              >
                 Registrate
               </v-btn>
 
@@ -159,6 +173,14 @@
       </v-card>
     </v-col>
   </v-row>
+
+  <v-overlay
+    :model-value="loading"
+    class="align-center justify-center text-center"
+  >
+    <v-progress-circular indeterminate size="64"></v-progress-circular>
+    <p class="mt-3">Registrando usuario...</p>
+  </v-overlay>
 </template>
 
 <script lang="ts" setup>
