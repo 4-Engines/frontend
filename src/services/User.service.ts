@@ -1,23 +1,6 @@
 import { axios } from '@/plugins/axios';
-import { User } from '@/types/User';
-import { AxiosResponse } from 'axios';
-
-type DefaultResponse = [
-  {
-    msj: string;
-    status: string;
-  },
-  number
-];
-
-type LoginResponse = [
-  {
-    msj: string;
-    status: string;
-    user: User;
-  },
-  number
-];
+import type { AxiosResponse } from 'axios';
+import type { DefaultResponse, LoginResponse } from '@/types/Response';
 
 async function loginUser(data: {
   username: string;
@@ -34,10 +17,7 @@ async function createUser(data: {
   phone: string;
   email: string;
 }): Promise<AxiosResponse<DefaultResponse>> {
-  return axios.post('/create-user', {
-    ...data,
-    rol: 1,
-  });
+  return axios.post('/create-user', data);
 }
 
 async function logoutUser(): Promise<void> {
