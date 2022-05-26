@@ -13,7 +13,7 @@
 
           <v-text-field
             v-model="form.username"
-            label="Usuario"
+            label="Usuario o dirección de mail"
             autofocus
             autocomplete="off"
             hide-details="auto"
