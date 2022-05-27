@@ -1,31 +1,43 @@
 <template>
   <h2 class="mb-4">Activar cuenta</h2>
 
-  <v-alert v-if="cuentaActiva" type="info">
-    Esta cuenta fue activada en otra oportunidad. Si no fuiste vos quien la
-    activó contactactate con nosotros para poder ayudarte.
-  </v-alert>
+  <template v-if="!loading">
+    <v-alert v-if="cuentaActiva" type="info">
+      Esta cuenta fue activada en otra oportunidad. Si no fuiste vos quien la
+      activó contactactate con nosotros para poder ayudarte.
+    </v-alert>
 
-  <v-alert v-if="errorMessage.length > 0" type="error">
-    {{ errorMessage }}
-  </v-alert>
+    <v-alert v-if="errorMessage.length > 0" type="error">
+      {{ errorMessage }}
+    </v-alert>
 
-  <v-alert
-    v-if="cuentaActivada"
-    type="success"
-    title="¡Cuenta activada con éxito!"
-  >
-    <v-divider class="my-4" />
-    <p class="mb-4">
-      ¡Felicidades! Ahora ya podés empezar a operar en nuestro sitio.
-    </p>
-  </v-alert>
+    <v-alert
+      v-if="cuentaActivada"
+      type="success"
+      title="¡Cuenta activada con éxito!"
+    >
+      <v-divider class="my-4" />
+      <p class="mb-4">
+        ¡Felicidades! Ahora ya podés empezar a operar en nuestro sitio.
+      </p>
+      <p class="mb-4">
+        Podés loguearte con tu nombre de usuario o tu mail y la contraseña que
+        ingresaste:
+      </p>
+      <p>
+        Nombre de usuario: <strong>{{ cliente?.username }}</strong>
+      </p>
+      <p>
+        Mail: <strong>{{ cliente?.email }}</strong>
+      </p>
+    </v-alert>
 
-  <v-row class="mt-4">
-    <v-col sm="2">
-      <v-btn color="primary" block to="/">Ingresar</v-btn>
-    </v-col>
-  </v-row>
+    <v-row class="mt-4">
+      <v-col sm="2">
+        <v-btn color="primary" block to="/">Ingresar</v-btn>
+      </v-col>
+    </v-row>
+  </template>
 
   <v-overlay
     :model-value="loading"
@@ -37,15 +49,17 @@
 </template>
 
 <script lang="ts" setup>
-import { confirmUser } from '@/services/User.service';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { confirmUser } from '@/services/User.service';
+import type { Cliente } from '@/types/User';
 
 const route = useRoute();
 const errorMessage = ref('');
 const cuentaActivada = ref(false);
 const cuentaActiva = ref(false);
 const loading = ref(false);
+const cliente = ref<Partial<Cliente>>();
 
 onMounted(async () => {
   errorMessage.value = '';
@@ -65,6 +79,7 @@ onMounted(async () => {
       );
     }
 
+    cliente.value = data[0];
     cuentaActivada.value = true;
   } catch (error: any) {
     errorMessage.value = error.message;

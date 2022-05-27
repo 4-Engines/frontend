@@ -5,7 +5,7 @@ interface BaseUser {
   id: string;
   name: string;
   lastname: string;
-  mail: string;
+  email: string;
   username: string;
   phone: string;
 }

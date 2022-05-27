@@ -1,11 +1,10 @@
 import { axios } from '@/plugins/axios';
-import type { AxiosResponse } from 'axios';
-import type { CreateUserResponse, DefaultResponse, LoginResponse } from '@/types/Response';
+import type { ConfirmUserResponse, CreateUserResponse, DefaultResponse, LoginResponse } from '@/types/Response';
 
 async function loginUser(data: {
   username: string;
   password: string;
-}): Promise<AxiosResponse<LoginResponse>> {
+}): Promise<LoginResponse> {
   return axios.post('/login', data);
 }
 
@@ -16,17 +15,17 @@ async function createUser(data: {
   lastname: string;
   phone: string;
   email: string;
-}): Promise<AxiosResponse<CreateUserResponse>> {
+}): Promise<CreateUserResponse> {
   return axios.post('/create-user', data);
 }
 
-async function logoutUser(id: string): Promise<AxiosResponse<DefaultResponse>> {
+async function logoutUser(id: string): Promise<DefaultResponse> {
   return axios.post('/logout', {
     id
   });
 }
 
-async function confirmUser(id: string): Promise<AxiosResponse<DefaultResponse>> {
+async function confirmUser(id: string): Promise<ConfirmUserResponse> {
   return axios.get(`/confirm/${id}`);
 }
 
