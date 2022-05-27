@@ -55,7 +55,12 @@ const router = createRouter({
 router.beforeEach((to) => {
   const store = useStore();
 
-  if (to.path !== '/' && to.path !== '/registro' && to.path.indexOf("/activar") < 0 && !store.isLoggedIn) {
+  if (
+    to.path !== '/' &&
+    to.path !== '/registro' &&
+    to.path.indexOf('/activar') < 0 &&
+    !store.isLoggedIn
+  ) {
     return '/';
   }
 });

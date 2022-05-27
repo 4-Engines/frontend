@@ -32,7 +32,6 @@ export const useStore = defineStore('main', {
   },
   persist: {
     key: 'sigea',
-    paths: ["theme"],
-
+    paths: ['theme'],
   },
 });

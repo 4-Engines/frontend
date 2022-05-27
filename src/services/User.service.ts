@@ -1,5 +1,10 @@
 import { axios } from '@/plugins/axios';
-import type { ConfirmUserResponse, CreateUserResponse, DefaultResponse, LoginResponse } from '@/types/Response';
+import type {
+  ConfirmUserResponse,
+  CreateUserResponse,
+  DefaultResponse,
+  LoginResponse,
+} from '@/types/Response';
 
 async function loginUser(data: {
   username: string;
@@ -21,7 +26,7 @@ async function createUser(data: {
 
 async function logoutUser(id: string): Promise<DefaultResponse> {
   return axios.post('/logout', {
-    id
+    id,
   });
 }
 
