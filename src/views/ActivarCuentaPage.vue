@@ -59,7 +59,7 @@ const errorMessage = ref('');
 const cuentaActivada = ref(false);
 const cuentaActiva = ref(false);
 const loading = ref(false);
-const cliente = ref<Partial<Cliente>>();
+const cliente = ref<Pick<Cliente, 'username' | 'email'>>();
 
 onMounted(async () => {
   errorMessage.value = '';

@@ -30,5 +30,9 @@ export const useStore = defineStore('main', {
       return '';
     },
   },
-  persist: true,
+  persist: {
+    key: 'sigea',
+    paths: ["theme"],
+
+  },
 });

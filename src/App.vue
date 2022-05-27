@@ -103,6 +103,8 @@ const drawer = ref(false);
 const loading = ref(false);
 
 onMounted(() => {
+  store.$patch({});
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt.value = e;
