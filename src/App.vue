@@ -51,7 +51,7 @@
 
         <v-list-item @click="logout">
           <v-list-item-avatar start>
-            <v-icon icon="mdi-lock-open" />
+            <v-icon icon="mdi-car-traction-control" />
           </v-list-item-avatar>
           Salir
         </v-list-item>
@@ -130,7 +130,9 @@ const avatarLabel = computed(() => {
     return '';
   }
 
-  return `${store.user.name.charAt(0)}${store.user.lastname.charAt(0)}`;
+  return `${store.user.name.charAt(0)}${store.user.lastname.charAt(
+    0
+  )}`.toUpperCase();
 });
 
 const isLightTheme = computed(() => store.theme === 'light');
@@ -140,7 +142,7 @@ const menuComputed = computed(() => {
     {
       title: 'Inicio',
       to: '/home',
-      icon: 'mdi-home',
+      icon: 'mdi-garage-open-variant',
     },
   ];
 
@@ -156,13 +158,7 @@ const menuComputed = computed(() => {
     menu.push({
       title: 'Autos',
       to: '/autos',
-      icon: 'mdi-car',
-    });
-
-    menu.push({
-      title: 'Nuevo cliente',
-      to: '/registro',
-      icon: 'mdi-person-add',
+      icon: 'mdi-car-multiple',
     });
   }
 
