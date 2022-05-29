@@ -13,7 +13,7 @@
           </v-card-text>
         </template>
         <template v-else>
-          <form name="registro-form" @submit.prevent>
+          <v-form ref="formRef" name="registro-form" lazy-validation>
             <v-card-text>
               <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
                 {{ errorMessage }}
@@ -91,16 +91,11 @@
             <v-card-actions>
               <v-btn to="/" color="dark" :disabled="loading">Cancelar</v-btn>
 
-              <v-btn
-                :disabled="loading"
-                type="submit"
-                color="primary"
-                @click="handleSubmit"
-              >
+              <v-btn :disabled="loading" color="primary" @click="handleSubmit">
                 Registrar auto
               </v-btn>
             </v-card-actions>
-          </form>
+          </v-form>
         </template>
       </v-card>
     </v-col>
@@ -122,7 +117,7 @@ import { createCar } from '@/services/Car.service';
 import { email, onlyNumbers, required } from '@/rules';
 
 const store = useStore();
-
+const formRef = ref<any>(null);
 const form = reactive({
   carid: '',
   marca: '',
@@ -156,6 +151,12 @@ const rules = {
 };
 
 async function handleSubmit() {
+  const validateForm = await formRef.value?.validate();
+  if (!validateForm.valid) {
+    errorMessage.value = 'Hay errores en el formulario';
+    return;
+  }
+
   errorMessage.value = '';
   loading.value = true;
   try {
