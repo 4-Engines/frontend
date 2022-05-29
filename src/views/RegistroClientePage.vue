@@ -25,7 +25,7 @@
           </v-card-text>
         </template>
         <template v-else>
-          <form name="registro-form" @submit.prevent>
+          <v-form ref="formRef" name="registro-form">
             <v-card-text>
               <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
                 {{ errorMessage }}
@@ -40,7 +40,7 @@
                     autocomplete="off"
                     hide-details="auto"
                     variant="outlined"
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.min3]"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
@@ -51,7 +51,7 @@
                     autocomplete="off"
                     hide-details="auto"
                     variant="outlined"
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.min3]"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -119,7 +119,12 @@
                 v-model="aceptoTerminos"
                 color="primary"
                 label="Acepto términos y condiciones"
-                hide-details
+                hide-details="auto"
+                required
+                :rules="[
+                  (v) =>
+                    !!v || 'Tenés que aceptar los términos antes de continuar',
+                ]"
               >
                 <template #label>
                   <div>
@@ -134,12 +139,7 @@
 
             <v-card-actions>
               <v-btn to="/" color="dark" :disabled="loading">Cancelar</v-btn>
-              <v-btn
-                :disabled="loading"
-                type="submit"
-                color="primary"
-                @click="handleSubmit"
-              >
+              <v-btn :disabled="loading" color="primary" @click="handleSubmit">
                 Registrate
               </v-btn>
 
@@ -168,7 +168,7 @@
                 </v-card>
               </v-dialog> -->
             </v-card-actions>
-          </form>
+          </v-form>
         </template>
       </v-card>
     </v-col>
@@ -187,9 +187,10 @@
 import { reactive, ref } from 'vue';
 import { useStore } from '@/store';
 import { createUser } from '@/services/User.service';
+import { email, onlyNumbers, required, min3 } from '@/rules';
 
 const store = useStore();
-
+const formRef = ref<any>(null);
 const form = reactive({
   username: '',
   password: '',
@@ -206,19 +207,21 @@ const userCreated = ref(false);
 const errorMessage = ref('');
 const loading = ref(false);
 const rules = {
-  required: (value: string) => !!value || 'Campo requerido',
-  email: (value: string) => {
-    const pattern =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return pattern.test(value) || 'Dirección de mail inválida';
-  },
+  required,
+  min3,
+  email,
+  onlyNumbers,
   sameAsPassword: (value: string) =>
     value === form.password || 'Las contraseñas ingresadas no coinciden',
-  onlyNumbers: (value: string | number) =>
-    /^\d+$/.test(value.toString()) || 'Solo se admiten números',
 };
 
 async function handleSubmit() {
+  const validateForm = await formRef.value?.validate();
+  if (!validateForm.valid) {
+    errorMessage.value = 'Hay errores en el formulario';
+    return;
+  }
+
   errorMessage.value = '';
   loading.value = true;
   try {
