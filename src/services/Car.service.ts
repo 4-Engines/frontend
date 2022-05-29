@@ -2,7 +2,7 @@ import { axios } from '@/plugins/axios';
 import type { DefaultResponse } from '@/types/Response';
 
 async function createCar(data: {
-  cardid: string;
+  carid: string;
   marca: string;
   model: string;
   year: string;
