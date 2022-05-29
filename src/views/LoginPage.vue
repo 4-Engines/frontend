@@ -8,7 +8,17 @@
       <div class="mt-10 mb-2">
         <form @submit.prevent>
           <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
-            {{ errorMessage }}
+            <p>{{ errorMessage }}</p>
+            <p v-if="cuentaNoActiva">
+              Si querés que te enviemos de nuevo el mail de activación hace
+              click
+              <a
+                class="text-white"
+                href="#"
+                @click="handleResendActivationEmail"
+                >acá</a
+              >
+            </p>
           </v-alert>
 
           <v-text-field
@@ -111,7 +121,8 @@
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
-import { loginUser } from '@/services/User.service';
+import { loginUser, resendActiationEmail } from '@/services/User.service';
+import { useSnackbar } from '@/composables/useSnackbar';
 
 const store = useStore();
 const router = useRouter();
@@ -122,6 +133,8 @@ const showPassword = ref(false);
 // const snackbar = ref(false);
 // const showDialog = ref(false);
 const loading = ref(false);
+const cuentaNoActiva = ref(false);
+const snackbar = useSnackbar();
 
 const form = reactive({
   username: '',
@@ -155,6 +168,11 @@ async function login() {
       throw Error(data.error);
     }
 
+    if (data[0].status === 'error' && data[0].msj === 'Cuenta no activa') {
+      cuentaNoActiva.value = true;
+      throw Error(data[0].msj);
+    }
+
     if (data[0].status === 'error') {
       throw Error(
         data[0].msj || 'Ocurrió un error al intentar ingresar al sistema'
@@ -167,6 +185,25 @@ async function login() {
     });
 
     router.replace('/home');
+  } catch (error: any) {
+    errorMessage.value = error.message;
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function handleResendActivationEmail() {
+  loading.value = true;
+  errorMessage.value = '';
+
+  try {
+    const { data } = await resendActiationEmail(form.username);
+
+    if (data[0].status === 'error') {
+      throw Error(data[0].msj);
+    }
+
+    snackbar.show('¡Se reenvió el mail!');
   } catch (error: any) {
     errorMessage.value = error.message;
   } finally {

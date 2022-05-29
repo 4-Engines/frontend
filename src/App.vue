@@ -79,6 +79,10 @@
     </v-main>
   </v-app>
 
+  <v-snackbar :model-value="snackbar.visible.value" left>{{
+    snackbar.message.value
+  }}</v-snackbar>
+
   <v-overlay
     :model-value="loading"
     class="align-center justify-center text-center"
@@ -94,6 +98,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import ReloadPWA from '@/components/ReloadPWA.vue';
 import { logoutUser } from '@/services/User.service';
+import { useSnackbar } from './composables/useSnackbar';
 
 const store = useStore();
 const router = useRouter();
@@ -101,6 +106,8 @@ const deferredPrompt = ref();
 const showInstallPromotion = ref(false);
 const drawer = ref(false);
 const loading = ref(false);
+
+const snackbar = useSnackbar();
 
 onMounted(() => {
   store.$patch({});
