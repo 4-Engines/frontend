@@ -203,7 +203,7 @@ async function handleResendActivationEmail() {
       throw Error(data[0].msj);
     }
 
-    snackbar.show('¡Se reenvió el mail!');
+    snackbar.show(data[0].msj);
   } catch (error: any) {
     errorMessage.value = error.message;
   } finally {
