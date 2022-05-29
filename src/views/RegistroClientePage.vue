@@ -187,6 +187,7 @@
 import { reactive, ref } from 'vue';
 import { useStore } from '@/store';
 import { createUser } from '@/services/User.service';
+import { email, onlyNumbers, required } from '@/rules';
 
 const store = useStore();
 
@@ -206,16 +207,11 @@ const userCreated = ref(false);
 const errorMessage = ref('');
 const loading = ref(false);
 const rules = {
-  required: (value: string) => !!value || 'Campo requerido',
-  email: (value: string) => {
-    const pattern =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return pattern.test(value) || 'Dirección de mail inválida';
-  },
+  required,
+  email,
+  onlyNumbers,
   sameAsPassword: (value: string) =>
     value === form.password || 'Las contraseñas ingresadas no coinciden',
-  onlyNumbers: (value: string | number) =>
-    /^\d+$/.test(value.toString()) || 'Solo se admiten números',
 };
 
 async function handleSubmit() {

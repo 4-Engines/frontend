@@ -6,13 +6,10 @@
 
         <template v-if="carCreated">
           <v-card-text>
-            <v-alert type="success" title="Auto creado con éxito!">
-              <v-divider class="my-2" />
-              <p>
-                Para poder operar con nosotros tenés que activar la cuenta
-                primero.
-              </p>
-            </v-alert>
+            <v-alert type="success" title="¡Auto creado con éxito!"> </v-alert>
+            <v-btn color="primary" class="mt-4" @click="$router.back()">
+              Volver
+            </v-btn>
           </v-card-text>
         </template>
         <template v-else>
@@ -28,8 +25,7 @@
                     v-model="form.carid"
                     :disabled="loading"
                     autofocus
-                    label="Nombre"
-                    autocomplete="off"
+                    label="Patente"
                     hide-details="auto"
                     variant="outlined"
                     :rules="[rules.required]"
@@ -39,8 +35,7 @@
                   <v-text-field
                     v-model="form.marca"
                     :disabled="loading"
-                    label="Apellido"
-                    autocomplete="off"
+                    label="Marca"
                     hide-details="auto"
                     variant="outlined"
                     :rules="[rules.required]"
@@ -54,37 +49,41 @@
                     v-model="form.model"
                     :disabled="loading"
                     autofocus
-                    label="Nombre"
-                    autocomplete="off"
+                    label="Modelo"
                     hide-details="auto"
                     variant="outlined"
                     :rules="[rules.required]"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
-                  <v-text-field
+                  <v-select
                     v-model="form.year"
-                    :disabled="loading"
-                    label="Apellido"
-                    autocomplete="off"
-                    hide-details="auto"
+                    :items="years"
+                    label="Año"
                     variant="outlined"
                     :rules="[rules.required]"
-                  ></v-text-field>
+                    hide-details="auto"
+                  ></v-select>
                 </v-col>
               </v-row>
 
               <v-text-field
+                v-if="store.isEmpleado"
                 v-model.number="form.owner"
                 :disabled="loading"
                 class="mt-4"
                 label="Usuario o dirección de mail"
-                autocomplete="off"
                 hide-details="auto"
                 type="text"
                 variant="outlined"
                 :rules="[rules.required]"
               ></v-text-field>
+
+              <v-alert v-if="store.isCliente" type="info" class="mt-4">
+                Recordá que solo te vamos a atender si presentás la
+                documentación que acredite que el auto te pertenece (cédula
+                verde, título del auto) o que podés conducirlo (cédula azul).
+              </v-alert>
             </v-card-text>
 
             <v-divider />
@@ -120,6 +119,7 @@
 import { reactive, ref } from 'vue';
 import { useStore } from '@/store';
 import { createCar } from '@/services/Car.service';
+import { email, onlyNumbers, required } from '@/rules';
 
 const store = useStore();
 
@@ -130,19 +130,29 @@ const form = reactive({
   year: '',
   owner: '',
 });
+const years = ref([
+  '2010',
+  '2011',
+  '2012',
+  '2013',
+  '2014',
+  '2015',
+  '2016',
+  '2017',
+  '2018',
+  '2019',
+  '2020',
+  '2021',
+  '2022',
+]);
 // const dialog = ref(false);
 const carCreated = ref(false);
 const errorMessage = ref('');
 const loading = ref(false);
 const rules = {
-  required: (value: string) => !!value || 'Campo requerido',
-  email: (value: string) => {
-    const pattern =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return pattern.test(value) || 'Dirección de mail inválida';
-  },
-  onlyNumbers: (value: string | number) =>
-    /^\d+$/.test(value.toString()) || 'Solo se admiten números',
+  required,
+  email,
+  onlyNumbers,
 };
 
 async function handleSubmit() {
@@ -154,7 +164,11 @@ async function handleSubmit() {
     if (store.isEmpleado) {
       (formData as any).id_user = store.user?.id;
     }
-    const { data } = await createCar(form);
+
+    if (store.isCliente) {
+      (formData as any).owner = store.user?.username;
+    }
+    const { data } = await createCar(formData);
 
     if (data[1] === 200) {
       carCreated.value = true;
