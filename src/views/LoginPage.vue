@@ -19,7 +19,7 @@
             :error="errorMessage.length > 0"
             variant="outlined"
             :disabled="loading"
-            :rules="[rules.required]"
+            :rules="[rules.required, rules.min3]"
           />
 
           <v-text-field
@@ -33,7 +33,7 @@
             :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             variant="outlined"
             :disabled="loading"
-            :rules="[rules.required, rules.min3]"
+            :rules="[rules.required]"
             @click:append-inner="showPassword = !showPassword"
           />
 
@@ -102,10 +102,6 @@
       </div> -->
     </v-col>
   </v-row>
-
-  <!-- <v-snackbar v-model="snackbar" timeout="2000" bottom left>
-    ¡Se envió un mail a tu casilla de correo!
-  </v-snackbar> -->
 </template>
 
 <script setup lang="ts">
@@ -121,7 +117,6 @@ const router = useRouter();
 const errorMessage = ref('');
 const showPassword = ref(false);
 // const recuperarMail = ref('');
-// const snackbar = ref(false);
 // const showDialog = ref(false);
 const loading = ref(false);
 const formRef = ref<any>(null);
