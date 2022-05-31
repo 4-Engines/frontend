@@ -6,7 +6,7 @@
         <div class="font-weight-bold">Sistema de gestión del automotor</div>
       </div>
       <div class="mt-10 mb-2">
-        <form @submit.prevent>
+        <v-form ref="formRef" @submit.prevent="handleLogin">
           <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
             {{ errorMessage }}
           </v-alert>
@@ -19,6 +19,7 @@
             :error="errorMessage.length > 0"
             variant="outlined"
             :disabled="loading"
+            :rules="[rules.required]"
           />
 
           <v-text-field
@@ -32,6 +33,7 @@
             :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             variant="outlined"
             :disabled="loading"
+            :rules="[rules.required, rules.min3]"
             @click:append-inner="showPassword = !showPassword"
           />
 
@@ -42,11 +44,10 @@
             block
             size="x-large"
             type="submit"
-            @click="login"
           >
             {{ loading ? 'Ingresando al sistema...' : 'Ingresar' }}
           </v-btn>
-        </form>
+        </v-form>
       </div>
 
       <div v-if="!loading" class="text-center">
@@ -112,6 +113,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { loginUser } from '@/services/User.service';
+import { required, min3 } from '@/rules';
 
 const store = useStore();
 const router = useRouter();
@@ -122,6 +124,11 @@ const showPassword = ref(false);
 // const snackbar = ref(false);
 // const showDialog = ref(false);
 const loading = ref(false);
+const formRef = ref<any>(null);
+const rules = ref({
+  required,
+  min3,
+});
 
 const form = reactive({
   username: '',
@@ -134,19 +141,10 @@ onMounted(() => {
   }
 });
 
-async function login() {
-  loading.value = true;
+async function handleLogin() {
   errorMessage.value = '';
-
+  loading.value = true;
   try {
-    if (form.username === '') {
-      throw Error('El campo Usuario no puede estar vacío');
-    }
-
-    if (form.password === '') {
-      throw Error('El campo Contraseña no puede estar vacío');
-    }
-
     const { data } = await loginUser(form);
 
     // @ts-ignore

@@ -12,4 +12,8 @@ function onlyNumbers(value: string | number) {
   return /^\d+$/.test(value.toString()) || 'Solo se admiten números';
 }
 
-export { required, email, onlyNumbers };
+function min3(value: string) {
+  return value.length > 3 || 'El campo debe tener como mínimo tres caracteres';
+}
+
+export { required, email, onlyNumbers, min3 };
