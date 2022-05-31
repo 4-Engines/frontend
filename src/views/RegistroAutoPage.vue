@@ -32,30 +32,6 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
-                  <v-text-field
-                    v-model="form.marca"
-                    :disabled="loading"
-                    label="Marca"
-                    hide-details="auto"
-                    variant="outlined"
-                    :rules="[rules.required]"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-
-              <v-row>
-                <v-col cols="12" md="6">
-                  <v-text-field
-                    v-model="form.model"
-                    :disabled="loading"
-                    autofocus
-                    label="Modelo"
-                    hide-details="auto"
-                    variant="outlined"
-                    :rules="[rules.required]"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="6">
                   <v-select
                     v-model="form.year"
                     :items="years"
@@ -67,17 +43,56 @@
                 </v-col>
               </v-row>
 
-              <v-text-field
-                v-if="store.isEmpleado"
-                v-model.number="form.owner"
-                :disabled="loading"
-                class="mt-4"
-                label="Usuario o dirección de mail"
-                hide-details="auto"
-                type="text"
-                variant="outlined"
-                :rules="[rules.required]"
-              ></v-text-field>
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="form.brand"
+                    :disabled="loading"
+                    label="Marca"
+                    hide-details="auto"
+                    variant="outlined"
+                    :rules="[rules.required]"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="form.model"
+                    :disabled="loading"
+                    autofocus
+                    label="Modelo"
+                    hide-details="auto"
+                    variant="outlined"
+                    :rules="[rules.required]"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="form.color"
+                    hide-details="auto"
+                    label="Color"
+                    variant="outlined"
+                    type="color"
+                  />
+                </v-col>
+              </v-row>
+
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-if="store.isEmpleado"
+                    v-model.number="form.owner"
+                    :disabled="loading"
+                    label="Usuario o dirección de mail"
+                    hide-details="auto"
+                    type="text"
+                    variant="outlined"
+                    :rules="[rules.required]"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
 
               <v-alert v-if="store.isCliente" type="info" class="mt-4">
                 Recordá que solo te vamos a atender si presentás la
@@ -120,8 +135,9 @@ const store = useStore();
 const formRef = ref<any>(null);
 const form = reactive({
   carid: '',
-  marca: '',
+  brand: '',
   model: '',
+  color: '#000000',
   year: '',
   owner: '',
 });

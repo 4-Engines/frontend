@@ -3,9 +3,10 @@ import type { DefaultResponse } from '@/types/Response';
 
 async function createCar(data: {
   carid: string;
-  marca: string;
+  brand: string;
   model: string;
   year: string;
+  color: string;
   owner: string;
   id_user?: string;
 }): Promise<DefaultResponse> {
