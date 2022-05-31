@@ -80,11 +80,11 @@
   </v-app>
 
   <v-overlay
-    :model-value="loading"
+    :model-value="overlay.visible.value"
     class="align-center justify-center text-center"
   >
     <v-progress-circular indeterminate size="64"></v-progress-circular>
-    <p class="mt-3">Cerrando sesión...</p>
+    <p class="mt-3">{{ overlay.message.value }}</p>
   </v-overlay>
 </template>
 
@@ -94,6 +94,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import ReloadPWA from '@/components/ReloadPWA.vue';
 import { logoutUser } from '@/services/User.service';
+import { useOverlay } from '@/composables/useOverlay';
 
 const store = useStore();
 const router = useRouter();
@@ -101,6 +102,7 @@ const deferredPrompt = ref();
 const showInstallPromotion = ref(false);
 const drawer = ref(false);
 const loading = ref(false);
+const overlay = useOverlay();
 
 onMounted(() => {
   store.$patch({});
@@ -192,6 +194,7 @@ function toggleTheme() {
 
 async function logout() {
   if (store.user) {
+    overlay.show('Cerrando sesión...');
     loading.value = true;
 
     try {
@@ -213,6 +216,7 @@ async function logout() {
       console.log(error.message);
     } finally {
       loading.value = false;
+      overlay.hide();
     }
   }
 }
