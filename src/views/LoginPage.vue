@@ -33,7 +33,7 @@
             :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             variant="outlined"
             :disabled="loading"
-            :rules="[rules.required]"
+            :rules="[rules.required, rules.min3]"
             @click:append-inner="showPassword = !showPassword"
           />
 
@@ -113,7 +113,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { loginUser } from '@/services/User.service';
-import { required } from '@/rules';
+import { required, min3 } from '@/rules';
 
 const store = useStore();
 const router = useRouter();
@@ -127,6 +127,7 @@ const loading = ref(false);
 const formRef = ref<any>(null);
 const rules = ref({
   required,
+  min3,
 });
 
 const form = reactive({
