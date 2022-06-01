@@ -34,4 +34,10 @@ async function confirmUser(id: string): Promise<ConfirmUserResponse> {
   return axios.get(`/confirm/${id}`);
 }
 
-export { loginUser, createUser, logoutUser, confirmUser };
+async function resendActiationEmail(id: string): Promise<DefaultResponse> {
+  return axios.post('/resend', {
+    username: id,
+  });
+}
+
+export { loginUser, createUser, logoutUser, confirmUser, resendActiationEmail };

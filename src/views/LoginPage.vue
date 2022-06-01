@@ -8,7 +8,15 @@
       <div class="mt-10 mb-2">
         <v-form ref="formRef" @submit.prevent="handleLogin">
           <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
-            {{ errorMessage }}
+            <p>{{ errorMessage }}</p>
+            <p v-if="cuentaNoActiva">
+              <a
+                class="text-white"
+                href="#"
+                @click="handleResendActivationEmail"
+                >Reenviar mail de activación</a
+              >
+            </p>
           </v-alert>
 
           <v-text-field
@@ -108,7 +116,8 @@
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
-import { loginUser } from '@/services/User.service';
+import { loginUser, resendActiationEmail } from '@/services/User.service';
+import { useSnackbar } from '@/composables/useSnackbar';
 import { required, min3 } from '@/rules';
 
 const store = useStore();
@@ -119,6 +128,8 @@ const showPassword = ref(false);
 // const recuperarMail = ref('');
 // const showDialog = ref(false);
 const loading = ref(false);
+const cuentaNoActiva = ref(false);
+const snackbar = useSnackbar();
 const formRef = ref<any>(null);
 const rules = ref({
   required,
@@ -148,6 +159,14 @@ async function handleLogin() {
       throw Error(data.error);
     }
 
+    if (
+      data[0].status === 'error' &&
+      data[0].msj.includes('Usuario inactivo')
+    ) {
+      cuentaNoActiva.value = true;
+      throw Error(data[0].msj);
+    }
+
     if (data[0].status === 'error') {
       throw Error(
         data[0].msj || 'Ocurrió un error al intentar ingresar al sistema'
@@ -160,6 +179,25 @@ async function handleLogin() {
     });
 
     router.replace('/home');
+  } catch (error: any) {
+    errorMessage.value = error.message;
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function handleResendActivationEmail() {
+  loading.value = true;
+  errorMessage.value = '';
+
+  try {
+    const { data } = await resendActiationEmail(form.username);
+
+    if (data[0].status === 'error') {
+      throw Error(data[0].msj);
+    }
+
+    snackbar.show(data[0].msj);
   } catch (error: any) {
     errorMessage.value = error.message;
   } finally {
