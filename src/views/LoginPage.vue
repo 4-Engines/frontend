@@ -53,7 +53,11 @@
             size="x-large"
             type="submit"
           >
-            {{ loading ? 'Ingresando al sistema...' : 'Ingresar' }}
+            {{
+              loading && !cuentaNoActiva
+                ? 'Ingresando al sistema...'
+                : 'Ingresar'
+            }}
           </v-btn>
         </v-form>
       </div>
@@ -118,6 +122,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { loginUser, resendActiationEmail } from '@/services/User.service';
 import { useSnackbar } from '@/composables/useSnackbar';
+import { useOverlay } from '@/composables/useOverlay';
 import { required, min3 } from '@/rules';
 
 const store = useStore();
@@ -130,6 +135,7 @@ const showPassword = ref(false);
 const loading = ref(false);
 const cuentaNoActiva = ref(false);
 const snackbar = useSnackbar();
+const overlay = useOverlay();
 const formRef = ref<any>(null);
 const rules = ref({
   required,
@@ -148,6 +154,7 @@ onMounted(() => {
 });
 
 async function handleLogin() {
+  cuentaNoActiva.value = false;
   errorMessage.value = '';
   loading.value = true;
   try {
@@ -189,6 +196,7 @@ async function handleLogin() {
 async function handleResendActivationEmail() {
   loading.value = true;
   errorMessage.value = '';
+  overlay.show('Reenviando mail...');
 
   try {
     const { data } = await resendActiationEmail(form.username);
@@ -202,6 +210,7 @@ async function handleResendActivationEmail() {
     errorMessage.value = error.message;
   } finally {
     loading.value = false;
+    overlay.hide();
   }
 }
 </script>
