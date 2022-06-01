@@ -159,11 +159,11 @@ const menuComputed = computed(() => {
       icon: 'mdi-car',
     });
 
-    menu.push({
-      title: 'Nuevo cliente',
-      to: '/registro',
-      icon: 'mdi-person-add',
-    });
+    // menu.push({
+    //   title: 'Nuevo cliente',
+    //   to: '/registro',
+    //   icon: 'mdi-person-add',
+    // });
   }
 
   if (store.isAdmin) {

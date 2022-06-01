@@ -1,30 +1,126 @@
 <template>
   <h2>Autos</h2>
 
-  <p>Desde acá vas a poder administrar los autos que tengas.</p>
+  <p v-if="store.isCliente">
+    Desde acá vas a poder administrar los autos que tengas.
+  </p>
+  <p v-else>Estos son los autos disponibles en el taller.</p>
 
-  <div class="mt-5 text-right">
+  <div class="my-5 text-right">
     <v-btn color="primary"> Agregar nuevo auto </v-btn>
   </div>
 
-  {{ cars }}
+  <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
+    {{ errorMessage }}
+  </v-alert>
+
+  <template v-if="isMobile">
+    <v-card v-for="car in cars" :key="car._id" class="mb-3">
+      <v-card-title>
+        {{ car.carid }}
+        <v-spacer /><v-avatar size="x-small" :color="car.color"></v-avatar
+      ></v-card-title>
+      <v-card-subtitle>{{ car.owner }}</v-card-subtitle>
+      <v-card-text>
+        <v-table density="compact">
+          <thead>
+            <tr>
+              <th class="text-left">Marca</th>
+              <th class="text-left">Modelo</th>
+              <th class="text-left">Año</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ car.brand }}</td>
+              <td>{{ car.model }}</td>
+              <td>{{ car.year }}</td>
+            </tr>
+          </tbody>
+        </v-table>
+      </v-card-text>
+    </v-card>
+  </template>
+  <v-card v-else>
+    <v-table>
+      <thead>
+        <tr>
+          <th class="text-left">Color</th>
+          <th class="text-left">Dominio</th>
+          <th class="text-left">Marca</th>
+          <th class="text-left">Modelo</th>
+          <th class="text-left">Año</th>
+          <th v-if="!store.isCliente" class="text-left">Dueño</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="car in cars" :key="car._id">
+          <td><v-avatar size="x-small" :color="car.color"></v-avatar></td>
+          <td>
+            <strong>{{ car.carid }}</strong>
+          </td>
+          <td>{{ car.brand }}</td>
+          <td>{{ car.model }}</td>
+          <td>{{ car.year }}</td>
+          <td v-if="!store.isCliente">{{ car.owner }}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </v-table>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
+import { useBreakpoints, breakpointsVuetify } from '@vueuse/core';
+import { useStore } from '@/store';
 import { getAllCars } from '@/services/Car.service';
 import type { Car } from '@/types/Car';
-import { useStore } from '@/store';
 
 const store = useStore();
 const cars = ref<Car[]>([]);
+const errorMessage = ref('');
+const loading = ref(false);
+const breakpoints = useBreakpoints(breakpointsVuetify);
+const isMobile = breakpoints.smaller('xs');
 
 onMounted(async () => {
+  loading.value = true;
   try {
     const { data } = await getAllCars(store.user?.id as string);
     cars.value = data;
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    errorMessage.value = error.message;
+  } finally {
+    loading.value = false;
+
+    cars.value = [
+      {
+        _id: '1',
+        brand: 'Fiat',
+        carid: 'AAA123',
+        color: '#FFAACC',
+        id_taller: 'TallerMasMotor',
+        id_user: 'ersdf4',
+        model: 'Uno',
+        owner: 'jsbarra@gmail.com',
+        year: '2017',
+        created_at: '22/22/2222',
+      },
+      {
+        _id: '2',
+        brand: 'Fiat',
+        carid: 'UUU432',
+        color: '#004590',
+        id_taller: 'TallerMasMotor',
+        id_user: 'ersdf4',
+        model: 'Idea',
+        owner: 'jcortazar@gmail.com',
+        year: '2016',
+        created_at: '22/22/2222',
+      },
+    ];
   }
 });
 </script>
