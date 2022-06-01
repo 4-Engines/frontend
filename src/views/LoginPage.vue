@@ -6,7 +6,7 @@
         <div class="font-weight-bold">Sistema de gestión del automotor</div>
       </div>
       <div class="mt-10 mb-2">
-        <form @submit.prevent>
+        <v-form ref="formRef" @submit.prevent="handleLogin">
           <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
             <p>{{ errorMessage }}</p>
             <p v-if="cuentaNoActiva">
@@ -27,6 +27,7 @@
             :error="errorMessage.length > 0"
             variant="outlined"
             :disabled="loading"
+            :rules="[rules.required, rules.min3]"
           />
 
           <v-text-field
@@ -40,6 +41,7 @@
             :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             variant="outlined"
             :disabled="loading"
+            :rules="[rules.required]"
             @click:append-inner="showPassword = !showPassword"
           />
 
@@ -50,11 +52,10 @@
             block
             size="x-large"
             type="submit"
-            @click="login"
           >
             {{ loading ? 'Ingresando al sistema...' : 'Ingresar' }}
           </v-btn>
-        </form>
+        </v-form>
       </div>
 
       <div v-if="!loading" class="text-center">
@@ -109,10 +110,6 @@
       </div> -->
     </v-col>
   </v-row>
-
-  <!-- <v-snackbar v-model="snackbar" timeout="2000" bottom left>
-    ¡Se envió un mail a tu casilla de correo!
-  </v-snackbar> -->
 </template>
 
 <script setup lang="ts">
@@ -121,6 +118,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { loginUser, resendActiationEmail } from '@/services/User.service';
 import { useSnackbar } from '@/composables/useSnackbar';
+import { required, min3 } from '@/rules';
 
 const store = useStore();
 const router = useRouter();
@@ -128,11 +126,15 @@ const router = useRouter();
 const errorMessage = ref('');
 const showPassword = ref(false);
 // const recuperarMail = ref('');
-// const snackbar = ref(false);
 // const showDialog = ref(false);
 const loading = ref(false);
 const cuentaNoActiva = ref(false);
 const snackbar = useSnackbar();
+const formRef = ref<any>(null);
+const rules = ref({
+  required,
+  min3,
+});
 
 const form = reactive({
   username: '',
@@ -145,19 +147,10 @@ onMounted(() => {
   }
 });
 
-async function login() {
-  loading.value = true;
+async function handleLogin() {
   errorMessage.value = '';
-
+  loading.value = true;
   try {
-    if (form.username === '') {
-      throw Error('El campo Usuario no puede estar vacío');
-    }
-
-    if (form.password === '') {
-      throw Error('El campo Contraseña no puede estar vacío');
-    }
-
     const { data } = await loginUser(form);
 
     // @ts-ignore
