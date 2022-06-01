@@ -10,13 +10,11 @@
           <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
             <p>{{ errorMessage }}</p>
             <p v-if="cuentaNoActiva">
-              Si querés que te enviemos de nuevo el mail de activación hace
-              click
               <a
                 class="text-white"
                 href="#"
                 @click="handleResendActivationEmail"
-                >acá</a
+                >Reenviar mail de activación</a
               >
             </p>
           </v-alert>
@@ -168,7 +166,10 @@ async function login() {
       throw Error(data.error);
     }
 
-    if (data[0].status === 'error' && data[0].msj === 'Cuenta no activa') {
+    if (
+      data[0].status === 'error' &&
+      data[0].msj.includes('Usuario inactivo')
+    ) {
       cuentaNoActiva.value = true;
       throw Error(data[0].msj);
     }
