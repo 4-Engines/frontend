@@ -15,6 +15,7 @@
   </v-alert>
 
   <v-text-field
+    v-if="errorMessage.length === 0"
     v-model="filter"
     variant="outlined"
     label="Filtrar por dominio"
@@ -166,6 +167,10 @@ onMounted(async () => {
   loading.value = true;
   try {
     const { data } = await getAllCars(store.user?.id as string);
+
+    if (data[0].status === 'error') {
+      throw Error(data[0].msj);
+    }
     cars.value = data[0].cars;
 
     if (data[0].cars.length === 0) {
