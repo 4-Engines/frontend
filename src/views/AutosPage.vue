@@ -6,8 +6,8 @@
   </p>
   <p v-else>Estos son los autos disponibles en el taller.</p>
 
-  <div class="my-5 text-right">
-    <v-btn :disabled="loading" color="primary"> Agregar auto </v-btn>
+  <div class="mt-5 text-right">
+    <v-btn color="primary" to="/registro-auto">Agregar auto</v-btn>
   </div>
 
   <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
