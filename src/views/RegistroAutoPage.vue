@@ -13,7 +13,7 @@
           </v-card-text>
         </template>
         <template v-else>
-          <v-form ref="formRef" name="registro-form" lazy-validation>
+          <v-form ref="formRef" @submit.prevent="handleSubmit">
             <v-card-text>
               <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
                 {{ errorMessage }}
@@ -106,7 +106,7 @@
             <v-card-actions>
               <v-btn to="/" color="dark" :disabled="loading">Cancelar</v-btn>
 
-              <v-btn :disabled="loading" color="primary" @click="handleSubmit">
+              <v-btn :disabled="loading" color="primary" type="submit">
                 Registrar auto
               </v-btn>
             </v-card-actions>
@@ -167,12 +167,6 @@ const rules = {
 };
 
 async function handleSubmit() {
-  const validateForm = await formRef.value?.validate();
-  if (!validateForm.valid) {
-    errorMessage.value = 'Hay errores en el formulario';
-    return;
-  }
-
   errorMessage.value = '';
   loading.value = true;
   try {
