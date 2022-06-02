@@ -40,7 +40,7 @@
           flat
       /></v-card-title>
       <v-card-subtitle>Dueño: {{ car.owner }}</v-card-subtitle>
-      <v-card-text v-if="!car.active" class="pb-0"
+      <v-card-text v-if="car.status === 'no active'" class="pb-0"
         ><v-chip size="small" color="red">NO ACTIVO</v-chip></v-card-text
       >
       <v-card-text>
@@ -103,7 +103,7 @@
           <td>{{ car.year }}</td>
           <td v-if="!store.isCliente">{{ car.owner }}</td>
           <td class="text-right">
-            <v-chip v-if="!car.active" size="small" color="red"
+            <v-chip v-if="car.status === 'no active'" size="small" color="red"
               >NO ACTIVO</v-chip
             >
             <v-btn
@@ -162,35 +162,6 @@ onMounted(async () => {
     errorMessage.value = error.message;
   } finally {
     loading.value = false;
-
-    cars.value = [
-      {
-        _id: '1',
-        brand: 'Fiat',
-        carid: 'AAA123',
-        color: '#FFAACC',
-        id_taller: 'TallerMasMotor',
-        id_user: 'ersdf4',
-        model: 'Uno',
-        owner: 'jsbarra@gmail.com',
-        year: '2017',
-        created_at: '22/22/2222',
-        active: true,
-      },
-      {
-        _id: '2',
-        brand: 'Fiat',
-        carid: 'UUU432',
-        color: '#004590',
-        id_taller: 'TallerMasMotor',
-        id_user: 'ersdf4',
-        model: 'Idea',
-        owner: 'jcortazar@gmail.com',
-        year: '2016',
-        created_at: '22/22/2222',
-        active: false,
-      },
-    ];
   }
 });
 </script>

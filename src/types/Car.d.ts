@@ -1,15 +1,15 @@
 interface Car {
   _id: string;
-  carid: string;
   brand: string;
-  model: string;
+  carid: string;
   color: string;
-  year: string;
-  owner: string;
-  id_user: string;
-  id_taller: string;
   created_at: string;
-  active: boolean;
+  id_taller: string;
+  id_user: string;
+  model: string;
+  owner: string;
+  status: string;
+  year: string;
 }
 
 export { Car };
