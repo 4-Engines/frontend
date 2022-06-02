@@ -7,7 +7,7 @@
   <p v-else>Estos son los autos disponibles en el taller.</p>
 
   <div class="my-5 text-right">
-    <v-btn color="primary"> Agregar nuevo auto </v-btn>
+    <v-btn :disabled="loading" color="primary"> Agregar auto </v-btn>
   </div>
 
   <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
@@ -73,6 +73,18 @@
         </tr>
       </thead>
       <tbody>
+        <tr v-if="loading">
+          <td :colspan="store.isCliente ? 6 : 7" class="text-center py-7">
+            <v-progress-circular indeterminate size="32"></v-progress-circular>
+            <p class="mt-3">Cargando...</p>
+          </td>
+        </tr>
+        <tr v-if="emptyList">
+          <td :colspan="store.isCliente ? 6 : 7" class="text-center py-5">
+            <v-icon size="64">mdi-gauge-empty</v-icon>
+            <p class="mt-3">No se encontraron autos</p>
+          </td>
+        </tr>
         <tr v-for="car in cars" :key="car._id">
           <td><v-avatar size="x-small" :color="car.color"></v-avatar></td>
           <td>
@@ -118,12 +130,17 @@ const errorMessage = ref('');
 const loading = ref(false);
 const breakpoints = useBreakpoints(breakpointsVuetify);
 const isMobile = breakpoints.smaller('xs');
+const emptyList = ref(false);
 
 onMounted(async () => {
   loading.value = true;
   try {
     const { data } = await getAllCars(store.user?.id as string);
-    cars.value = data;
+    cars.value = data[0].cars;
+
+    if (data[0].cars.length === 0) {
+      emptyList.value = true;
+    }
   } catch (error: any) {
     errorMessage.value = error.message;
   } finally {
