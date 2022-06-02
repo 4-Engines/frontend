@@ -14,6 +14,17 @@
     {{ errorMessage }}
   </v-alert>
 
+  <v-text-field
+    v-model="filter"
+    variant="outlined"
+    label="Filtrar por dominio"
+    class="mb-3"
+    density="comfortable"
+    hide-details
+    prepend-inner-icon="mdi-magnify"
+    clearable
+  />
+
   <template v-if="isMobile">
     <v-card v-for="car in cars" :key="car._id" class="mb-3">
       <v-card-title>
@@ -67,6 +78,7 @@
       </v-card-actions> -->
     </v-card>
   </template>
+
   <v-card v-else>
     <v-table>
       <thead>
@@ -93,7 +105,7 @@
             <p class="mt-3">No se encontraron autos</p>
           </td>
         </tr>
-        <tr v-for="car in cars" :key="car._id">
+        <tr v-for="car in carsFiltered" :key="car._id">
           <td><v-avatar size="x-small" :color="car.color"></v-avatar></td>
           <td>
             <strong>{{ car.carid }}</strong>
@@ -135,7 +147,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useBreakpoints, breakpointsVuetify } from '@vueuse/core';
 import { useStore } from '@/store';
 import { getAllCars } from '@/services/Car.service';
@@ -148,6 +160,7 @@ const loading = ref(false);
 const breakpoints = useBreakpoints(breakpointsVuetify);
 const isMobile = breakpoints.smaller('xs');
 const emptyList = ref(false);
+const filter = ref('');
 
 onMounted(async () => {
   loading.value = true;
@@ -163,5 +176,15 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
+});
+
+const carsFiltered = computed(() => {
+  if (filter.value === '') {
+    return cars.value;
+  }
+
+  return cars.value.filter((car) =>
+    car.carid.toLocaleUpperCase().includes(filter.value.toLocaleUpperCase())
+  );
 });
 </script>
