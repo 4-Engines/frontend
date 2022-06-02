@@ -21,12 +21,17 @@
         {{ car.carid }}
         <v-spacer />
         <v-btn
+          icon="mdi-car-info"
+          flat
+          variant="text"
+          title="Información del auto" />
+        <v-btn
           icon="mdi-calendar-search"
           color="primary"
           flat
           variant="text"
           title="Solicitar turno" />
-        <v-btn title="Historial" icon="mdi-history" variant="text" flat />
+        <!-- <v-btn title="Historial" icon="mdi-history" variant="text" flat /> -->
         <v-btn
           title="Eliminar"
           icon="mdi-car-off"
@@ -35,6 +40,9 @@
           flat
       /></v-card-title>
       <v-card-subtitle>Dueño: {{ car.owner }}</v-card-subtitle>
+      <v-card-text v-if="!car.active" class="pb-0"
+        ><v-chip size="small" color="red">NO ACTIVO</v-chip></v-card-text
+      >
       <v-card-text>
         <v-table density="compact">
           <thead>
@@ -63,12 +71,12 @@
     <v-table>
       <thead>
         <tr>
-          <th class="text-left">Color</th>
-          <th class="text-left">Dominio</th>
-          <th class="text-left">Marca</th>
-          <th class="text-left">Modelo</th>
-          <th class="text-left">Año</th>
-          <th v-if="!store.isCliente" class="text-left">Dueño</th>
+          <th>Color</th>
+          <th>Dominio</th>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>Año</th>
+          <th v-if="!store.isCliente">Dueño</th>
           <th></th>
         </tr>
       </thead>
@@ -95,6 +103,15 @@
           <td>{{ car.year }}</td>
           <td v-if="!store.isCliente">{{ car.owner }}</td>
           <td class="text-right">
+            <v-chip v-if="!car.active" size="small" color="red"
+              >NO ACTIVO</v-chip
+            >
+            <v-btn
+              icon="mdi-car-info"
+              flat
+              variant="text"
+              title="Información del auto"
+            />
             <v-btn
               icon="mdi-calendar-search"
               color="primary"
@@ -102,7 +119,7 @@
               variant="text"
               title="Solicitar turno"
             />
-            <v-btn title="Historial" icon="mdi-history" variant="text" flat />
+            <!-- <v-btn title="Historial" icon="mdi-history" variant="text" flat /> -->
             <v-btn
               title="Eliminar"
               icon="mdi-car-off"
@@ -158,6 +175,7 @@ onMounted(async () => {
         owner: 'jsbarra@gmail.com',
         year: '2017',
         created_at: '22/22/2222',
+        active: true,
       },
       {
         _id: '2',
@@ -170,6 +188,7 @@ onMounted(async () => {
         owner: 'jcortazar@gmail.com',
         year: '2016',
         created_at: '22/22/2222',
+        active: false,
       },
     ];
   }

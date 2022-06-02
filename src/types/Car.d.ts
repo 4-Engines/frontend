@@ -9,6 +9,7 @@ interface Car {
   id_user: string;
   id_taller: string;
   created_at: string;
+  active: boolean;
 }
 
 export { Car };
