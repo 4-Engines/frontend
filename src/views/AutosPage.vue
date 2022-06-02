@@ -27,7 +27,21 @@
   />
 
   <template v-if="isMobile">
-    <v-card v-for="car in cars" :key="car._id" class="mb-3">
+    <v-card v-if="loading">
+      <v-card-text class="text-center py-7">
+        <v-progress-circular indeterminate size="32"></v-progress-circular>
+        <p class="mt-3">Cargando...</p>
+      </v-card-text>
+    </v-card>
+
+    <v-card v-if="emptyList">
+      <v-card-text class="text-center py-5">
+        <v-icon size="64">mdi-gauge-empty</v-icon>
+        <p class="mt-3">No se encontraron autos</p>
+      </v-card-text>
+    </v-card>
+
+    <v-card v-for="car in carsFiltered" :key="car._id" class="mb-3">
       <v-card-title>
         <v-avatar class="mr-4" size="x-small" :color="car.color"></v-avatar>
         {{ car.carid }}
