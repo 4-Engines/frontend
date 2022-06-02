@@ -17,10 +17,24 @@
   <template v-if="isMobile">
     <v-card v-for="car in cars" :key="car._id" class="mb-3">
       <v-card-title>
+        <v-avatar class="mr-4" size="x-small" :color="car.color"></v-avatar>
         {{ car.carid }}
-        <v-spacer /><v-avatar size="x-small" :color="car.color"></v-avatar
-      ></v-card-title>
-      <v-card-subtitle>{{ car.owner }}</v-card-subtitle>
+        <v-spacer />
+        <v-btn
+          icon="mdi-calendar-search"
+          color="primary"
+          flat
+          variant="text"
+          title="Solicitar turno" />
+        <v-btn title="Historial" icon="mdi-history" variant="text" flat />
+        <v-btn
+          title="Eliminar"
+          icon="mdi-car-off"
+          variant="text"
+          color="red"
+          flat
+      /></v-card-title>
+      <v-card-subtitle>Dueño: {{ car.owner }}</v-card-subtitle>
       <v-card-text>
         <v-table density="compact">
           <thead>
@@ -39,6 +53,10 @@
           </tbody>
         </v-table>
       </v-card-text>
+      <!-- <v-card-actions>
+        <v-btn color="primary" text>Solicitar turno</v-btn>
+        <v-btn color="red" text>Eliminar</v-btn>
+      </v-card-actions> -->
     </v-card>
   </template>
   <v-card v-else>
@@ -51,7 +69,7 @@
           <th class="text-left">Modelo</th>
           <th class="text-left">Año</th>
           <th v-if="!store.isCliente" class="text-left">Dueño</th>
-          <th>Acciones</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -64,7 +82,23 @@
           <td>{{ car.model }}</td>
           <td>{{ car.year }}</td>
           <td v-if="!store.isCliente">{{ car.owner }}</td>
-          <td></td>
+          <td class="text-right">
+            <v-btn
+              icon="mdi-calendar-search"
+              color="primary"
+              flat
+              variant="text"
+              title="Solicitar turno"
+            />
+            <v-btn title="Historial" icon="mdi-history" variant="text" flat />
+            <v-btn
+              title="Eliminar"
+              icon="mdi-car-off"
+              variant="text"
+              color="red"
+              flat
+            />
+          </td>
         </tr>
       </tbody>
     </v-table>
