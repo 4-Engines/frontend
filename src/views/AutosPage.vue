@@ -6,7 +6,7 @@
   </p>
   <p v-else>Estos son los autos disponibles en el taller.</p>
 
-  <div class="mt-5 text-right">
+  <div class="my-5 text-right">
     <v-btn color="primary" to="/registro-auto">Agregar auto</v-btn>
   </div>
 
@@ -15,8 +15,8 @@
   </v-alert>
 
   <v-text-field
-    v-if="errorMessage.length === 0"
     v-model="filter"
+    :disabled="errorMessage.length > 0"
     variant="outlined"
     label="Filtrar por dominio"
     class="mb-3"
@@ -44,7 +44,9 @@
     <v-card v-for="car in carsFiltered" :key="car._id" class="mb-3">
       <v-card-title>
         <v-avatar class="mr-4" size="x-small" :color="car.color"></v-avatar>
-        {{ car.carid }}
+        <v-chip label
+          ><strong>{{ car.carid }}</strong></v-chip
+        >
         <v-spacer />
         <v-btn
           icon="mdi-car-info"
@@ -98,7 +100,7 @@
     <v-table>
       <thead>
         <tr>
-          <th>Color</th>
+          <th style="width: 1%"></th>
           <th>Dominio</th>
           <th>Marca</th>
           <th>Modelo</th>
@@ -123,7 +125,9 @@
         <tr v-for="car in carsFiltered" :key="car._id">
           <td><v-avatar size="x-small" :color="car.color"></v-avatar></td>
           <td>
-            <strong>{{ car.carid }}</strong>
+            <v-chip label
+              ><strong>{{ car.carid }}</strong></v-chip
+            >
           </td>
           <td>{{ car.brand }}</td>
           <td>{{ car.model }}</td>
