@@ -151,7 +151,7 @@ const menuComputed = computed(() => {
     {
       title: 'Inicio',
       to: '/home',
-      icon: 'mdi-garage-open-variant',
+      icon: 'mdi-home-variant',
     },
   ];
 
@@ -159,7 +159,7 @@ const menuComputed = computed(() => {
     menu.push({
       title: 'Mis autos',
       to: '/mis-autos',
-      icon: 'mdi-car-key',
+      icon: 'mdi-key-chain',
     });
   }
 

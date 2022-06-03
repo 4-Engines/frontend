@@ -104,7 +104,9 @@
             <v-divider />
 
             <v-card-actions>
-              <v-btn to="/" color="dark" :disabled="loading">Cancelar</v-btn>
+              <v-btn color="dark" :disabled="loading" @click="router.back()"
+                >Cancelar</v-btn
+              >
 
               <v-btn :disabled="loading" color="primary" type="submit">
                 Registrar auto
@@ -130,8 +132,10 @@ import { reactive, ref } from 'vue';
 import { useStore } from '@/store';
 import { createCar } from '@/services/Car.service';
 import { email, onlyNumbers, required } from '@/rules';
+import { useRouter } from 'vue-router';
 
 const store = useStore();
+const router = useRouter();
 const formRef = ref<any>(null);
 const form = reactive({
   carid: '',

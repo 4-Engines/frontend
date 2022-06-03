@@ -169,7 +169,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useBreakpoints, breakpointsVuetify } from '@vueuse/core';
 import { useStore } from '@/store';
-import { getAllCars } from '@/services/Car.service';
+import { getAllCars, getMyCars } from '@/services/Car.service';
 import type { Car } from '@/types/Car';
 
 const store = useStore();
@@ -184,7 +184,8 @@ const filter = ref('');
 onMounted(async () => {
   loading.value = true;
   try {
-    const { data } = await getAllCars(store.user?.id as string);
+    const service = store.isEmpleado ? getAllCars : getMyCars;
+    const { data } = await service(store.user?.id as string);
 
     if (data[0].status === 'error') {
       throw Error(data[0].msj);

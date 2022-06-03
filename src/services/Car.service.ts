@@ -1,9 +1,19 @@
 import { axios } from '@/plugins/axios';
-import type { DefaultResponse, GetAllCarsResponse } from '@/types/Response';
+import type {
+  DefaultResponse,
+  GetAllCarsResponse,
+  GetMyCarResponse,
+} from '@/types/Response';
 
 function getAllCars(id_user: string): Promise<GetAllCarsResponse> {
   return axios.post('/select-all-cars', {
     id_user,
+  });
+}
+
+function getMyCars(id_owner: string): Promise<GetMyCarResponse> {
+  return axios.post('/select-my-car', {
+    id_owner,
   });
 }
 
@@ -19,4 +29,4 @@ async function createCar(data: {
   return axios.post('/create-car', data);
 }
 
-export { getAllCars, createCar };
+export { getAllCars, getMyCars, createCar };
