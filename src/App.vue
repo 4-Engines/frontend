@@ -169,6 +169,12 @@ const menuComputed = computed(() => {
       to: '/autos',
       icon: 'mdi-car-multiple',
     });
+
+    // menu.push({
+    //   title: 'Nuevo cliente',
+    //   to: '/registro',
+    //   icon: 'mdi-person-add',
+    // });
   }
 
   if (store.isAdmin) {
