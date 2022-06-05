@@ -33,6 +33,10 @@ type GetMyCarResponse = DefaultResponse<{
   cars: Car[];
 }>;
 
+type GetCarResponse = DefaultResponse<{
+  car: Car;
+}>;
+
 export {
   DefaultResponse,
   LoginResponse,
@@ -40,4 +44,5 @@ export {
   ConfirmUserResponse,
   GetAllCarsResponse,
   GetMyCarResponse,
+  GetCarResponse,
 };

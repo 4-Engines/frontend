@@ -158,7 +158,7 @@ const menuComputed = computed(() => {
   if (store.isCliente) {
     menu.push({
       title: 'Mis autos',
-      to: '/mis-autos',
+      to: '/autos',
       icon: 'mdi-key-chain',
     });
   }

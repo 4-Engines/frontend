@@ -52,13 +52,15 @@
           icon="mdi-car-info"
           flat
           variant="text"
-          title="Información del auto" />
+          title="Información del auto"
+          :to="`/autos/${car.carid}`" />
         <v-btn
           icon="mdi-calendar-search"
           color="primary"
           flat
           variant="text"
-          title="Solicitar turno" />
+          title="Solicitar turno"
+          :to="`/autos/${car.carid}?t=turno`" />
         <!-- <v-btn title="Historial" icon="mdi-history" variant="text" flat /> -->
         <v-btn
           title="Eliminar"
@@ -66,6 +68,7 @@
           variant="text"
           color="red"
           flat
+          :to="`/autos/${car.carid}?t=administrar`"
       /></v-card-title>
       <v-card-subtitle>Dueño: {{ car.owner }}</v-card-subtitle>
       <v-card-text v-if="car.status === 'no active'" class="pb-0"
@@ -142,6 +145,7 @@
               flat
               variant="text"
               title="Información del auto"
+              :to="`/autos/${car.carid}`"
             />
             <v-btn
               icon="mdi-calendar-search"
@@ -149,6 +153,7 @@
               flat
               variant="text"
               title="Solicitar turno"
+              :to="`/autos/${car.carid}?t=turno`"
             />
             <!-- <v-btn title="Historial" icon="mdi-history" variant="text" flat /> -->
             <v-btn
@@ -157,6 +162,7 @@
               variant="text"
               color="red"
               flat
+              :to="`/autos/${car.carid}?t=administrar`"
             />
           </td>
         </tr>

@@ -23,10 +23,6 @@ const routes: RouteRecordRaw[] = [
     component: Home,
   },
   {
-    path: '/mis-autos',
-    component: Autos,
-  },
-  {
     path: '/mis-datos',
     component: MisDatos,
   },
