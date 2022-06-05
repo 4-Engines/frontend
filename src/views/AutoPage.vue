@@ -58,8 +58,8 @@
 
             <label>Hora</label>
             <v-chip-group v-model="time" selected-class="text-primary">
-              <v-chip v-for="time in times" :key="time" filter>{{
-                time
+              <v-chip v-for="label in times" :key="label" filter>{{
+                label
               }}</v-chip>
             </v-chip-group>
           </v-card-text>
