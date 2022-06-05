@@ -8,7 +8,15 @@
       <div class="mt-10 mb-2">
         <v-form ref="formRef" @submit.prevent="handleLogin">
           <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
-            {{ errorMessage }}
+            <p>{{ errorMessage }}</p>
+            <p v-if="cuentaNoActiva">
+              <a
+                class="text-white"
+                href="#"
+                @click="handleResendActivationEmail"
+                >Reenviar mail de activación</a
+              >
+            </p>
           </v-alert>
 
           <v-text-field
@@ -19,7 +27,7 @@
             :error="errorMessage.length > 0"
             variant="outlined"
             :disabled="loading"
-            :rules="[rules.required]"
+            :rules="[rules.required, rules.min3]"
           />
 
           <v-text-field
@@ -33,7 +41,7 @@
             :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             variant="outlined"
             :disabled="loading"
-            :rules="[rules.required, rules.min3]"
+            :rules="[rules.required]"
             @click:append-inner="showPassword = !showPassword"
           />
 
@@ -45,7 +53,11 @@
             size="x-large"
             type="submit"
           >
-            {{ loading ? 'Ingresando al sistema...' : 'Ingresar' }}
+            {{
+              loading && !cuentaNoActiva
+                ? 'Ingresando al sistema...'
+                : 'Ingresar'
+            }}
           </v-btn>
         </v-form>
       </div>
@@ -102,17 +114,15 @@
       </div> -->
     </v-col>
   </v-row>
-
-  <!-- <v-snackbar v-model="snackbar" timeout="2000" bottom left>
-    ¡Se envió un mail a tu casilla de correo!
-  </v-snackbar> -->
 </template>
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
-import { loginUser } from '@/services/User.service';
+import { loginUser, resendActiationEmail } from '@/services/User.service';
+import { useSnackbar } from '@/composables/useSnackbar';
+import { useOverlay } from '@/composables/useOverlay';
 import { required, min3 } from '@/rules';
 
 const store = useStore();
@@ -121,9 +131,11 @@ const router = useRouter();
 const errorMessage = ref('');
 const showPassword = ref(false);
 // const recuperarMail = ref('');
-// const snackbar = ref(false);
 // const showDialog = ref(false);
 const loading = ref(false);
+const cuentaNoActiva = ref(false);
+const snackbar = useSnackbar();
+const overlay = useOverlay();
 const formRef = ref<any>(null);
 const rules = ref({
   required,
@@ -142,6 +154,7 @@ onMounted(() => {
 });
 
 async function handleLogin() {
+  cuentaNoActiva.value = false;
   errorMessage.value = '';
   loading.value = true;
   try {
@@ -151,6 +164,14 @@ async function handleLogin() {
     if (data.error) {
       // @ts-ignore
       throw Error(data.error);
+    }
+
+    if (
+      data[0].status === 'error' &&
+      data[0].msj.includes('Usuario inactivo')
+    ) {
+      cuentaNoActiva.value = true;
+      throw Error(data[0].msj);
     }
 
     if (data[0].status === 'error') {
@@ -169,6 +190,27 @@ async function handleLogin() {
     errorMessage.value = error.message;
   } finally {
     loading.value = false;
+  }
+}
+
+async function handleResendActivationEmail() {
+  loading.value = true;
+  errorMessage.value = '';
+  overlay.show('Reenviando mail...');
+
+  try {
+    const { data } = await resendActiationEmail(form.username);
+
+    if (data[0].status === 'error') {
+      throw Error(data[0].msj);
+    }
+
+    snackbar.show(data[0].msj);
+  } catch (error: any) {
+    errorMessage.value = error.message;
+  } finally {
+    loading.value = false;
+    overlay.hide();
   }
 }
 </script>

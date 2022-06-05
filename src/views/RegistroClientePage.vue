@@ -122,7 +122,7 @@
                 hide-details="auto"
                 required
                 :rules="[
-                  (v) =>
+                  (v: boolean) =>
                     !!v || 'Tenés que aceptar los términos antes de continuar',
                 ]"
               >
