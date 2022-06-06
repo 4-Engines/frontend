@@ -1,5 +1,5 @@
 import type { AxiosResponse } from 'axios';
-import { Car } from './Car';
+import type { Car } from './Car';
 import type { User } from './User';
 
 type DefaultResponse<T = {}> = AxiosResponse<

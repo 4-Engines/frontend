@@ -76,7 +76,7 @@
 <script setup lang="ts">
 import { getCar } from '@/services/Car.service';
 import { useStore } from '@/store';
-import { Car } from '@/types/Car';
+import type { Car } from '@/types/Car';
 import { breakpointsVuetify, useBreakpoints } from '@vueuse/core';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
