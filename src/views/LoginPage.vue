@@ -53,11 +53,7 @@
             size="x-large"
             type="submit"
           >
-            {{
-              loading && !cuentaNoActiva
-                ? 'Ingresando al sistema...'
-                : 'Ingresar'
-            }}
+            Ingresar
           </v-btn>
         </v-form>
       </div>
@@ -157,6 +153,8 @@ async function handleLogin() {
   cuentaNoActiva.value = false;
   errorMessage.value = '';
   loading.value = true;
+  overlay.show('Ingresando al sistema...');
+
   try {
     const { data } = await loginUser(form);
 
@@ -190,6 +188,7 @@ async function handleLogin() {
     errorMessage.value = error.message;
   } finally {
     loading.value = false;
+    overlay.hide();
   }
 }
 

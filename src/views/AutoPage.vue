@@ -9,7 +9,7 @@
       centered
       :stacked="!isMobile"
       :grow="isMobile"
-      :background-color="store.theme === 'light' ? '#E1E1E1' : '#333333'"
+      :background-color="store.isLightTheme ? '#E1E1E1' : '#333333'"
       color="primary"
     >
       <v-tab
@@ -29,11 +29,11 @@
       </v-tab>
 
       <v-tab
-        value="historial"
-        @click="router.push({ path: route.path, query: { t: 'historial' } })"
+        value="servicios"
+        @click="router.push({ path: route.path, query: { t: 'servicios' } })"
       >
-        <v-icon>mdi-history</v-icon>
-        <span class="d-none d-sm-inline-block">Historial</span>
+        <v-icon>mdi-hammer-wrench</v-icon>
+        <span class="d-none d-sm-inline-block">Servicios</span>
       </v-tab>
 
       <v-tab
@@ -45,37 +45,29 @@
       </v-tab>
     </v-tabs>
 
-    <v-window v-model="tab">
+    <v-window v-model="tab" class="px-4 py-4">
       <v-window-item value="detalle">
-        <v-card title="Detalle">
-          <v-card-text>Detalle</v-card-text>
-        </v-card>
+        <h2 class="mb-4">Detalle</h2>
+        <p>Detalle</p>
       </v-window-item>
-      <v-window-item value="turno">
-        <v-card title="Nuevo turno">
-          <v-card-text>
-            <v-text-field v-model="date" type="date" label="Fecha" />
 
-            <label>Hora</label>
-            <v-chip-group v-model="time" selected-class="text-primary">
-              <v-chip v-for="label in times" :key="label" filter>{{
-                label
-              }}</v-chip>
-            </v-chip-group>
-          </v-card-text>
-        </v-card>
+      <v-window-item value="turno">
+        <nuevo-turno-tab :car="car" />
       </v-window-item>
-      <v-window-item value="historial">
-        <v-card title="Historial">
-          <v-card-text>Historial</v-card-text>
-        </v-card>
+
+      <v-window-item value="servicios">
+        <h2 class="mb-4">Servicios</h2>
+
+        <div v-if="store.isEmpleado" class="mt-4 text-right">
+          <v-btn color="primary">Agregar servicio</v-btn>
+        </div>
+
+        <p>Servicios</p>
       </v-window-item>
+
       <v-window-item value="administrar">
-        <v-card title="Administrar">
-          <v-card-text>
-            <v-alert>Borrar auto</v-alert>
-          </v-card-text>
-        </v-card>
+        <h2 class="mb-4">Administrar</h2>
+        <v-alert color="red" variant="outlined">Borrar auto</v-alert>
       </v-window-item>
     </v-window>
   </v-card>
@@ -88,8 +80,9 @@ import { Car } from '@/types/Car';
 import { breakpointsVuetify, useBreakpoints } from '@vueuse/core';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import NuevoTurnoTab from './NuevoTurnoTab.vue';
 
-const TABS = ['detalle', 'turno', 'historial', 'administrar'];
+const TABS = ['detalle', 'turno', 'servicios', 'administrar'];
 
 const router = useRouter();
 const route = useRoute();
@@ -99,18 +92,6 @@ const breakpoints = useBreakpoints(breakpointsVuetify);
 const isMobile = breakpoints.smaller('xs');
 const loading = ref(false);
 const car = ref<Car>();
-const date = ref('');
-const times = ref([
-  '9:00 am',
-  '10:00 am',
-  '11:00 am',
-  '12:00 pm',
-  '15:00 pm',
-  '16:00 pm',
-  '17:00 pm',
-  '18:00 pm',
-]);
-const time = ref('');
 
 watch(
   () => route.query.t,

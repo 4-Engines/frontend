@@ -50,27 +50,28 @@
         <v-spacer />
         <v-btn
           icon="mdi-car-info"
+          :color="actionButtonColor"
           flat
           variant="text"
           title="Información del auto"
           :to="`/autos/${car.carid}`" />
         <v-btn
           icon="mdi-calendar-search"
-          color="primary"
+          :color="actionButtonColor"
           flat
           variant="text"
           title="Solicitar turno"
           :to="`/autos/${car.carid}?t=turno`" />
         <!-- <v-btn title="Historial" icon="mdi-history" variant="text" flat /> -->
         <v-btn
-          title="Eliminar"
-          icon="mdi-car-off"
+          title="Servicios"
+          icon="mdi-hammer-wrench"
+          :color="actionButtonColor"
           variant="text"
-          color="red"
           flat
-          :to="`/autos/${car.carid}?t=administrar`"
+          :to="`/autos/${car.carid}?t=servicios`"
       /></v-card-title>
-      <v-card-subtitle>Dueño: {{ car.owner }}</v-card-subtitle>
+      <v-card-subtitle>Responsable: {{ car.owner }}</v-card-subtitle>
       <v-card-text v-if="car.status === 'no active'" class="pb-0"
         ><v-chip size="small" color="red">NO ACTIVO</v-chip></v-card-text
       >
@@ -108,7 +109,7 @@
           <th>Marca</th>
           <th>Modelo</th>
           <th>Año</th>
-          <th v-if="!store.isCliente">Dueño</th>
+          <th v-if="!store.isCliente">Responsable</th>
           <th></th>
         </tr>
       </thead>
@@ -142,6 +143,8 @@
             >
             <v-btn
               icon="mdi-car-info"
+              :color="actionButtonColor"
+              size="small"
               flat
               variant="text"
               title="Información del auto"
@@ -149,7 +152,8 @@
             />
             <v-btn
               icon="mdi-calendar-search"
-              color="primary"
+              :color="actionButtonColor"
+              size="small"
               flat
               variant="text"
               title="Solicitar turno"
@@ -157,12 +161,13 @@
             />
             <!-- <v-btn title="Historial" icon="mdi-history" variant="text" flat /> -->
             <v-btn
-              title="Eliminar"
-              icon="mdi-car-off"
+              title="Servicios"
+              icon="mdi-hammer-wrench"
+              :color="actionButtonColor"
+              size="small"
               variant="text"
-              color="red"
               flat
-              :to="`/autos/${car.carid}?t=administrar`"
+              :to="`/autos/${car.carid}?t=servicios`"
             />
           </td>
         </tr>
@@ -186,6 +191,10 @@ const breakpoints = useBreakpoints(breakpointsVuetify);
 const isMobile = breakpoints.smaller('xs');
 const emptyList = ref(false);
 const filter = ref('');
+
+const actionButtonColor = computed(() =>
+  store.isLightTheme ? '#6D6D6D' : '#ADADAD'
+);
 
 onMounted(async () => {
   loading.value = true;
