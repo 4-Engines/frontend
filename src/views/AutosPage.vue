@@ -60,8 +60,8 @@
           :color="actionButtonColor"
           flat
           variant="text"
-          title="Solicitar turno"
-          :to="`/autos/${car.carid}?t=turno`" />
+          title="Turnos"
+          :to="`/autos/${car.carid}?t=turnos`" />
         <!-- <v-btn title="Historial" icon="mdi-history" variant="text" flat /> -->
         <v-btn
           title="Servicios"
@@ -93,10 +93,6 @@
           </tbody>
         </v-table>
       </v-card-text>
-      <!-- <v-card-actions>
-        <v-btn color="primary" text>Solicitar turno</v-btn>
-        <v-btn color="red" text>Eliminar</v-btn>
-      </v-card-actions> -->
     </v-card>
   </template>
 
@@ -156,8 +152,8 @@
               size="small"
               flat
               variant="text"
-              title="Solicitar turno"
-              :to="`/autos/${car.carid}?t=turno`"
+              title="Turnos"
+              :to="`/autos/${car.carid}?t=turnos`"
             />
             <!-- <v-btn title="Historial" icon="mdi-history" variant="text" flat /> -->
             <v-btn

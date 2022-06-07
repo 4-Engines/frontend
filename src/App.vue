@@ -84,6 +84,7 @@
   }}</v-snackbar>
 
   <v-overlay
+    :theme="store.theme"
     :model-value="overlay.visible.value"
     class="align-center justify-center text-center"
   >

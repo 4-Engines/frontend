@@ -58,7 +58,6 @@
                   <v-text-field
                     v-model="form.model"
                     :disabled="loading"
-                    autofocus
                     label="Modelo"
                     hide-details="auto"
                     variant="outlined"

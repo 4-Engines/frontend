@@ -1,4 +1,12 @@
 <template>
+  <v-breadcrumbs>
+    <v-breadcrumbs-item to="/autos">Autos</v-breadcrumbs-item>
+    <v-breadcrumbs-divider>/</v-breadcrumbs-divider>
+    <v-breadcrumbs-item disabled :to="`/autos/${car?.carid}`">{{
+      car?.carid
+    }}</v-breadcrumbs-item>
+  </v-breadcrumbs>
+
   <h1>Detalle del Auto {{ car?.carid }}</h1>
 
   <p>Responsable: {{ car?.owner }}</p>
@@ -21,11 +29,11 @@
       </v-tab>
 
       <v-tab
-        value="turno"
-        @click="router.push({ path: route.path, query: { t: 'turno' } })"
+        value="turnos"
+        @click="router.push({ path: route.path, query: { t: 'turnos' } })"
       >
         <v-icon>mdi-calendar-search</v-icon>
-        <span class="d-none d-sm-inline-block">Nuevo turno</span>
+        <span class="d-none d-sm-inline-block">Turnos</span>
       </v-tab>
 
       <v-tab
@@ -51,26 +59,56 @@
         <p>Detalle</p>
       </v-window-item>
 
-      <v-window-item value="turno">
-        <nuevo-turno-tab :car="car" />
+      <v-window-item value="turnos">
+        <turnos-tab :car="car" />
       </v-window-item>
 
       <v-window-item value="servicios">
         <h2 class="mb-4">Servicios</h2>
-
-        <div v-if="store.isEmpleado" class="mt-4 text-right">
-          <v-btn color="primary">Agregar servicio</v-btn>
-        </div>
-
-        <p>Servicios</p>
+        <p class="mb-6">Estos son los servicios que tuviste con nosotros.</p>
       </v-window-item>
 
       <v-window-item value="administrar">
         <h2 class="mb-4">Administrar</h2>
-        <v-alert color="red" variant="outlined">Borrar auto</v-alert>
+        <v-alert color="red" variant="outlined">Eliminar auto</v-alert>
       </v-window-item>
     </v-window>
   </v-card>
+
+  <v-dialog
+    v-model="nuevoServicioModal"
+    :fullscreen="isMobile"
+    :scrim="!isMobile"
+    transition="dialog-bottom-transition"
+  >
+    <v-card>
+      <v-toolbar dark :color="isMobile ? 'primary' : 'transparent'">
+        <v-toolbar-title>Nuevo servicio</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+          <v-btn icon variant="text" @click="nuevoServicioModal = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar-items>
+      </v-toolbar>
+
+      <v-card-text>
+        <v-btn color="primary" @click="nuevoServicioModal = false">
+          Cargar servicio
+        </v-btn>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+
+  <v-btn
+    v-if="store.isEmpleado && tab === 'servicios'"
+    title="Agregar nuevo servicio"
+    icon="mdi-plus"
+    color="primary"
+    size="large"
+    style="position: fixed; right: 20px; bottom: 20px"
+    @click="nuevoServicioModal = true"
+  ></v-btn>
 </template>
 
 <script setup lang="ts">
@@ -80,9 +118,9 @@ import type { Car } from '@/types/Car';
 import { breakpointsVuetify, useBreakpoints } from '@vueuse/core';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import NuevoTurnoTab from './NuevoTurnoTab.vue';
+import TurnosTab from './TurnosTab.vue';
 
-const TABS = ['detalle', 'turno', 'servicios', 'administrar'];
+const TABS = ['detalle', 'turnos', 'servicios', 'administrar'];
 
 const router = useRouter();
 const route = useRoute();
@@ -92,6 +130,7 @@ const breakpoints = useBreakpoints(breakpointsVuetify);
 const isMobile = breakpoints.smaller('xs');
 const loading = ref(false);
 const car = ref<Car>();
+const nuevoServicioModal = ref(false);
 
 watch(
   () => route.query.t,
