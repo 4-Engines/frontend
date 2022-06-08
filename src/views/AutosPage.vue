@@ -174,17 +174,16 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
-import { useBreakpoints, breakpointsVuetify } from '@vueuse/core';
 import { useStore } from '@/store';
 import { getAllCars, getMyCars } from '@/services/Car.service';
 import type { Car } from '@/types/Car';
+import { useMobile } from '@/composables/useMobile';
 
 const store = useStore();
 const cars = ref<Car[]>([]);
 const errorMessage = ref('');
 const loading = ref(false);
-const breakpoints = useBreakpoints(breakpointsVuetify);
-const isMobile = breakpoints.smaller('xs');
+const { isMobile } = useMobile();
 const emptyList = ref(false);
 const filter = ref('');
 
