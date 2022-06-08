@@ -60,11 +60,15 @@
       </v-window-item>
 
       <v-window-item value="turnos">
-        <turnos-tab :car="car" />
+        <turnos-tab :car="car" @reload="fetchCar" />
       </v-window-item>
 
       <v-window-item value="servicios">
-        <servicio-tab :active="tab === 'servicios'" />
+        <servicio-tab
+          :active="tab === 'servicios'"
+          :car="car"
+          @reload="fetchCar"
+        />
       </v-window-item>
 
       <v-window-item value="administrar">
@@ -100,11 +104,15 @@ watch(
   (value) => (tab.value = value as string)
 );
 
-onMounted(async () => {
+onMounted(() => {
   if (route.query.t && TABS.includes(route.query.t as string)) {
     tab.value = route.query.t as string;
   }
 
+  fetchCar();
+});
+
+async function fetchCar() {
   try {
     loading.value = true;
     const { data } = await getCar(route.params.id as string);
@@ -128,5 +136,5 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
-});
+}
 </script>

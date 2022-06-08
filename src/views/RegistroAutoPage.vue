@@ -170,6 +170,11 @@ const rules = {
 };
 
 async function handleSubmit() {
+  const validateForm = await formRef.value?.validate();
+  if (!validateForm.valid) {
+    return;
+  }
+
   errorMessage.value = '';
   loading.value = true;
   try {

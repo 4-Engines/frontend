@@ -218,7 +218,6 @@ const rules = {
 async function handleSubmit() {
   const validateForm = await formRef.value?.validate();
   if (!validateForm.valid) {
-    errorMessage.value = 'Hay errores en el formulario';
     return;
   }
 

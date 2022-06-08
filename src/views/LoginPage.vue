@@ -150,6 +150,11 @@ onMounted(() => {
 });
 
 async function handleLogin() {
+  const validateForm = await formRef.value?.validate();
+  if (!validateForm.valid) {
+    return;
+  }
+
   cuentaNoActiva.value = false;
   errorMessage.value = '';
   loading.value = true;
