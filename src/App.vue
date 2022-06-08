@@ -44,7 +44,7 @@
             <v-switch
               color="indigo-lighten-2"
               hide-details
-              :model-value="!isLightTheme"
+              :model-value="!store.isLightTheme"
             />
           </v-list-item-action>
         </v-list-item>
@@ -58,7 +58,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar :color="isLightTheme ? 'primary' : '#1E1E1E'">
+    <v-app-bar :color="store.isLightTheme ? 'primary' : '#1E1E1E'">
       <v-app-bar-nav-icon v-if="store.isLoggedIn" @click="drawer = !drawer" />
       <v-app-bar-title>
         <span class="d-block d-sm-none">SiGeA</span>
@@ -84,6 +84,7 @@
   }}</v-snackbar>
 
   <v-overlay
+    :theme="store.theme"
     :model-value="overlay.visible.value"
     class="align-center justify-center text-center"
   >
@@ -127,7 +128,7 @@ onMounted(() => {
 
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute('content', isLightTheme.value ? '#124B8D' : '#2A2A2A');
+    ?.setAttribute('content', store.isLightTheme ? '#124B8D' : '#2A2A2A');
 
   if (store.isLoggedIn) {
     router.replace('/home');
@@ -144,8 +145,6 @@ const avatarLabel = computed(() => {
   )}`.toUpperCase();
 });
 
-const isLightTheme = computed(() => store.theme === 'light');
-
 const menuComputed = computed(() => {
   const menu = [
     {
@@ -158,7 +157,7 @@ const menuComputed = computed(() => {
   if (store.isCliente) {
     menu.push({
       title: 'Mis autos',
-      to: '/mis-autos',
+      to: '/autos',
       icon: 'mdi-key-chain',
     });
   }
@@ -199,10 +198,10 @@ function installApp() {
 }
 
 function toggleTheme() {
-  store.theme = isLightTheme.value ? 'dark' : 'light';
+  store.theme = store.isLightTheme ? 'dark' : 'light';
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute('content', isLightTheme.value ? '#124B8D' : '#2A2A2A');
+    ?.setAttribute('content', store.isLightTheme ? '#124B8D' : '#2A2A2A');
 }
 
 async function logout() {
