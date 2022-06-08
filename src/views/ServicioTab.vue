@@ -24,15 +24,6 @@
             :rules="[rules.required]"
           />
 
-          <v-text-field
-            v-model="form.price"
-            hide-details="auto"
-            label="Precio (opcional)"
-            variant="outlined"
-            class="mb-4"
-            prepend-inner-icon="mdi-currency-usd"
-          />
-
           <v-textarea
             v-model="form.details"
             label="Observaciones (opcional)"
@@ -85,13 +76,11 @@ const formRef = ref<any>(null);
 const form = reactive({
   service: '',
   details: '',
-  price: '',
 });
 
 function resetForm() {
   form.service = '';
   form.details = '';
-  form.price = '';
 }
 
 function handleCloseModal() {
@@ -109,7 +98,6 @@ async function handleAddService() {
     await newService({
       details: form.details,
       service: form.service,
-      price: form.price,
       id_car: props.car?._id as string,
       id_user: store.user?.username as string,
     });
