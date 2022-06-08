@@ -64,8 +64,7 @@
       </v-window-item>
 
       <v-window-item value="servicios">
-        <h2 class="mb-4">Servicios</h2>
-        <p class="mb-6">Estos son los servicios que tuviste con nosotros.</p>
+        <servicio-tab :active="tab === 'servicios'" />
       </v-window-item>
 
       <v-window-item value="administrar">
@@ -74,51 +73,17 @@
       </v-window-item>
     </v-window>
   </v-card>
-
-  <v-dialog
-    v-model="nuevoServicioModal"
-    :fullscreen="isMobile"
-    :scrim="!isMobile"
-    transition="dialog-bottom-transition"
-  >
-    <v-card>
-      <v-toolbar dark :color="isMobile ? 'primary' : 'transparent'">
-        <v-toolbar-title>Nuevo servicio</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-toolbar-items>
-          <v-btn icon variant="text" @click="nuevoServicioModal = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
-
-      <v-card-text>
-        <v-btn color="primary" @click="nuevoServicioModal = false">
-          Cargar servicio
-        </v-btn>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
-
-  <v-btn
-    v-if="store.isEmpleado && tab === 'servicios'"
-    title="Agregar nuevo servicio"
-    icon="mdi-plus"
-    color="primary"
-    size="large"
-    style="position: fixed; right: 20px; bottom: 20px"
-    @click="nuevoServicioModal = true"
-  ></v-btn>
 </template>
 
 <script setup lang="ts">
+import { useMobile } from '@/composables/useMobile';
 import { getCar } from '@/services/Car.service';
 import { useStore } from '@/store';
 import type { Car } from '@/types/Car';
-import { breakpointsVuetify, useBreakpoints } from '@vueuse/core';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import TurnosTab from './TurnosTab.vue';
+import ServicioTab from './ServicioTab.vue';
 
 const TABS = ['detalle', 'turnos', 'servicios', 'administrar'];
 
@@ -126,11 +91,9 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 const tab = ref('detalle');
-const breakpoints = useBreakpoints(breakpointsVuetify);
-const isMobile = breakpoints.smaller('xs');
+const { isMobile } = useMobile();
 const loading = ref(false);
 const car = ref<Car>();
-const nuevoServicioModal = ref(false);
 
 watch(
   () => route.query.t,
