@@ -195,8 +195,9 @@ const actionButtonColor = computed(() =>
 onMounted(async () => {
   loading.value = true;
   try {
-    const service = store.isEmpleado ? getAllCars : getMyCars;
-    const { data } = await service(store.user?.id as string);
+    const { data } = await (store.isEmpleado
+      ? getAllCars(store.user?.id as string)
+      : getMyCars(store.user?.username as string));
 
     if (data[0].status === 'error') {
       throw Error(data[0].msj);
