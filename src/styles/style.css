@@ -17,3 +17,33 @@
 .v-card-subtitle {
   display: block;
 }
+
+.v-breadcrumbs {
+  padding: 0 !important;
+}
+
+.v-breadcrumbs .v-breadcrumbs-item {
+  text-decoration: underline;
+}
+
+.v-breadcrumbs .v-breadcrumbs-item:last-child {
+  text-decoration: none;
+}
+
+.v-tabs--fixed-tabs .v-slide-group__content > :first-child,
+.v-tabs--centered .v-slide-group__content > :first-child {
+  margin-inline-start: auto !important;
+}
+
+.v-tabs--fixed-tabs .v-slide-group__content > :last-child,
+.v-tabs--centered .v-slide-group__content > :last-child {
+  margin-inline-end: auto !important;
+}
+
+.v-tab {
+  min-width: 60px;
+}
+
+.v-select .v-field--dirty .v-select__selection {
+  margin-top: 4px;
+}

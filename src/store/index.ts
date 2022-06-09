@@ -11,6 +11,7 @@ export const useStore = defineStore('main', {
     user: null as User | null,
   }),
   getters: {
+    isLightTheme: (state) => state.theme === 'light',
     isCliente: (state) => state.user?.rol === Rol.Cliente,
     isEmpleado: (state) => state.user?.rol === Rol.Empleado,
     isAdmin: (state) => state.user?.rol === Rol.Admin,

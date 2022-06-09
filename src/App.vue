@@ -44,21 +44,21 @@
             <v-switch
               color="indigo-lighten-2"
               hide-details
-              :model-value="!isLightTheme"
+              :model-value="!store.isLightTheme"
             />
           </v-list-item-action>
         </v-list-item>
 
         <v-list-item @click="logout">
           <v-list-item-avatar start>
-            <v-icon icon="mdi-lock-open" />
+            <v-icon icon="mdi-car-traction-control" />
           </v-list-item-avatar>
           Salir
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar :color="isLightTheme ? 'primary' : '#1E1E1E'">
+    <v-app-bar :color="store.isLightTheme ? 'primary' : '#1E1E1E'">
       <v-app-bar-nav-icon v-if="store.isLoggedIn" @click="drawer = !drawer" />
       <v-app-bar-title>
         <span class="d-block d-sm-none">SiGeA</span>
@@ -79,12 +79,17 @@
     </v-main>
   </v-app>
 
+  <v-snackbar :model-value="snackbar.visible.value" left>{{
+    snackbar.message.value
+  }}</v-snackbar>
+
   <v-overlay
-    :model-value="loading"
+    :theme="store.theme"
+    :model-value="overlay.visible.value"
     class="align-center justify-center text-center"
   >
     <v-progress-circular indeterminate size="64"></v-progress-circular>
-    <p class="mt-3">Cerrando sesión...</p>
+    <p class="mt-3">{{ overlay.message.value }}</p>
   </v-overlay>
 </template>
 
@@ -94,6 +99,8 @@ import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import ReloadPWA from '@/components/ReloadPWA.vue';
 import { logoutUser } from '@/services/User.service';
+import { useSnackbar } from './composables/useSnackbar';
+import { useOverlay } from '@/composables/useOverlay';
 
 const store = useStore();
 const router = useRouter();
@@ -101,6 +108,9 @@ const deferredPrompt = ref();
 const showInstallPromotion = ref(false);
 const drawer = ref(false);
 const loading = ref(false);
+const overlay = useOverlay();
+
+const snackbar = useSnackbar();
 
 onMounted(() => {
   store.$patch({});
@@ -118,7 +128,7 @@ onMounted(() => {
 
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute('content', isLightTheme.value ? '#124B8D' : '#2A2A2A');
+    ?.setAttribute('content', store.isLightTheme ? '#124B8D' : '#2A2A2A');
 
   if (store.isLoggedIn) {
     router.replace('/home');
@@ -130,25 +140,25 @@ const avatarLabel = computed(() => {
     return '';
   }
 
-  return `${store.user.name.charAt(0)}${store.user.lastname.charAt(0)}`;
+  return `${store.user.name.charAt(0)}${store.user.lastname.charAt(
+    0
+  )}`.toUpperCase();
 });
-
-const isLightTheme = computed(() => store.theme === 'light');
 
 const menuComputed = computed(() => {
   const menu = [
     {
       title: 'Inicio',
       to: '/home',
-      icon: 'mdi-home',
+      icon: 'mdi-home-variant',
     },
   ];
 
   if (store.isCliente) {
     menu.push({
       title: 'Mis autos',
-      to: '/mis-autos',
-      icon: 'mdi-car-key',
+      to: '/autos',
+      icon: 'mdi-key-chain',
     });
   }
 
@@ -156,14 +166,14 @@ const menuComputed = computed(() => {
     menu.push({
       title: 'Autos',
       to: '/autos',
-      icon: 'mdi-car',
+      icon: 'mdi-car-multiple',
     });
 
-    menu.push({
-      title: 'Nuevo cliente',
-      to: '/registro',
-      icon: 'mdi-person-add',
-    });
+    // menu.push({
+    //   title: 'Nuevo cliente',
+    //   to: '/registro',
+    //   icon: 'mdi-person-add',
+    // });
   }
 
   if (store.isAdmin) {
@@ -188,14 +198,15 @@ function installApp() {
 }
 
 function toggleTheme() {
-  store.theme = isLightTheme.value ? 'dark' : 'light';
+  store.theme = store.isLightTheme ? 'dark' : 'light';
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute('content', isLightTheme.value ? '#124B8D' : '#2A2A2A');
+    ?.setAttribute('content', store.isLightTheme ? '#124B8D' : '#2A2A2A');
 }
 
 async function logout() {
   if (store.user) {
+    overlay.show('Cerrando sesión...');
     loading.value = true;
 
     try {
@@ -217,6 +228,7 @@ async function logout() {
       console.log(error.message);
     } finally {
       loading.value = false;
+      overlay.hide();
     }
   }
 }

@@ -1,4 +1,5 @@
 import type { AxiosResponse } from 'axios';
+import type { Car } from './Car';
 import type { User } from './User';
 
 type DefaultResponse<T = {}> = AxiosResponse<
@@ -24,9 +25,24 @@ type ConfirmUserResponse = DefaultResponse<{
   username: string;
 }>;
 
+type GetAllCarsResponse = DefaultResponse<{
+  cars: Car[];
+}>;
+
+type GetMyCarResponse = DefaultResponse<{
+  cars: Car[];
+}>;
+
+type GetCarResponse = DefaultResponse<{
+  car: Car;
+}>;
+
 export {
   DefaultResponse,
   LoginResponse,
   CreateUserResponse,
   ConfirmUserResponse,
+  GetAllCarsResponse,
+  GetMyCarResponse,
+  GetCarResponse,
 };

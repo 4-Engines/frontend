@@ -10,6 +10,7 @@ import Home from '@/views/HomePage.vue';
 import MisDatos from '@/views/MisDatosPage.vue';
 import ActivarCuenta from '@/views/ActivarCuentaPage.vue';
 import RegistroCliente from '@/views/RegistroClientePage.vue';
+import RegistroAuto from '@/views/RegistroAutoPage.vue';
 
 const routes: RouteRecordRaw[] = [
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
@@ -20,10 +21,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/home',
     component: Home,
-  },
-  {
-    path: '/mis-autos',
-    component: Autos,
   },
   {
     path: '/mis-datos',
@@ -44,6 +41,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/registro',
     component: RegistroCliente,
+  },
+  {
+    path: '/registro-auto',
+    component: RegistroAuto,
   },
 ];
 

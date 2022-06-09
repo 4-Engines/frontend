@@ -38,20 +38,13 @@
       </v-col>
     </v-row>
   </template>
-
-  <v-overlay
-    :model-value="loading"
-    class="align-center justify-center text-center"
-  >
-    <v-progress-circular indeterminate size="64"></v-progress-circular>
-    <p class="mt-3">Activando cuenta...</p>
-  </v-overlay>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { confirmUser } from '@/services/User.service';
+import { useOverlay } from '@/composables/useOverlay';
 import type { Cliente } from '@/types/User';
 
 const route = useRoute();
@@ -60,10 +53,12 @@ const cuentaActivada = ref(false);
 const cuentaActiva = ref(false);
 const loading = ref(false);
 const cliente = ref<Pick<Cliente, 'username' | 'email'>>();
+const overlay = useOverlay();
 
 onMounted(async () => {
   errorMessage.value = '';
   loading.value = true;
+  overlay.show('Activando cuenta...');
 
   try {
     const { data } = await confirmUser(route.params.id as string);
@@ -85,6 +80,7 @@ onMounted(async () => {
     errorMessage.value = error.message;
   } finally {
     loading.value = false;
+    overlay.hide();
   }
 });
 </script>
