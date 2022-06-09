@@ -7,7 +7,7 @@
 
   <v-dialog v-model="turnoModal" scrollable persistent>
     <v-form ref="formRef" @submit.prevent="handleNewAppointment">
-      <v-card :style="{ width: isMobile ? 'auto' : '500px' }">
+      <v-card :style="{ width: isMobile ? '326px' : '500px' }">
         <v-card-title>Nuevo turno</v-card-title>
 
         <v-divider />

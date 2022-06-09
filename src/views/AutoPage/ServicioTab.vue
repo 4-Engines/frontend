@@ -9,7 +9,7 @@
 
   <v-dialog v-model="nuevoServicioModal" scrollable persistent>
     <v-form ref="formRef" @submit.prevent="handleAddService">
-      <v-card :style="{ width: isMobile ? 'auto' : '500px' }">
+      <v-card :style="{ width: isMobile ? '326px' : '500px' }">
         <v-card-title>Nuevo servicio</v-card-title>
 
         <v-divider />
