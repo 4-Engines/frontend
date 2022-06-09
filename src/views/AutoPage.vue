@@ -77,7 +77,7 @@
   <v-btn
     v-if="tab === 'turnos'"
     title="Solicitar turno"
-    icon="mdi-calendar-search"
+    icon="mdi-calendar-plus"
     color="primary"
     size="large"
     style="position: fixed; right: 20px; bottom: 20px"
@@ -86,7 +86,7 @@
   <v-btn
     v-if="store.isEmpleado && tab === 'servicios'"
     title="Agregar nuevo servicio"
-    icon="mdi-hammer-wrench"
+    icon="mdi-cart-plus"
     color="primary"
     size="large"
     style="position: fixed; right: 20px; bottom: 20px"
