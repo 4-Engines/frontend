@@ -43,3 +43,7 @@
 .v-tab {
   min-width: 60px;
 }
+
+.v-select .v-field--dirty .v-select__selection {
+  margin-top: 4px;
+}

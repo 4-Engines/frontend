@@ -14,7 +14,7 @@
         <v-divider />
 
         <v-card-text>
-          <v-text-field
+          <!-- <v-text-field
             v-model="form.service"
             hide-details="auto"
             autofocus
@@ -22,18 +22,32 @@
             variant="outlined"
             class="mb-4"
             :rules="[rules.required]"
-          />
+          /> -->
+
+          <v-select
+            v-model="form.services"
+            label="Servicios"
+            :items="SERVICIOS"
+            :rules="[rules.required]"
+            multiple
+            chips
+            variant="outlined"
+            hide-details="auto"
+            autofocus
+          ></v-select>
 
           <v-textarea
             v-model="form.details"
-            label="Observaciones (opcional)"
+            class="mt-4"
+            :label="`Observaciones ${isOtherSelected ? '' : '(opcional)'}`"
             hide-details="auto"
             variant="outlined"
+            :rules="isOtherSelected ? [rules.required] : undefined"
           ></v-textarea>
         </v-card-text>
         <v-divider />
         <v-card-actions>
-          <v-btn color="primary" text @click="handleCloseModal"> Cerrar </v-btn>
+          <v-btn color="dark" text @click="handleCloseModal"> Cerrar </v-btn>
           <v-btn color="primary" type="submit" text> Cargar servicio </v-btn>
         </v-card-actions>
       </v-card>
@@ -52,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, reactive, ref } from 'vue';
+import { PropType, reactive, ref, computed } from 'vue';
 import { useStore } from '@/store';
 import { useMobile } from '@/composables/useMobile';
 import { useOverlay } from '@/composables/useOverlay';
@@ -67,6 +81,20 @@ const props = defineProps({
 });
 const emit = defineEmits(['reload']);
 
+const SERVICIOS = [
+  'Cambio de aceite y filtro',
+  'Cambio de escobillas limpiaparabrisas',
+  'Cambio filtro de aire',
+  'Mantenimiento programado',
+  'Llantas nuevas',
+  'Cambio de batería',
+  'Servicio/reparación de frenos',
+  'Anticongelante adicional',
+  'Afinación del motor',
+  'Alineación/balanceo de llantas',
+  'Otros',
+];
+
 const store = useStore();
 const { isMobile } = useMobile();
 const nuevoServicioModal = ref(false);
@@ -74,12 +102,13 @@ const overlay = useOverlay();
 const snackbar = useSnackbar();
 const formRef = ref<any>(null);
 const form = reactive({
-  service: '',
+  services: [] as string[],
   details: '',
 });
+const isOtherSelected = computed(() => form.services.includes('Otros'));
 
 function resetForm() {
-  form.service = '';
+  form.services = [];
   form.details = '';
 }
 
@@ -97,7 +126,7 @@ async function handleAddService() {
     overlay.show('Cargando servicio...');
     await newService({
       details: form.details,
-      service: form.service,
+      services: form.services,
       id_car: props.car?._id as string,
       id_user: store.user?.username as string,
     });
