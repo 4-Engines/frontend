@@ -53,16 +53,6 @@
       </v-card>
     </v-form>
   </v-dialog>
-
-  <v-btn
-    v-if="store.isEmpleado && active"
-    title="Agregar nuevo servicio"
-    icon="mdi-plus"
-    color="primary"
-    size="large"
-    style="position: fixed; right: 20px; bottom: 20px"
-    @click="nuevoServicioModal = true"
-  ></v-btn>
 </template>
 
 <script setup lang="ts">
@@ -139,4 +129,8 @@ async function handleAddService() {
     overlay.hide();
   }
 }
+
+defineExpose({
+  nuevoServicioModal,
+});
 </script>

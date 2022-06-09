@@ -60,15 +60,11 @@
       </v-window-item>
 
       <v-window-item value="turnos">
-        <turnos-tab :car="car" @reload="fetchCar" />
+        <turnos-tab ref="turnosTabRef" :car="car" @reload="fetchCar" />
       </v-window-item>
 
       <v-window-item value="servicios">
-        <servicio-tab
-          :active="tab === 'servicios'"
-          :car="car"
-          @reload="fetchCar"
-        />
+        <servicio-tab ref="servicioTabRef" :car="car" @reload="fetchCar" />
       </v-window-item>
 
       <v-window-item value="administrar">
@@ -77,6 +73,25 @@
       </v-window-item>
     </v-window>
   </v-card>
+
+  <v-btn
+    v-if="tab === 'turnos'"
+    title="Solicitar turno"
+    icon="mdi-calendar-search"
+    color="primary"
+    size="large"
+    style="position: fixed; right: 20px; bottom: 20px"
+  ></v-btn>
+
+  <v-btn
+    v-if="store.isEmpleado && tab === 'servicios'"
+    title="Agregar nuevo servicio"
+    icon="mdi-hammer-wrench"
+    color="primary"
+    size="large"
+    style="position: fixed; right: 20px; bottom: 20px"
+    @click="servicioTabRef.nuevoServicioModal = true"
+  ></v-btn>
 </template>
 
 <script setup lang="ts">
@@ -98,6 +113,7 @@ const tab = ref('detalle');
 const { isMobile } = useMobile();
 const loading = ref(false);
 const car = ref<Car>();
+const servicioTabRef = ref<any>(null);
 
 watch(
   () => route.query.t,
