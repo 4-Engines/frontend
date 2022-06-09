@@ -58,7 +58,7 @@ import { PropType, reactive, ref } from 'vue';
 import { useStore } from '@/store';
 import { newAppointment } from '@/services/Appointment.service';
 import type { Car } from '@/types/Car';
-import { required } from '@/rules';
+import * as rules from '@/rules';
 import { useOverlay } from '@/composables/useOverlay';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useMobile } from '@/composables/useMobile';
@@ -73,7 +73,6 @@ const { isMobile } = useMobile();
 const overlay = useOverlay();
 const snackbar = useSnackbar();
 const turnoModal = ref(false);
-const turnoSolicitado = ref(false);
 const formRef = ref<any>(null);
 const times = ref([
   '9:00 am',
@@ -90,9 +89,6 @@ const form = reactive({
   time: '',
   comments: '',
 });
-const rules = {
-  required,
-};
 
 function resetForm() {
   form.date = '';
@@ -120,7 +116,6 @@ async function handleNewAppointment() {
       time: form.time,
       comments: form.comments,
     });
-    turnoSolicitado.value = true;
     snackbar.show('¡Turno solicitado con éxito!');
     turnoModal.value = false;
     resetForm();

@@ -167,13 +167,15 @@
     </v-table>
   </v-card>
 
+  <registro-auto-modal ref="registroAuto" @reload="fetchCars" />
+
   <v-fab-transition>
     <v-btn
       class="v-btn--fab"
       icon="mdi-plus"
       title="Agregar auto"
       color="primary"
-      to="/registro-auto"
+      @click="registroAuto.registroAutoModal = true"
     />
   </v-fab-transition>
 </template>
@@ -184,6 +186,7 @@ import { useStore } from '@/store';
 import { getAllCars, getMyCars } from '@/services/Car.service';
 import type { Car } from '@/types/Car';
 import { useMobile } from '@/composables/useMobile';
+import RegistroAutoModal from './RegistroAutoModal.vue';
 
 const store = useStore();
 const cars = ref<Car[]>([]);
@@ -192,12 +195,27 @@ const loading = ref(false);
 const { isMobile } = useMobile();
 const emptyList = ref(false);
 const filter = ref('');
+const registroAuto = ref<any>(null);
 
 const actionButtonColor = computed(() =>
   store.isLightTheme ? '#6D6D6D' : '#ADADAD'
 );
 
-onMounted(async () => {
+onMounted(() => {
+  fetchCars();
+});
+
+const carsFiltered = computed(() => {
+  if (filter.value === '') {
+    return cars.value;
+  }
+
+  return cars.value.filter((car) =>
+    car.carid.toLocaleUpperCase().includes(filter.value.toLocaleUpperCase())
+  );
+});
+
+async function fetchCars() {
   loading.value = true;
   try {
     const { data } = await (store.isEmpleado
@@ -217,15 +235,5 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
-});
-
-const carsFiltered = computed(() => {
-  if (filter.value === '') {
-    return cars.value;
-  }
-
-  return cars.value.filter((car) =>
-    car.carid.toLocaleUpperCase().includes(filter.value.toLocaleUpperCase())
-  );
-});
+}
 </script>

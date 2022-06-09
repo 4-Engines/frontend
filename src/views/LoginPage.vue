@@ -119,7 +119,7 @@ import { useStore } from '@/store';
 import { loginUser, resendActiationEmail } from '@/services/User.service';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useOverlay } from '@/composables/useOverlay';
-import { required, min3 } from '@/rules';
+import * as rules from '@/rules';
 
 const store = useStore();
 const router = useRouter();
@@ -133,10 +133,6 @@ const cuentaNoActiva = ref(false);
 const snackbar = useSnackbar();
 const overlay = useOverlay();
 const formRef = ref<any>(null);
-const rules = ref({
-  required,
-  min3,
-});
 
 const form = reactive({
   username: '',
