@@ -46,12 +46,14 @@ import { useSnackbar } from '@/composables/useSnackbar';
 const props = defineProps({
   car: { type: Object as PropType<Car>, default: undefined },
 });
+const emit = defineEmits(['reload']);
 
 const store = useStore();
 const overlay = useOverlay();
 const snackbar = useSnackbar();
 const errorMessage = ref('');
 const turnoSolicitado = ref(false);
+const formRef = ref<any>(null);
 const times = ref([
   '9:00 am',
   '10:00 am',
@@ -72,6 +74,11 @@ const rules = {
 };
 
 async function handleNewAppointment() {
+  const validateForm = await formRef.value?.validate();
+  if (!validateForm.valid) {
+    return;
+  }
+
   errorMessage.value = '';
 
   try {
@@ -85,6 +92,7 @@ async function handleNewAppointment() {
     });
     turnoSolicitado.value = true;
     snackbar.show('¡Turno solicitado con éxito!');
+    emit('reload');
   } catch (error: any) {
     errorMessage.value = error.message;
   } finally {

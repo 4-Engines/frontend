@@ -60,12 +60,11 @@
       </v-window-item>
 
       <v-window-item value="turnos">
-        <turnos-tab :car="car" />
+        <turnos-tab ref="turnosTabRef" :car="car" @reload="fetchCar" />
       </v-window-item>
 
       <v-window-item value="servicios">
-        <h2 class="mb-4">Servicios</h2>
-        <p class="mb-6">Estos son los servicios que tuviste con nosotros.</p>
+        <servicio-tab ref="servicioTabRef" :car="car" @reload="fetchCar" />
       </v-window-item>
 
       <v-window-item value="administrar">
@@ -75,50 +74,35 @@
     </v-window>
   </v-card>
 
-  <v-dialog
-    v-model="nuevoServicioModal"
-    :fullscreen="isMobile"
-    :scrim="!isMobile"
-    transition="dialog-bottom-transition"
-  >
-    <v-card>
-      <v-toolbar dark :color="isMobile ? 'primary' : 'transparent'">
-        <v-toolbar-title>Nuevo servicio</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-toolbar-items>
-          <v-btn icon variant="text" @click="nuevoServicioModal = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
-
-      <v-card-text>
-        <v-btn color="primary" @click="nuevoServicioModal = false">
-          Cargar servicio
-        </v-btn>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+  <v-btn
+    v-if="tab === 'turnos'"
+    title="Solicitar turno"
+    icon="mdi-calendar-plus"
+    color="primary"
+    size="large"
+    style="position: fixed; right: 20px; bottom: 20px"
+  ></v-btn>
 
   <v-btn
     v-if="store.isEmpleado && tab === 'servicios'"
     title="Agregar nuevo servicio"
-    icon="mdi-plus"
+    icon="mdi-cart-plus"
     color="primary"
     size="large"
     style="position: fixed; right: 20px; bottom: 20px"
-    @click="nuevoServicioModal = true"
+    @click="servicioTabRef.nuevoServicioModal = true"
   ></v-btn>
 </template>
 
 <script setup lang="ts">
+import { useMobile } from '@/composables/useMobile';
 import { getCar } from '@/services/Car.service';
 import { useStore } from '@/store';
 import type { Car } from '@/types/Car';
-import { breakpointsVuetify, useBreakpoints } from '@vueuse/core';
 import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import TurnosTab from './TurnosTab.vue';
+import ServicioTab from './ServicioTab.vue';
 
 const TABS = ['detalle', 'turnos', 'servicios', 'administrar'];
 
@@ -126,22 +110,25 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 const tab = ref('detalle');
-const breakpoints = useBreakpoints(breakpointsVuetify);
-const isMobile = breakpoints.smaller('xs');
+const { isMobile } = useMobile();
 const loading = ref(false);
 const car = ref<Car>();
-const nuevoServicioModal = ref(false);
+const servicioTabRef = ref<any>(null);
 
 watch(
   () => route.query.t,
   (value) => (tab.value = value as string)
 );
 
-onMounted(async () => {
+onMounted(() => {
   if (route.query.t && TABS.includes(route.query.t as string)) {
     tab.value = route.query.t as string;
   }
 
+  fetchCar();
+});
+
+async function fetchCar() {
   try {
     loading.value = true;
     const { data } = await getCar(route.params.id as string);
@@ -165,5 +152,5 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
-});
+}
 </script>
