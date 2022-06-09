@@ -6,10 +6,6 @@
   </p>
   <p v-else>Estos son los autos disponibles en el taller.</p>
 
-  <div class="my-5 text-right">
-    <v-btn color="primary" to="/registro-auto">Agregar auto</v-btn>
-  </div>
-
   <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
     {{ errorMessage }}
   </v-alert>
@@ -170,6 +166,16 @@
       </tbody>
     </v-table>
   </v-card>
+
+  <v-fab-transition>
+    <v-btn
+      class="v-btn--fab"
+      icon="mdi-plus"
+      title="Agregar auto"
+      color="primary"
+      to="/registro-auto"
+    />
+  </v-fab-transition>
 </template>
 
 <script lang="ts" setup>

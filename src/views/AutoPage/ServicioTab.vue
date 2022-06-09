@@ -11,19 +11,10 @@
     <v-form ref="formRef" @submit.prevent="handleAddService">
       <v-card :style="{ width: isMobile ? 'auto' : '500px' }">
         <v-card-title>Nuevo servicio</v-card-title>
+
         <v-divider />
 
         <v-card-text>
-          <!-- <v-text-field
-            v-model="form.service"
-            hide-details="auto"
-            autofocus
-            label="Servicio"
-            variant="outlined"
-            class="mb-4"
-            :rules="[rules.required]"
-          /> -->
-
           <v-select
             v-model="form.services"
             label="Servicios"
@@ -45,7 +36,9 @@
             :rules="isOtherSelected ? [rules.required] : undefined"
           ></v-textarea>
         </v-card-text>
+
         <v-divider />
+
         <v-card-actions>
           <v-btn color="dark" text @click="handleCloseModal"> Cerrar </v-btn>
           <v-btn color="primary" type="submit" text> Cargar servicio </v-btn>
@@ -96,6 +89,7 @@ const form = reactive({
   details: '',
 });
 const isOtherSelected = computed(() => form.services.includes(0));
+
 function resetForm() {
   form.services = [];
   form.details = '';
@@ -105,6 +99,7 @@ function handleCloseModal() {
   nuevoServicioModal.value = false;
   resetForm();
 }
+
 async function handleAddService() {
   const validateForm = await formRef.value?.validate();
   if (!validateForm.valid) {
@@ -124,7 +119,7 @@ async function handleAddService() {
     resetForm();
     emit('reload');
   } catch (error: any) {
-    snackbar.show('Ocurrió un error al cargar el servicio');
+    snackbar.show(error.message || 'Ocurrió un error al cargar el servicio');
   } finally {
     overlay.hide();
   }
