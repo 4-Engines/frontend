@@ -82,17 +82,17 @@ const props = defineProps({
 const emit = defineEmits(['reload']);
 
 const SERVICIOS = [
-  'Cambio de aceite y filtro',
-  'Cambio de escobillas limpiaparabrisas',
-  'Cambio filtro de aire',
-  'Mantenimiento programado',
-  'Llantas nuevas',
-  'Cambio de batería',
-  'Servicio/reparación de frenos',
-  'Anticongelante adicional',
-  'Afinación del motor',
-  'Alineación/balanceo de llantas',
-  'Otros',
+  { value: 1, title: 'Cambio de aceite y filtro' },
+  { value: 2, title: 'Cambio de escobillas limpiaparabrisas' },
+  { value: 3, title: 'Cambio filtro de aire' },
+  { value: 4, title: 'Mantenimiento programado' },
+  { value: 5, title: 'Llantas nuevas' },
+  { value: 6, title: 'Cambio de batería' },
+  { value: 7, title: 'Servicio/reparación de frenos' },
+  { value: 8, title: 'Anticongelante adicional' },
+  { value: 9, title: 'Afinación del motor' },
+  { value: 10, title: 'Alineación/balanceo de llantas' },
+  { value: 0, title: 'Otros' },
 ];
 
 const store = useStore();
@@ -102,11 +102,10 @@ const overlay = useOverlay();
 const snackbar = useSnackbar();
 const formRef = ref<any>(null);
 const form = reactive({
-  services: [] as string[],
+  services: [] as number[],
   details: '',
 });
-const isOtherSelected = computed(() => form.services.includes('Otros'));
-
+const isOtherSelected = computed(() => form.services.includes(0));
 function resetForm() {
   form.services = [];
   form.details = '';

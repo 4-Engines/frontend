@@ -2,7 +2,7 @@ import { axios } from '@/plugins/axios';
 
 function newService(data: {
   id_car: string;
-  services: string[];
+  services: number[];
   details: string;
   id_user: string;
 }) {
