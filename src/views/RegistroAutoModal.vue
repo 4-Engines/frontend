@@ -171,15 +171,15 @@ async function handleSubmit() {
     const { data } = await createCar(formData);
 
     if (data[1] === 200) {
-      snackbar.show('¡Turno solicitado con éxito!');
+      snackbar.show('¡Auto cargado con éxito!');
       registroAutoModal.value = false;
       resetForm();
       emit('reload');
     } else {
-      throw Error(data[0].msj || 'Ocurrió un error al cargar el auto');
+      throw Error(data[0].msj);
     }
   } catch (error: any) {
-    snackbar.show(error.message || 'Ocurrió un error al solicitar el turno');
+    snackbar.show(error.message || 'Ocurrió un error al cargar el auto');
   } finally {
     overlay.hide();
   }
