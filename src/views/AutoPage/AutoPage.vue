@@ -74,7 +74,7 @@
     </v-window>
   </v-card>
 
-  <v-btn
+  <!-- <v-btn
     v-if="tab === 'turnos'"
     title="Solicitar turno"
     icon="mdi-calendar-plus"
@@ -91,7 +91,19 @@
     size="large"
     style="position: fixed; right: 20px; bottom: 20px"
     @click="servicioTabRef.nuevoServicioModal = true"
-  ></v-btn>
+  ></v-btn> -->
+
+  <v-fab-transition>
+    <v-btn
+      v-if="activeFab"
+      :key="activeFab.icon"
+      class="v-btn--fab"
+      :icon="activeFab.icon"
+      color="primary"
+      :title="activeFab.title"
+      @click="activeFab.click"
+    />
+  </v-fab-transition>
 </template>
 
 <script setup lang="ts">
@@ -99,21 +111,43 @@ import { useMobile } from '@/composables/useMobile';
 import { getCar } from '@/services/Car.service';
 import { useStore } from '@/store';
 import type { Car } from '@/types/Car';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import TurnosTab from './TurnosTab.vue';
 import ServicioTab from './ServicioTab.vue';
+import { useSnackbar } from '@/composables/useSnackbar';
+import { useOverlay } from '@/composables/useOverlay';
 
 const TABS = ['detalle', 'turnos', 'servicios', 'administrar'];
 
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+const snackbar = useSnackbar();
+const overlay = useOverlay();
 const tab = ref('detalle');
 const { isMobile } = useMobile();
-const loading = ref(false);
 const car = ref<Car>();
 const servicioTabRef = ref<any>(null);
+const turnosTabRef = ref<any>(null);
+const activeFab = computed(() => {
+  switch (tab.value) {
+    case 'turnos':
+      return {
+        title: 'Solicitar turno',
+        icon: 'mdi-calendar-plus',
+        click: () => (turnosTabRef.value.turnoModal = true),
+      };
+    case 'servicios':
+      return {
+        title: 'Agregar nuevo servicio',
+        icon: 'mdi-cart-plus',
+        click: () => (servicioTabRef.value.nuevoServicioModal = true),
+      };
+    default:
+      return null;
+  }
+});
 
 watch(
   () => route.query.t,
@@ -130,27 +164,15 @@ onMounted(() => {
 
 async function fetchCar() {
   try {
-    loading.value = true;
+    overlay.show('Cargando auto...');
     const { data } = await getCar(route.params.id as string);
     car.value = data[0].car;
-  } catch (error) {
-    console.log(error);
-
-    car.value = {
-      _id: '6486484',
-      brand: 'Toyota',
-      carid: 'AAA234',
-      color: '#FFAACC',
-      created_at: '05/05/2022',
-      id_taller: '46845',
-      id_user: '654867',
-      model: 'Etios',
-      owner: 'rjuarroz@gmail.com',
-      status: 'active',
-      year: '2012',
-    };
+  } catch (error: any) {
+    snackbar.show(
+      error.message || 'Ocurrió un error al obtener la información del auto'
+    );
   } finally {
-    loading.value = false;
+    overlay.hide();
   }
 }
 </script>

@@ -30,9 +30,9 @@ function createCar(data: {
   return axios.post('/create-car', data);
 }
 
-function getCar(id_car: string): Promise<GetCarResponse> {
+function getCar(carid: string): Promise<GetCarResponse> {
   return axios.post('/get-car', {
-    id_car,
+    carid,
   });
 }
 

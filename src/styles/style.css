@@ -47,3 +47,18 @@
 .v-select .v-field--dirty .v-select__selection {
   margin-top: 4px;
 }
+
+.v-btn--fab {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+}
+
+.v-btn--fab.v-btn--density-default {
+  height: 56px;
+  width: 56px;
+}
+
+.v-overlay .v-overlay__content {
+  overflow-y: auto;
+}

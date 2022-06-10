@@ -6,10 +6,6 @@
   </p>
   <p v-else>Estos son los autos disponibles en el taller.</p>
 
-  <div class="my-5 text-right">
-    <v-btn color="primary" to="/registro-auto">Agregar auto</v-btn>
-  </div>
-
   <v-alert v-if="errorMessage.length > 0" type="error" class="mb-4">
     {{ errorMessage }}
   </v-alert>
@@ -170,6 +166,18 @@
       </tbody>
     </v-table>
   </v-card>
+
+  <registro-auto-modal ref="registroAuto" @reload="fetchCars" />
+
+  <v-fab-transition>
+    <v-btn
+      class="v-btn--fab"
+      icon="mdi-plus"
+      title="Agregar auto"
+      color="primary"
+      @click="registroAuto.registroAutoModal = true"
+    />
+  </v-fab-transition>
 </template>
 
 <script lang="ts" setup>
@@ -178,6 +186,7 @@ import { useStore } from '@/store';
 import { getAllCars, getMyCars } from '@/services/Car.service';
 import type { Car } from '@/types/Car';
 import { useMobile } from '@/composables/useMobile';
+import RegistroAutoModal from './RegistroAutoModal.vue';
 
 const store = useStore();
 const cars = ref<Car[]>([]);
@@ -186,12 +195,27 @@ const loading = ref(false);
 const { isMobile } = useMobile();
 const emptyList = ref(false);
 const filter = ref('');
+const registroAuto = ref<any>(null);
 
 const actionButtonColor = computed(() =>
   store.isLightTheme ? '#6D6D6D' : '#ADADAD'
 );
 
-onMounted(async () => {
+onMounted(() => {
+  fetchCars();
+});
+
+const carsFiltered = computed(() => {
+  if (filter.value === '') {
+    return cars.value;
+  }
+
+  return cars.value.filter((car) =>
+    car.carid.toLocaleUpperCase().includes(filter.value.toLocaleUpperCase())
+  );
+});
+
+async function fetchCars() {
   loading.value = true;
   try {
     const { data } = await (store.isEmpleado
@@ -211,15 +235,5 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
-});
-
-const carsFiltered = computed(() => {
-  if (filter.value === '') {
-    return cars.value;
-  }
-
-  return cars.value.filter((car) =>
-    car.carid.toLocaleUpperCase().includes(filter.value.toLocaleUpperCase())
-  );
-});
+}
 </script>
