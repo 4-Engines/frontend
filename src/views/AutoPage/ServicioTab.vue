@@ -90,14 +90,9 @@ const form = reactive({
 });
 const isOtherSelected = computed(() => form.services.includes(0));
 
-function resetForm() {
-  form.services = [];
-  form.details = '';
-}
-
 function handleCloseModal() {
   nuevoServicioModal.value = false;
-  resetForm();
+  formRef.value.reset();
 }
 
 async function handleAddService() {
@@ -116,7 +111,7 @@ async function handleAddService() {
     });
     snackbar.show('¡Servicio cargado con éxito!');
     nuevoServicioModal.value = false;
-    resetForm();
+    formRef.value.reset();
     emit('reload');
   } catch (error: any) {
     snackbar.show(error.message || 'Ocurrió un error al cargar el servicio');

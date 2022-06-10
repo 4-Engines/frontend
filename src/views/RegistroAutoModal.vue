@@ -137,18 +137,9 @@ const years = ref([
   '2022',
 ]);
 
-function resetForm() {
-  form.brand = '';
-  form.carid = '';
-  form.color = '#000000';
-  form.model = '';
-  form.owner = '';
-  form.year = '';
-}
-
 function handleCloseModal() {
   registroAutoModal.value = false;
-  resetForm();
+  formRef.value.reset();
 }
 
 async function handleSubmit() {
@@ -173,7 +164,7 @@ async function handleSubmit() {
     if (data[1] === 200) {
       snackbar.show('¡Auto cargado con éxito!');
       registroAutoModal.value = false;
-      resetForm();
+      formRef.value.reset();
       emit('reload');
     } else {
       throw Error(data[0].msj);

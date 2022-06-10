@@ -90,15 +90,9 @@ const form = reactive({
   comments: '',
 });
 
-function resetForm() {
-  form.date = '';
-  form.time = '';
-  form.comments = '';
-}
-
 function handleCloseModal() {
   turnoModal.value = false;
-  resetForm();
+  formRef.value.reset();
 }
 
 async function handleNewAppointment() {
@@ -118,7 +112,7 @@ async function handleNewAppointment() {
     });
     snackbar.show('¡Turno solicitado con éxito!');
     turnoModal.value = false;
-    resetForm();
+    formRef.value.reset();
     emit('reload');
   } catch (error: any) {
     snackbar.show(error.message || 'Ocurrió un error al solicitar el turno');

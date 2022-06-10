@@ -58,3 +58,7 @@
   height: 56px;
   width: 56px;
 }
+
+.v-overlay .v-overlay__content {
+  overflow-y: auto;
+}
