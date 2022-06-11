@@ -32,13 +32,30 @@
             }}</v-chip>
           </v-chip-group>
 
+          <v-select
+            v-model="form.services"
+            class="mt-6"
+            label="Servicios"
+            :items="formattedServices"
+            :rules="[rules.required]"
+            multiple
+            chips
+            variant="outlined"
+            hide-details="auto"
+          >
+          </v-select>
+
+          <p class="mt-3 text-right font-weight-bold">
+            TOTAL: {{ totalAmount }}
+          </p>
+
           <v-textarea
             v-model="form.comments"
             class="mt-4"
             rows="3"
             variant="outlined"
-            label="Comentarios (opcional)"
-            :rules="[rules.required]"
+            :label="`Observaciones ${isOtherSelected ? '' : '(opcional)'}`"
+            :rules="isOtherSelected ? [rules.required] : undefined"
           ></v-textarea>
         </v-card-text>
 
@@ -54,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, reactive, ref } from 'vue';
+import { computed, PropType, reactive, ref } from 'vue';
 import { useStore } from '@/store';
 import { newAppointment } from '@/services/Appointment.service';
 import type { Car } from '@/types/Car';
@@ -62,6 +79,8 @@ import * as rules from '@/rules';
 import { useOverlay } from '@/composables/useOverlay';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useMobile } from '@/composables/useMobile';
+import { SERVICES } from '@/constants/Services';
+import { currencyFormatter } from '@/utils/currencyFormatter';
 
 const props = defineProps({
   car: { type: Object as PropType<Car>, default: undefined },
@@ -88,6 +107,21 @@ const form = reactive({
   date: '',
   time: '',
   comments: '',
+  services: [] as number[],
+});
+const isOtherSelected = computed(() => form.services.includes(0));
+const formattedServices = computed(() =>
+  SERVICES.map((service) => ({
+    value: service.value,
+    title: `${service.title} (${currencyFormatter.format(service.price)})`,
+  }))
+);
+const totalAmount = computed(() => {
+  const amount = SERVICES.filter((service) =>
+    form.services.includes(service.value)
+  ).reduce((a, b) => a + b.price, 0);
+
+  return currencyFormatter.format(amount);
 });
 
 function handleCloseModal() {

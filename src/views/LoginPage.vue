@@ -2,7 +2,7 @@
   <v-row v-if="!store.isLoggedIn" justify="center">
     <v-col sm="8" md="4">
       <div class="text-center">
-        <img src="@/assets/logo.png" width="200" />
+        <img src="/logo.png" width="200" />
         <div class="font-weight-bold">Sistema de gestión del automotor</div>
       </div>
       <div class="mt-10 mb-2">

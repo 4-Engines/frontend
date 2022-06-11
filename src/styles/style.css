@@ -60,5 +60,5 @@
 }
 
 .v-overlay .v-overlay__content {
-  overflow-y: auto;
+  overflow-y: auto !important;
 }

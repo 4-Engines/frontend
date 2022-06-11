@@ -18,7 +18,7 @@
           <v-select
             v-model="form.services"
             label="Servicios"
-            :items="SERVICIOS"
+            :items="formattedServices"
             :rules="[rules.required]"
             multiple
             chips
@@ -26,6 +26,10 @@
             hide-details="auto"
             autofocus
           ></v-select>
+
+          <p class="mt-3 text-right font-weight-bold">
+            TOTAL: {{ totalAmount }}
+          </p>
 
           <v-textarea
             v-model="form.details"
@@ -57,26 +61,14 @@ import { useSnackbar } from '@/composables/useSnackbar';
 import * as rules from '@/rules';
 import { newService } from '@/services/Service.service';
 import type { Car } from '@/types/Car';
+import { SERVICES } from '@/constants/Services';
+import { currencyFormatter } from '@/utils/currencyFormatter';
 
 const props = defineProps({
   active: { type: Boolean, default: false },
   car: { type: Object as PropType<Car>, default: undefined },
 });
 const emit = defineEmits(['reload']);
-
-const SERVICIOS = [
-  { value: 1, title: 'Cambio de aceite y filtro' },
-  { value: 2, title: 'Cambio de escobillas limpiaparabrisas' },
-  { value: 3, title: 'Cambio filtro de aire' },
-  { value: 4, title: 'Mantenimiento programado' },
-  { value: 5, title: 'Llantas nuevas' },
-  { value: 6, title: 'Cambio de batería' },
-  { value: 7, title: 'Servicio/reparación de frenos' },
-  { value: 8, title: 'Anticongelante adicional' },
-  { value: 9, title: 'Afinación del motor' },
-  { value: 10, title: 'Alineación/balanceo de llantas' },
-  { value: 0, title: 'Otros' },
-];
 
 const store = useStore();
 const { isMobile } = useMobile();
@@ -89,6 +81,19 @@ const form = reactive({
   details: '',
 });
 const isOtherSelected = computed(() => form.services.includes(0));
+const formattedServices = computed(() =>
+  SERVICES.map((service) => ({
+    value: service.value,
+    title: `${service.title} (${currencyFormatter.format(service.price)})`,
+  }))
+);
+const totalAmount = computed(() => {
+  const amount = SERVICES.filter((service) =>
+    form.services.includes(service.value)
+  ).reduce((a, b) => a + b.price, 0);
+
+  return currencyFormatter.format(amount);
+});
 
 function handleCloseModal() {
   nuevoServicioModal.value = false;

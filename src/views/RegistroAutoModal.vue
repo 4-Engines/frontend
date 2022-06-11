@@ -16,6 +16,7 @@
                 hide-details="auto"
                 variant="outlined"
                 :rules="[rules.required]"
+                @input="() => (form.carid = form.carid.toUpperCase())"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="6">
