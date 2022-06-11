@@ -12,34 +12,62 @@ import ActivarCuenta from '@/views/ActivarCuentaPage.vue';
 import RegistroCliente from '@/views/RegistroClientePage.vue';
 
 const routes: RouteRecordRaw[] = [
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
+    meta: {
+      title: 'Página no encontrada',
+    },
+  },
   {
     path: '/',
     component: Login,
+    meta: {
+      title: 'Login',
+    },
   },
   {
     path: '/home',
     component: Home,
+    meta: {
+      title: 'Inicio',
+    },
   },
   {
     path: '/mis-datos',
     component: MisDatos,
+    meta: {
+      title: 'Mis datos',
+    },
   },
   {
     path: '/autos',
     component: Autos,
+    meta: {
+      title: 'Autos',
+    },
   },
   {
     path: '/autos/:id',
     component: Auto,
+    meta: {
+      title: 'Auto',
+    },
   },
   {
     path: '/activar/:id',
     component: ActivarCuenta,
+    meta: {
+      title: 'Acticar cuenta',
+    },
   },
   {
     path: '/registro',
     component: RegistroCliente,
+    meta: {
+      title: 'Registro',
+    },
   },
 ];
 
@@ -59,6 +87,12 @@ router.beforeEach((to) => {
   ) {
     return '/';
   }
+});
+
+const DEFAULT_TITLE = 'Sistema de gestión del automotor';
+
+router.afterEach((to) => {
+  document.title = `${to.meta.title} - ${DEFAULT_TITLE}` || DEFAULT_TITLE;
 });
 
 export default router;
