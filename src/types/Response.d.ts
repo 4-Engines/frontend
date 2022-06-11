@@ -27,10 +27,12 @@ type ConfirmUserResponse = DefaultResponse<{
 
 type GetAllCarsResponse = DefaultResponse<{
   cars: Car[];
+  car: Car[];
 }>;
 
 type GetMyCarResponse = DefaultResponse<{
   cars: Car[];
+  car: Car[];
 }>;
 
 type GetCarResponse = DefaultResponse<{

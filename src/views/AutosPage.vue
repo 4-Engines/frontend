@@ -225,9 +225,12 @@ async function fetchCars() {
     if (data[0].status === 'error') {
       throw Error(data[0].msj);
     }
-    cars.value = data[0].cars;
+    cars.value = store.isEmpleado ? data[0].car : data[0].cars;
 
-    if (data[0].cars.length === 0) {
+    if (
+      (data[0].car && data[0].car.length === 0) ||
+      (data[0].cars && data[0].cars.length === 0)
+    ) {
       emptyList.value = true;
     }
   } catch (error: any) {
