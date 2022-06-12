@@ -11,6 +11,12 @@ import MisDatos from '@/views/MisDatosPage.vue';
 import ActivarCuenta from '@/views/ActivarCuentaPage.vue';
 import RegistroCliente from '@/views/RegistroClientePage.vue';
 
+declare module 'vue-router' {
+  export interface RouteMeta {
+    title: string;
+  }
+}
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/:pathMatch(.*)*',
