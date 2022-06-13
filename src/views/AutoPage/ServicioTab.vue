@@ -7,6 +7,65 @@
     Estos son los servicios que se le hicieron a este auto.
   </p>
 
+  <v-expansion-panels
+    v-for="service in services"
+    :key="service.created_at"
+    class="mb-4"
+  >
+    <v-expansion-panel>
+      <v-expansion-panel-title>
+        <v-list-item class="text-left py-0 px-0">
+          <template #title>
+            <strong>{{ service.created_at }}</strong>
+          </template>
+
+          <template #subtitle>
+            <span
+              v-if="service.services.length === 1 && service.services[0] === 0"
+            >
+              Hacé click en el ícono de información para más detalles sobre el
+              servicio
+            </span>
+            <span v-else>
+              Se realizaron {{ service.services.length }} servicio/s por un
+              valor de
+              <strong>{{ getTotalAmountByServices(service.services) }}</strong>
+            </span>
+          </template>
+        </v-list-item>
+
+        <template #actions="{ expanded }">
+          <v-icon
+            color="primary"
+            :icon="expanded ? 'mdi-information' : 'mdi-information-outline'"
+          ></v-icon>
+        </template>
+      </v-expansion-panel-title>
+
+      <v-expansion-panel-text>
+        <h4 class="mb-4">Servicios realizados</h4>
+        <div
+          v-for="label in getServicesLabel(service.services)"
+          :key="label"
+          class="mb-2"
+        >
+          <v-chip label> {{ label }}</v-chip>
+        </div>
+
+        <v-textarea
+          v-if="service.details"
+          class="mt-6"
+          label="Observaciones"
+          disabled
+          hide-details
+          :model-value="service.details"
+          rows="3"
+          variant="outlined"
+        ></v-textarea>
+      </v-expansion-panel-text>
+    </v-expansion-panel>
+  </v-expansion-panels>
+
   <v-dialog v-model="nuevoServicioModal" scrollable persistent>
     <v-form ref="formRef" @submit.prevent="handleAddService">
       <v-card :style="{ width: isMobile ? '326px' : '500px' }">
@@ -37,6 +96,7 @@
             :label="`Observaciones ${isOtherSelected ? '' : '(opcional)'}`"
             hide-details="auto"
             variant="outlined"
+            rows="3"
             :rules="isOtherSelected ? [rules.required] : undefined"
           ></v-textarea>
         </v-card-text>
@@ -63,6 +123,7 @@ import { newService } from '@/services/Service.service';
 import type { Car } from '@/types/Car';
 import { SERVICES } from '@/constants/Services';
 import { currencyFormatter } from '@/utils/currencyFormatter';
+import { Service } from '@/types/Service';
 
 const props = defineProps({
   active: { type: Boolean, default: false },
@@ -72,9 +133,32 @@ const emit = defineEmits(['reload']);
 
 const store = useStore();
 const { isMobile } = useMobile();
-const nuevoServicioModal = ref(false);
 const overlay = useOverlay();
 const snackbar = useSnackbar();
+const services = ref<Service[]>([
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [2, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '06/06/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [2, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '12/06/2022 15:00',
+    details: 'Se hicieron muchas cosas',
+    id_user: '1',
+    services: [0],
+  },
+]);
+const nuevoServicioModal = ref(false);
 const formRef = ref<any>(null);
 const form = reactive({
   services: [] as number[],
@@ -87,13 +171,23 @@ const formattedServices = computed(() =>
     title: `${service.title} (${currencyFormatter.format(service.price)})`,
   }))
 );
-const totalAmount = computed(() => {
+const totalAmount = computed(() => getTotalAmountByServices(form.services));
+
+function getTotalAmountByServices(services: number[]) {
   const amount = SERVICES.filter((service) =>
-    form.services.includes(service.value)
+    services.includes(service.value)
   ).reduce((a, b) => a + b.price, 0);
 
   return currencyFormatter.format(amount);
-});
+}
+
+function getServicesLabel(services: number[]) {
+  const servicesFiltered = formattedServices.value.filter((service) =>
+    services.includes(service.value)
+  );
+
+  return servicesFiltered.map((service) => service.title);
+}
 
 function handleCloseModal() {
   nuevoServicioModal.value = false;

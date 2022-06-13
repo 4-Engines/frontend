@@ -1,7 +1,7 @@
 interface Car {
   _id: string;
   brand: string;
-  carid: string;
+  carid: Uppercase<string>;
   color: string;
   created_at: string;
   id_taller: string;
