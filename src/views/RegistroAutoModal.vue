@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="registroAutoModal" scrollable persistent>
-    <v-form ref="formRef" @submit.prevent="handleSubmit">
-      <v-card :style="{ width: isMobile ? '326px' : '500px' }">
+    <v-card :style="{ width: isMobile ? '326px' : '500px' }">
+      <v-form ref="formRef" @submit.prevent="handleSubmit">
         <v-card-title>Registro auto</v-card-title>
 
         <v-divider />
@@ -92,8 +92,8 @@
 
           <v-btn color="primary" text type="submit"> Registrar auto </v-btn>
         </v-card-actions>
-      </v-card>
-    </v-form>
+      </v-form>
+    </v-card>
   </v-dialog>
 </template>
 

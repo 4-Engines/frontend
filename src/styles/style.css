@@ -60,10 +60,6 @@
   z-index: 100;
 }
 
-.v-overlay .v-overlay__content {
-  overflow-y: auto !important;
-}
-
 .v-expansion-panel .v-chip.v-chip--density-default {
   min-height: calc(var(--v-chip-height) + 0px);
   height: auto;
