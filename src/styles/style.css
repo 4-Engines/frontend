@@ -65,3 +65,8 @@
   height: auto;
   white-space: inherit;
 }
+
+.v-dialog--scrollable .v-overlay__content > .v-card > .v-card-text,
+.v-dialog--scrollable .v-overlay__content > form > .v-card > .v-card-text {
+  max-height: 76vh;
+}

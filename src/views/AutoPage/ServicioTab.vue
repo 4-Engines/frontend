@@ -61,8 +61,8 @@
   </v-expansion-panels>
 
   <v-dialog v-model="nuevoServicioModal" scrollable persistent>
-    <v-card :style="{ width: isMobile ? '326px' : '500px' }">
-      <v-form ref="formRef" @submit.prevent="handleAddService">
+    <v-form ref="formRef" @submit.prevent="handleAddService">
+      <v-card :style="{ width: isMobile ? '326px' : '500px' }">
         <v-card-title>Nuevo servicio</v-card-title>
 
         <v-divider />
@@ -101,8 +101,8 @@
           <v-btn color="dark" text @click="handleCloseModal"> Cerrar </v-btn>
           <v-btn color="primary" type="submit" text> Cargar servicio </v-btn>
         </v-card-actions>
-      </v-form>
-    </v-card>
+      </v-card>
+    </v-form>
   </v-dialog>
 </template>
 

@@ -6,8 +6,8 @@
   </p>
 
   <v-dialog v-model="turnoModal" scrollable persistent>
-    <v-card :style="{ width: isMobile ? '326px' : '500px' }">
-      <v-form ref="formRef" @submit.prevent="handleNewAppointment">
+    <v-form ref="formRef" @submit.prevent="handleNewAppointment">
+      <v-card :style="{ width: isMobile ? '326px' : '500px' }">
         <v-card-title>Nuevo turno</v-card-title>
 
         <v-divider />
@@ -65,8 +65,8 @@
           <v-btn color="dark" text @click="handleCloseModal"> Cerrar </v-btn>
           <v-btn color="primary" text type="submit">Solicitar turno</v-btn>
         </v-card-actions>
-      </v-form>
-    </v-card>
+      </v-card>
+    </v-form>
   </v-dialog>
 </template>
 
