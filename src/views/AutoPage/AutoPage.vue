@@ -48,6 +48,8 @@
     </v-window>
   </v-card>
 
+  <div class="my-16"></div>
+
   <v-fab-transition>
     <v-btn
       v-if="activeFab"

@@ -43,7 +43,8 @@
       </v-expansion-panel-title>
 
       <v-expansion-panel-text>
-        <h4 class="mb-4">Servicios realizados</h4>
+        <h4 class="mt-2 mb-4">Servicios realizados</h4>
+
         <div
           v-for="label in getServicesLabel(service.services)"
           :key="label"
@@ -52,16 +53,9 @@
           <v-chip label> {{ label }}</v-chip>
         </div>
 
-        <v-textarea
-          v-if="service.details"
-          class="mt-6"
-          label="Observaciones"
-          disabled
-          hide-details
-          :model-value="service.details"
-          rows="3"
-          variant="outlined"
-        ></v-textarea>
+        <h4 class="mt-5 mb-4">Observaciones</h4>
+
+        {{ service.details || 'Sin observaciones' }}
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -166,10 +160,18 @@ const form = reactive({
 });
 const isOtherSelected = computed(() => form.services.includes(0));
 const formattedServices = computed(() =>
-  SERVICES.map((service) => ({
-    value: service.value,
-    title: `${service.title} (${currencyFormatter.format(service.price)})`,
-  }))
+  SERVICES.map((service) => {
+    const obj = {
+      value: service.value,
+      title: `${service.title} (${currencyFormatter.format(service.price)})`,
+    };
+
+    if (service.price === 0) {
+      obj.title = service.title;
+    }
+
+    return obj;
+  })
 );
 const totalAmount = computed(() => getTotalAmountByServices(form.services));
 

@@ -186,6 +186,8 @@
     </v-table>
   </v-card>
 
+  <div class="my-16"></div>
+
   <registro-auto-modal ref="registroAuto" @reload="fetchCars" />
 
   <v-dialog v-model="detailDialog">
