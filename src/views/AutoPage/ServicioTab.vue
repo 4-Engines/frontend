@@ -14,7 +14,10 @@
   >
     <v-expansion-panel>
       <v-expansion-panel-title>
-        <v-list-item class="text-left py-0 px-0">
+        <v-list-item
+          class="text-left py-0 px-0"
+          :prepend-icon="getServiceObject(service.services[0])?.icon"
+        >
           <template #title>
             <strong>{{ service.created_at }}</strong>
           </template>
@@ -23,14 +26,16 @@
             <span
               v-if="service.services.length === 1 && service.services[0] === 0"
             >
-              Hacé click en el ícono de información para más detalles sobre el
-              servicio
+              Hacé click en el ícono de información para más detalles
             </span>
             <span v-else>
+              {{ getServiceSubtitle(service.services) }}
+            </span>
+            <!-- <span v-else>
               Se realizaron {{ service.services.length }} servicio/s por un
               valor de
               <strong>{{ getTotalAmountByServices(service.services) }}</strong>
-            </span>
+            </span> -->
           </template>
         </v-list-item>
 
@@ -56,6 +61,15 @@
         <h4 class="mt-5 mb-4">Observaciones</h4>
 
         {{ service.details || 'Sin observaciones' }}
+
+        <template
+          v-if="service.services.length > 1 || service.services[0] !== 0"
+        >
+          <v-divider class="mt-4"></v-divider>
+          <p class="mt-3 font-weight-bold">
+            TOTAL: {{ getTotalAmountByServices(service.services) }}
+          </p>
+        </template>
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -189,6 +203,24 @@ function getServicesLabel(services: number[]) {
   );
 
   return servicesFiltered.map((service) => service.title);
+}
+
+function getServiceObject(serviceNumber: number) {
+  return SERVICES.find((service) => service.value === serviceNumber);
+}
+
+function getServiceSubtitle(services: number[]) {
+  let label = getServiceObject(services[0])?.title;
+
+  if (services.length === 2) {
+    label += ` (+${services.length - 1} servicio)`;
+  }
+
+  if (services.length > 2) {
+    label += ` (+${services.length - 1} servicios)`;
+  }
+
+  return label;
 }
 
 function handleCloseModal() {
