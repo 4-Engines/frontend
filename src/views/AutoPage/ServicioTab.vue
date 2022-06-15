@@ -23,14 +23,14 @@
           </template>
 
           <template #subtitle>
-            <span
+            <!-- <span
               v-if="service.services.length === 1 && service.services[0] === 0"
             >
               Hacé click en el ícono de información para más detalles
-            </span>
-            <span v-else>
+            </span> -->
+            <!-- <span v-else> -->
               {{ getServiceSubtitle(service.services) }}
-            </span>
+            <!-- </span> -->
             <!-- <span v-else>
               Se realizaron {{ service.services.length }} servicio/s por un
               valor de
@@ -156,7 +156,7 @@ const services = ref<Service[]>([
     created_at: '06/06/2022 15:00',
     details: '',
     id_user: '1',
-    services: [2, 6],
+    services: [4, 6],
   },
   {
     id_car: 'AAA123',
