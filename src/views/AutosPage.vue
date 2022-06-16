@@ -193,7 +193,7 @@
   <v-dialog v-model="detailDialog">
     <v-card :style="{ width: isMobile ? '326px' : '500px' }">
       <v-img
-        src="/car-placeholder.jpg"
+        src="/car-placeholder.png"
         class="white--text align-end"
         gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
         height="200px"
