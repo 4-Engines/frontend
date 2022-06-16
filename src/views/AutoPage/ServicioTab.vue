@@ -14,20 +14,22 @@
   >
     <v-expansion-panel>
       <v-expansion-panel-title>
-        <v-list-item
-          class="text-left py-0 px-0"
-          :prepend-icon="getServiceObject(service.services[0])?.icon"
-          :title="service.created_at"
-          :subtitle="getServiceSubtitle(service.services)"
-        >
-        </v-list-item>
+        <v-list-item class="text-left pa-0">
+          <v-list-item-avatar start color="primary">
+            <v-icon :class="{ 'text-grey-darken-4': !store.isLightTheme }">{{
+              getServiceObject(service.services[0])?.icon
+            }}</v-icon>
+          </v-list-item-avatar>
 
-        <template #actions="{ expanded }">
-          <v-icon
-            color="primary"
-            :icon="expanded ? 'mdi-information' : 'mdi-information-outline'"
-          ></v-icon>
-        </template>
+          <v-list-item-header>
+            <v-list-item-title>
+              {{ service.created_at }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              {{ getServiceSubtitle(service.services) }}
+            </v-list-item-subtitle>
+          </v-list-item-header>
+        </v-list-item>
       </v-expansion-panel-title>
 
       <v-expansion-panel-text>
@@ -45,14 +47,15 @@
 
         {{ service.details || 'Sin observaciones' }}
 
-        <template
+        <p
           v-if="service.services.length > 1 || service.services[0] !== 0"
+          class="mt-5 font-weight-bold text-right rounded pa-4 mb-2 d-flex"
+          :class="store.isLightTheme ? 'bg-grey-lighten-2' : 'bg-grey-darken-3'"
         >
-          <v-divider class="mt-4"></v-divider>
-          <p class="mt-3 font-weight-bold">
-            TOTAL: {{ getTotalAmountByServices(service.services) }}
-          </p>
-        </template>
+          TOTAL
+          <v-spacer />
+          {{ getTotalAmountByServices(service.services) }}
+        </p>
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -77,9 +80,7 @@
             autofocus
           ></v-select>
 
-          <p class="mt-3 text-right font-weight-bold">
-            TOTAL: {{ totalAmount }}
-          </p>
+          <p class="mt-3 font-weight-bold">TOTAL: {{ totalAmount }}</p>
 
           <v-textarea
             v-model="form.details"
