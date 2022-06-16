@@ -17,26 +17,9 @@
         <v-list-item
           class="text-left py-0 px-0"
           :prepend-icon="getServiceObject(service.services[0])?.icon"
+          :title="service.created_at"
+          :subtitle="getServiceSubtitle(service.services)"
         >
-          <template #title>
-            <strong>{{ service.created_at }}</strong>
-          </template>
-
-          <template #subtitle>
-            <!-- <span
-              v-if="service.services.length === 1 && service.services[0] === 0"
-            >
-              Hacé click en el ícono de información para más detalles
-            </span> -->
-            <!-- <span v-else> -->
-              {{ getServiceSubtitle(service.services) }}
-            <!-- </span> -->
-            <!-- <span v-else>
-              Se realizaron {{ service.services.length }} servicio/s por un
-              valor de
-              <strong>{{ getTotalAmountByServices(service.services) }}</strong>
-            </span> -->
-          </template>
         </v-list-item>
 
         <template #actions="{ expanded }">
@@ -153,10 +136,59 @@ const services = ref<Service[]>([
   },
   {
     id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [3],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [4, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [5, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
     created_at: '06/06/2022 15:00',
     details: '',
     id_user: '1',
-    services: [5, 6],
+    services: [6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [7, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [8, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [9, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [10, 3, 6],
   },
   {
     id_car: 'AAA123',

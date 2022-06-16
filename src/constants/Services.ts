@@ -21,13 +21,13 @@ export const SERVICES = [
     value: 4,
     title: 'Mantenimiento programado',
     price: 2500,
-    icon: 'mdi-car-wrench',
+    icon: 'mdi-alarm',
   },
   {
     value: 5,
     title: 'Llantas nuevas',
     price: 50000,
-    icon: 'mdi-car-traction-control',
+    icon: 'mdi-car-hatchback',
   },
   {
     value: 6,
@@ -52,7 +52,7 @@ export const SERVICES = [
     value: 10,
     title: 'Alineación/balanceo de llantas',
     price: 6500,
-    icon: 'mdi-car-settings',
+    icon: 'mdi-car-traction-control',
   },
   { value: 0, title: 'Otros', price: 0, icon: 'mdi-car-cog' },
 ];
