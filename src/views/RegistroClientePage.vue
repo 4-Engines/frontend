@@ -142,31 +142,6 @@
               <v-btn :disabled="loading" color="primary" @click="handleSubmit">
                 Registrate
               </v-btn>
-
-              <!-- <v-dialog v-model="dialog" persistent max-width="400">
-                <v-card>
-                  <v-card-title class="headline">
-                    ¡Ya casi estás registrado!
-                  </v-card-title>
-                  <v-card-text
-                    ><p>
-                      Te enviamos un mail a
-                      <strong>{{ form.email }}</strong> para que continues con
-                      el registro.
-                    </p>
-                    <p>
-                      Una vez que confirmes tu identidad vas a poder ingresar en
-                      este sitio y disfrutar del mejor contenido.
-                    </p></v-card-text
-                  >
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="$router.replace('/')">
-                      Ir a inicio
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog> -->
             </v-card-actions>
           </v-form>
         </template>

@@ -73,13 +73,18 @@
       @submit.prevent="handleSubmitResetPassword"
     >
       <v-card :style="{ width: isMobile ? '326px' : '500px' }">
-        <v-card-title>Recuperar contraseña</v-card-title>
+        <v-card-title>Generar nueva contraseña</v-card-title>
 
         <v-divider />
 
         <v-card-text class="mb-3 mt-2">
+          <p>
+            Te vamos a enviar un mail para que puedas setear una nueva
+            contraseña.
+          </p>
           <v-text-field
             v-model="resetPasswordField"
+            class="mt-6"
             label="Dirección de mail"
             autocomplete="off"
             hide-details="auto"
@@ -102,7 +107,7 @@
             Cancelar
           </v-btn>
 
-          <v-btn color="primary" type="submit"> Recuperar contraseña </v-btn>
+          <v-btn color="primary" type="submit"> Enviar mail </v-btn>
         </v-card-actions>
       </v-card>
     </v-form>

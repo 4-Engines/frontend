@@ -10,6 +10,7 @@ import Home from '@/views/HomePage.vue';
 import MisDatos from '@/views/MisDatosPage.vue';
 import ActivarCuenta from '@/views/ActivarCuentaPage.vue';
 import RegistroCliente from '@/views/RegistroClientePage.vue';
+import ResetPassword from '@/views/ResetPasswordPage.vue';
 
 declare module 'vue-router' {
   export interface RouteMeta {
@@ -65,7 +66,14 @@ const routes: RouteRecordRaw[] = [
     path: '/activar/:id',
     component: ActivarCuenta,
     meta: {
-      title: 'Acticar cuenta',
+      title: 'Activar cuenta',
+    },
+  },
+  {
+    path: '/reset/:id',
+    component: ResetPassword,
+    meta: {
+      title: 'Nueva contraseña',
     },
   },
   {
@@ -89,6 +97,7 @@ router.beforeEach((to) => {
     to.path !== '/' &&
     to.path !== '/registro' &&
     to.path.indexOf('/activar') < 0 &&
+    to.path.indexOf('/reset') < 0 &&
     !store.isLoggedIn
   ) {
     return '/';
