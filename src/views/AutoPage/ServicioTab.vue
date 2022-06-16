@@ -197,6 +197,20 @@ const services = ref<Service[]>([
     id_user: '1',
     services: [0],
   },
+  {
+    id_car: 'AAA123',
+    created_at: '12/06/2022 15:00',
+    details: 'Se hicieron muchas cosas',
+    id_user: '1',
+    services: [0, 1],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '12/06/2022 15:00',
+    details: 'Se hicieron muchas cosas',
+    id_user: '1',
+    services: [6, 0, 1],
+  },
 ]);
 const nuevoServicioModal = ref(false);
 const formRef = ref<any>(null);
