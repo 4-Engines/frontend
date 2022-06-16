@@ -48,11 +48,13 @@ async function sendResetPasswordEmail(email: string): Promise<DefaultResponse> {
   });
 }
 
-async function resetPassword(data: {
-  id: string;
-  password: string;
-}): Promise<DefaultResponse> {
-  return axios.post('/reset', data);
+async function resetPassword(
+  id: string,
+  password: string
+): Promise<DefaultResponse> {
+  return axios.post(`/reset/${id}`, {
+    password,
+  });
 }
 
 export {

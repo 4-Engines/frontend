@@ -67,10 +67,10 @@ const rules = {
 async function handleSubmit() {
   try {
     overlay.show('Cambiando contraseña...');
-    const { data } = await resetPassword({
-      id: route.params.id as string,
-      password: form.password,
-    });
+    const { data } = await resetPassword(
+      route.params.id as string,
+      form.password
+    );
     snackbar.show(data[0].msj);
     router.replace('/');
   } catch (error: any) {
