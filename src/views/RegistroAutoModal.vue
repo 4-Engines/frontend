@@ -88,7 +88,9 @@
         <v-divider />
 
         <v-card-actions>
-          <v-btn color="dark" text @click="handleCloseModal">Cancelar</v-btn>
+          <v-btn color="dark" type="reset" text @click="handleCloseModal"
+            >Cancelar</v-btn
+          >
 
           <v-btn color="primary" text type="submit"> Registrar auto </v-btn>
         </v-card-actions>
@@ -140,7 +142,6 @@ const years = ref([
 
 function handleCloseModal() {
   registroAutoModal.value = false;
-  formRef.value.reset();
 }
 
 async function handleSubmit() {

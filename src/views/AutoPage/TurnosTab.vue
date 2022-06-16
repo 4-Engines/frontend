@@ -62,7 +62,9 @@
         <v-divider />
 
         <v-card-actions>
-          <v-btn color="dark" text @click="handleCloseModal"> Cerrar </v-btn>
+          <v-btn color="dark" text type="reset" @click="handleCloseModal">
+            Cerrar
+          </v-btn>
           <v-btn color="primary" text type="submit">Solicitar turno</v-btn>
         </v-card-actions>
       </v-card>
@@ -126,7 +128,6 @@ const totalAmount = computed(() => {
 
 function handleCloseModal() {
   turnoModal.value = false;
-  formRef.value.reset();
 }
 
 async function handleNewAppointment() {

@@ -34,10 +34,25 @@ async function confirmUser(id: string): Promise<ConfirmUserResponse> {
   return axios.get(`/confirm/${id}`);
 }
 
-async function resendActiationEmail(id: string): Promise<DefaultResponse> {
+async function resendActivationEmail(
+  username: string
+): Promise<DefaultResponse> {
   return axios.post('/resend', {
-    username: id,
+    username,
   });
 }
 
-export { loginUser, createUser, logoutUser, confirmUser, resendActiationEmail };
+async function sendResetPasswordEmail(email: string): Promise<DefaultResponse> {
+  return axios.post('/reset-pass-email', {
+    email,
+  });
+}
+
+export {
+  loginUser,
+  createUser,
+  logoutUser,
+  confirmUser,
+  resendActivationEmail,
+  sendResetPasswordEmail,
+};

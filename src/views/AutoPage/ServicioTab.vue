@@ -96,7 +96,9 @@
         <v-divider />
 
         <v-card-actions>
-          <v-btn color="dark" text @click="handleCloseModal"> Cerrar </v-btn>
+          <v-btn color="dark" type="reset" text @click="handleCloseModal">
+            Cerrar
+          </v-btn>
           <v-btn color="primary" type="submit" text> Cargar servicio </v-btn>
         </v-card-actions>
       </v-card>
@@ -272,7 +274,6 @@ function getServiceSubtitle(services: number[]) {
 
 function handleCloseModal() {
   nuevoServicioModal.value = false;
-  formRef.value.reset();
 }
 
 async function handleAddService() {

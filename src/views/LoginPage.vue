@@ -26,7 +26,6 @@
             hide-details="auto"
             :error="errorMessage.length > 0"
             variant="outlined"
-            :disabled="loading"
             :rules="[rules.required, rules.min3]"
           />
 
@@ -40,13 +39,11 @@
             :error="errorMessage.length > 0"
             :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             variant="outlined"
-            :disabled="loading"
             :rules="[rules.required]"
             @click:append-inner="showPassword = !showPassword"
           />
 
           <v-btn
-            :disabled="loading"
             class="mt-4"
             color="primary"
             block
@@ -58,81 +55,87 @@
         </v-form>
       </div>
 
-      <div v-if="!loading" class="text-center">
+      <div class="text-center">
         ¿No tenés cuenta? <router-link to="/registro"> Registrate </router-link>
       </div>
 
-      <!-- <div class="text-center">
-        <v-dialog v-model="showDialog">
-          <template #activator="{ props }">
-            <a
-              v-if="!loading"
-              href="#"
-              class="white--text"
-              v-bind="props"
-              @click.prevent="recuperarMail = ''"
-              >¿Olvidaste tu contraseña?</a
-            >
-          </template>
-
-          <v-card>
-            <v-card-title>Recuperar contraseña</v-card-title>
-
-            <v-card-text class="mb-2">
-              <v-text-field
-                v-model="recuperarMail"
-                label="Ingresá tu dirección de mail"
-                autocomplete="off"
-                hide-details="auto"
-                type="mail"
-                autofocus
-                variant="outlined"
-              />
-            </v-card-text>
-
-            <v-card-actions class="justify-end flex-column-reverse flex-sm-row">
-              <v-btn text class="mt-3 mt-sm-0" @click="showDialog = false">
-                Cancelar
-              </v-btn>
-
-              <v-btn
-                color="primary"
-                @click="
-                  showDialog = false;
-                  snackbar = true;
-                "
-              >
-                Recuperar contraseña
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </div> -->
+      <div class="text-center">
+        <a href="#" class="white--text" @click.prevent="handleRecoverPassword"
+          >¿Olvidaste tu contraseña?</a
+        >
+      </div>
     </v-col>
   </v-row>
+
+  <v-dialog v-model="showDialog" persistent>
+    <v-form
+      ref="resetPasswordFormRef"
+      @submit.prevent="handleSubmitResetPassword"
+    >
+      <v-card :style="{ width: isMobile ? '326px' : '500px' }">
+        <v-card-title>Recuperar contraseña</v-card-title>
+
+        <v-divider />
+
+        <v-card-text class="mb-3 mt-2">
+          <v-text-field
+            v-model="resetPasswordField"
+            label="Dirección de mail"
+            autocomplete="off"
+            hide-details="auto"
+            type="mail"
+            autofocus
+            variant="outlined"
+            :rules="[rules.required, rules.email]"
+          />
+        </v-card-text>
+
+        <v-divider />
+
+        <v-card-actions class="justify-end flex-column-reverse flex-sm-row">
+          <v-btn
+            class="mt-3 mt-sm-0"
+            type="reset"
+            text
+            @click="handleCloseResetPasswordModal"
+          >
+            Cancelar
+          </v-btn>
+
+          <v-btn color="primary" type="submit"> Recuperar contraseña </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-form>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
-import { loginUser, resendActiationEmail } from '@/services/User.service';
+import {
+  loginUser,
+  resendActivationEmail,
+  sendResetPasswordEmail,
+} from '@/services/User.service';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useOverlay } from '@/composables/useOverlay';
 import * as rules from '@/rules';
+import { useMobile } from '@/composables/useMobile';
 
 const store = useStore();
 const router = useRouter();
 
+const { isMobile } = useMobile();
 const errorMessage = ref('');
 const showPassword = ref(false);
-// const recuperarMail = ref('');
-// const showDialog = ref(false);
-const loading = ref(false);
+const resetPasswordField = ref('');
+const showDialog = ref(false);
 const cuentaNoActiva = ref(false);
 const snackbar = useSnackbar();
 const overlay = useOverlay();
 const formRef = ref<any>(null);
+const resetPasswordFormRef = ref<any>(null);
 
 const form = reactive({
   username: '',
@@ -145,6 +148,39 @@ onMounted(() => {
   }
 });
 
+function handleRecoverPassword() {
+  if (form.username.includes('@')) {
+    resetPasswordField.value = form.username;
+  }
+
+  showDialog.value = true;
+}
+
+function handleCloseResetPasswordModal() {
+  resetPasswordField.value = '';
+  showDialog.value = false;
+}
+
+async function handleSubmitResetPassword() {
+  const validateForm = await resetPasswordFormRef.value?.validate();
+  if (!validateForm.valid) {
+    return;
+  }
+
+  try {
+    overlay.show('Enviando mail...');
+
+    const { data } = await sendResetPasswordEmail(resetPasswordField.value);
+    showDialog.value = false;
+    resetPasswordFormRef.value.reset();
+    snackbar.show(data[0].msj);
+  } catch (error: any) {
+    snackbar.show(error.message || 'Ocurrió un error al enviar mail');
+  } finally {
+    overlay.hide();
+  }
+}
+
 async function handleLogin() {
   const validateForm = await formRef.value?.validate();
   if (!validateForm.valid) {
@@ -153,7 +189,6 @@ async function handleLogin() {
 
   cuentaNoActiva.value = false;
   errorMessage.value = '';
-  loading.value = true;
   overlay.show('Ingresando al sistema...');
 
   try {
@@ -188,18 +223,16 @@ async function handleLogin() {
   } catch (error: any) {
     errorMessage.value = error.message;
   } finally {
-    loading.value = false;
     overlay.hide();
   }
 }
 
 async function handleResendActivationEmail() {
-  loading.value = true;
   errorMessage.value = '';
   overlay.show('Reenviando mail...');
 
   try {
-    const { data } = await resendActiationEmail(form.username);
+    const { data } = await resendActivationEmail(form.username);
 
     if (data[0].status === 'error') {
       throw Error(data[0].msj);
@@ -209,7 +242,6 @@ async function handleResendActivationEmail() {
   } catch (error: any) {
     errorMessage.value = error.message;
   } finally {
-    loading.value = false;
     overlay.hide();
   }
 }
