@@ -10,36 +10,78 @@ import Home from '@/views/HomePage.vue';
 import MisDatos from '@/views/MisDatosPage.vue';
 import ActivarCuenta from '@/views/ActivarCuentaPage.vue';
 import RegistroCliente from '@/views/RegistroClientePage.vue';
+import ResetPassword from '@/views/ResetPasswordPage.vue';
+
+declare module 'vue-router' {
+  export interface RouteMeta {
+    title: string;
+  }
+}
 
 const routes: RouteRecordRaw[] = [
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
+    meta: {
+      title: 'Página no encontrada',
+    },
+  },
   {
     path: '/',
     component: Login,
+    meta: {
+      title: 'Login',
+    },
   },
   {
     path: '/home',
     component: Home,
+    meta: {
+      title: 'Inicio',
+    },
   },
   {
     path: '/mis-datos',
     component: MisDatos,
+    meta: {
+      title: 'Mis datos',
+    },
   },
   {
     path: '/autos',
     component: Autos,
+    meta: {
+      title: 'Autos',
+    },
   },
   {
     path: '/autos/:id',
     component: Auto,
+    meta: {
+      title: 'Auto',
+    },
   },
   {
     path: '/activar/:id',
     component: ActivarCuenta,
+    meta: {
+      title: 'Activar cuenta',
+    },
+  },
+  {
+    path: '/reset/:id',
+    component: ResetPassword,
+    meta: {
+      title: 'Nueva contraseña',
+    },
   },
   {
     path: '/registro',
     component: RegistroCliente,
+    meta: {
+      title: 'Registro',
+    },
   },
 ];
 
@@ -55,10 +97,17 @@ router.beforeEach((to) => {
     to.path !== '/' &&
     to.path !== '/registro' &&
     to.path.indexOf('/activar') < 0 &&
+    to.path.indexOf('/reset') < 0 &&
     !store.isLoggedIn
   ) {
     return '/';
   }
+});
+
+const DEFAULT_TITLE = 'Sistema de gestión del automotor';
+
+router.afterEach((to) => {
+  document.title = `${to.meta.title} - ${DEFAULT_TITLE}` || DEFAULT_TITLE;
 });
 
 export default router;

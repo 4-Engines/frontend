@@ -49,27 +49,38 @@
           :color="actionButtonColor"
           flat
           variant="text"
+          size="small"
           title="Información del auto"
-          :to="`/autos/${car.carid}`" />
+          @click="showCarDetail(car)" />
+
         <v-btn
           icon="mdi-calendar-search"
           :color="actionButtonColor"
           flat
           variant="text"
+          size="small"
           title="Turnos"
-          :to="`/autos/${car.carid}?t=turnos`" />
-        <!-- <v-btn title="Historial" icon="mdi-history" variant="text" flat /> -->
+          :to="`/autos/${car.carid}`" />
+
         <v-btn
           title="Servicios"
           icon="mdi-hammer-wrench"
           :color="actionButtonColor"
           variant="text"
+          size="small"
           flat
-          :to="`/autos/${car.carid}?t=servicios`"
+          :to="`/autos/${car.carid}?t=servicios`" />
+        <v-btn
+          title="Eliminar auto"
+          icon="mdi-car-off"
+          color="red"
+          variant="text"
+          size="small"
+          flat
+          @click="showDeleteCardDialog(car)"
       /></v-card-title>
-      <v-card-subtitle>Responsable: {{ car.owner }}</v-card-subtitle>
-      <v-card-text v-if="car.status === 'no active'" class="pb-0"
-        ><v-chip size="small" color="red">NO ACTIVO</v-chip></v-card-text
+      <v-card-subtitle v-if="car.status === 'no active'"
+        ><v-chip size="small" color="red">NO ACTIVO</v-chip></v-card-subtitle
       >
       <v-card-text>
         <v-table density="compact">
@@ -77,14 +88,14 @@
             <tr>
               <th class="text-left">Marca</th>
               <th class="text-left">Modelo</th>
-              <th class="text-left">Año</th>
+              <th class="text-left">Titular</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>{{ car.brand }}</td>
               <td>{{ car.model }}</td>
-              <td>{{ car.year }}</td>
+              <td>{{ car.owner }}</td>
             </tr>
           </tbody>
         </v-table>
@@ -100,8 +111,7 @@
           <th>Dominio</th>
           <th>Marca</th>
           <th>Modelo</th>
-          <th>Año</th>
-          <th v-if="!store.isCliente">Responsable</th>
+          <th v-if="!store.isCliente">Titular</th>
           <th></th>
         </tr>
       </thead>
@@ -127,7 +137,6 @@
           </td>
           <td>{{ car.brand }}</td>
           <td>{{ car.model }}</td>
-          <td>{{ car.year }}</td>
           <td v-if="!store.isCliente">{{ car.owner }}</td>
           <td class="text-right">
             <v-chip v-if="car.status === 'no active'" size="small" color="red"
@@ -140,7 +149,7 @@
               flat
               variant="text"
               title="Información del auto"
-              :to="`/autos/${car.carid}`"
+              @click="showCarDetail(car)"
             />
             <v-btn
               icon="mdi-calendar-search"
@@ -149,7 +158,7 @@
               flat
               variant="text"
               title="Turnos"
-              :to="`/autos/${car.carid}?t=turnos`"
+              :to="`/autos/${car.carid}`"
             />
             <!-- <v-btn title="Historial" icon="mdi-history" variant="text" flat /> -->
             <v-btn
@@ -161,13 +170,78 @@
               flat
               :to="`/autos/${car.carid}?t=servicios`"
             />
+
+            <v-btn
+              title="Eliminar auto"
+              icon="mdi-car-off"
+              color="red"
+              size="small"
+              variant="text"
+              flat
+              @click="showDeleteCardDialog(car)"
+            />
           </td>
         </tr>
       </tbody>
     </v-table>
   </v-card>
 
+  <div class="my-16"></div>
+
   <registro-auto-modal ref="registroAuto" @reload="fetchCars" />
+
+  <v-dialog v-model="detailDialog">
+    <v-card :style="{ width: isMobile ? '326px' : '500px' }">
+      <v-img
+        src="/car-placeholder.png"
+        class="white--text align-end"
+        gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+        height="200px"
+        cover
+      >
+        <v-card-title class="text-white">
+          <v-avatar
+            size="x-small"
+            class="mr-3"
+            :color="selectedCar?.color"
+          ></v-avatar>
+          {{ selectedCar?.carid }}
+        </v-card-title>
+      </v-img>
+
+      <v-card-text>
+        <p>{{ selectedCar?.brand }} {{ selectedCar?.model }}</p>
+        <p>Año: {{ selectedCar?.year }}</p>
+        <p>Titular: {{ selectedCar?.owner }}</p>
+      </v-card-text>
+
+      <v-divider />
+
+      <v-card-actions>
+        <v-btn color="dark" @click="detailDialog = false">Cerrar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog v-model="deleteCarDialog">
+    <v-card>
+      <v-card-title>Eliminar auto</v-card-title>
+      <v-divider />
+      <v-card-text
+        ><p>
+          ¿Estás seguro de que querés eliminar el auto con dominio
+          <strong>{{ selectedCar?.carid }}</strong
+          >?
+        </p>
+        <p class="mt-2">Esta acción no puede deshacerse.</p></v-card-text
+      >
+      <v-divider />
+      <v-card-actions>
+        <v-btn color="dark" @click="deleteCarDialog = false">Cerrar</v-btn>
+        <v-btn color="red" @click="handleDeleteCar">Eliminar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 
   <v-fab-transition>
     <v-btn
@@ -196,14 +270,16 @@ const { isMobile } = useMobile();
 const emptyList = ref(false);
 const filter = ref('');
 const registroAuto = ref<any>(null);
-
+const detailDialog = ref(false);
 const actionButtonColor = computed(() =>
   store.isLightTheme ? '#6D6D6D' : '#ADADAD'
 );
+const deleteCarDialog = ref(false);
 
 onMounted(() => {
   fetchCars();
 });
+const selectedCar = ref<Car>();
 
 const carsFiltered = computed(() => {
   if (filter.value === '') {
@@ -215,6 +291,20 @@ const carsFiltered = computed(() => {
   );
 });
 
+function showCarDetail(car: Car) {
+  selectedCar.value = car;
+  detailDialog.value = true;
+}
+
+function showDeleteCardDialog(car: Car) {
+  selectedCar.value = car;
+  deleteCarDialog.value = true;
+}
+
+function handleDeleteCar() {
+  deleteCarDialog.value = false;
+}
+
 async function fetchCars() {
   loading.value = true;
   try {
@@ -225,12 +315,9 @@ async function fetchCars() {
     if (data[0].status === 'error') {
       throw Error(data[0].msj);
     }
-    cars.value = store.isEmpleado ? data[0].car : data[0].cars;
+    cars.value = data[0].cars;
 
-    if (
-      (data[0].car && data[0].car.length === 0) ||
-      (data[0].cars && data[0].cars.length === 0)
-    ) {
+    if (data[0].cars.length === 0) {
       emptyList.value = true;
     }
   } catch (error: any) {

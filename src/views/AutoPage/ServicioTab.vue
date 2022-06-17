@@ -7,6 +7,59 @@
     Estos son los servicios que se le hicieron a este auto.
   </p>
 
+  <v-expansion-panels
+    v-for="service in services"
+    :key="service.created_at"
+    class="mb-4"
+  >
+    <v-expansion-panel>
+      <v-expansion-panel-title>
+        <v-list-item class="text-left pa-0">
+          <v-list-item-avatar start color="primary">
+            <v-icon :class="{ 'text-grey-darken-4': !store.isLightTheme }">{{
+              getServiceObject(service.services[0])?.icon
+            }}</v-icon>
+          </v-list-item-avatar>
+
+          <v-list-item-header>
+            <v-list-item-title>
+              {{ service.created_at }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              {{ getServiceSubtitle(service.services) }}
+            </v-list-item-subtitle>
+          </v-list-item-header>
+        </v-list-item>
+      </v-expansion-panel-title>
+
+      <v-expansion-panel-text>
+        <h4 class="mt-2 mb-4">Servicios realizados</h4>
+
+        <div
+          v-for="label in getServicesLabel(service.services)"
+          :key="label"
+          class="mb-2"
+        >
+          <v-chip label> {{ label }}</v-chip>
+        </div>
+
+        <h4 class="mt-5 mb-4">Observaciones</h4>
+
+        {{ service.details || 'Sin observaciones' }}
+
+        <p
+          v-if="service.services.length > 1 || service.services[0] !== 0"
+          class="mt-5 font-weight-bold text-right rounded pa-4 mb-2 d-flex"
+          :class="store.isLightTheme ? 'bg-grey-lighten-2' : 'bg-grey-darken-3'"
+        >
+          TOTAL
+          <v-spacer />
+          {{ getTotalAmountByServices(service.services) }}
+        </p>
+      </v-expansion-panel-text>
+    </v-expansion-panel>
+  </v-expansion-panels>
+
   <v-dialog v-model="nuevoServicioModal" scrollable persistent>
     <v-form ref="formRef" @submit.prevent="handleAddService">
       <v-card :style="{ width: isMobile ? '326px' : '500px' }">
@@ -18,7 +71,7 @@
           <v-select
             v-model="form.services"
             label="Servicios"
-            :items="SERVICIOS"
+            :items="formattedServices"
             :rules="[rules.required]"
             multiple
             chips
@@ -27,12 +80,15 @@
             autofocus
           ></v-select>
 
+          <p class="mt-3 font-weight-bold">TOTAL: {{ totalAmount }}</p>
+
           <v-textarea
             v-model="form.details"
             class="mt-4"
             :label="`Observaciones ${isOtherSelected ? '' : '(opcional)'}`"
             hide-details="auto"
             variant="outlined"
+            rows="3"
             :rules="isOtherSelected ? [rules.required] : undefined"
           ></v-textarea>
         </v-card-text>
@@ -40,7 +96,9 @@
         <v-divider />
 
         <v-card-actions>
-          <v-btn color="dark" text @click="handleCloseModal"> Cerrar </v-btn>
+          <v-btn color="dark" type="reset" text @click="handleCloseModal">
+            Cerrar
+          </v-btn>
           <v-btn color="primary" type="submit" text> Cargar servicio </v-btn>
         </v-card-actions>
       </v-card>
@@ -57,6 +115,9 @@ import { useSnackbar } from '@/composables/useSnackbar';
 import * as rules from '@/rules';
 import { newService } from '@/services/Service.service';
 import type { Car } from '@/types/Car';
+import { SERVICES } from '@/constants/Services';
+import { currencyFormatter } from '@/utils/currencyFormatter';
+import { Service } from '@/types/Service';
 
 const props = defineProps({
   active: { type: Boolean, default: false },
@@ -64,35 +125,155 @@ const props = defineProps({
 });
 const emit = defineEmits(['reload']);
 
-const SERVICIOS = [
-  { value: 1, title: 'Cambio de aceite y filtro' },
-  { value: 2, title: 'Cambio de escobillas limpiaparabrisas' },
-  { value: 3, title: 'Cambio filtro de aire' },
-  { value: 4, title: 'Mantenimiento programado' },
-  { value: 5, title: 'Llantas nuevas' },
-  { value: 6, title: 'Cambio de batería' },
-  { value: 7, title: 'Servicio/reparación de frenos' },
-  { value: 8, title: 'Anticongelante adicional' },
-  { value: 9, title: 'Afinación del motor' },
-  { value: 10, title: 'Alineación/balanceo de llantas' },
-  { value: 0, title: 'Otros' },
-];
-
 const store = useStore();
 const { isMobile } = useMobile();
-const nuevoServicioModal = ref(false);
 const overlay = useOverlay();
 const snackbar = useSnackbar();
+const services = ref<Service[]>([
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [2, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [3],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [4, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [5, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '06/06/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [7, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [8, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [9, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '27/05/2022 15:00',
+    details: '',
+    id_user: '1',
+    services: [10, 3, 6],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '12/06/2022 15:00',
+    details: 'Se hicieron muchas cosas',
+    id_user: '1',
+    services: [0],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '12/06/2022 15:00',
+    details: 'Se hicieron muchas cosas',
+    id_user: '1',
+    services: [0, 1],
+  },
+  {
+    id_car: 'AAA123',
+    created_at: '12/06/2022 15:00',
+    details: 'Se hicieron muchas cosas',
+    id_user: '1',
+    services: [6, 0, 1],
+  },
+]);
+const nuevoServicioModal = ref(false);
 const formRef = ref<any>(null);
 const form = reactive({
   services: [] as number[],
   details: '',
 });
 const isOtherSelected = computed(() => form.services.includes(0));
+const formattedServices = computed(() =>
+  SERVICES.map((service) => {
+    const obj = {
+      value: service.value,
+      title: `${service.title} (${currencyFormatter.format(service.price)})`,
+    };
+
+    if (service.price === 0) {
+      obj.title = service.title;
+    }
+
+    return obj;
+  })
+);
+const totalAmount = computed(() => getTotalAmountByServices(form.services));
+
+function getTotalAmountByServices(services: number[]) {
+  const amount = SERVICES.filter((service) =>
+    services.includes(service.value)
+  ).reduce((a, b) => a + b.price, 0);
+
+  return currencyFormatter.format(amount);
+}
+
+function getServicesLabel(services: number[]) {
+  const servicesFiltered = formattedServices.value.filter((service) =>
+    services.includes(service.value)
+  );
+
+  return servicesFiltered.map((service) => service.title);
+}
+
+function getServiceObject(serviceNumber: number) {
+  return SERVICES.find((service) => service.value === serviceNumber);
+}
+
+function getServiceSubtitle(services: number[]) {
+  let label = getServiceObject(services[0])?.title;
+
+  if (services.length === 2) {
+    label += ` (+${services.length - 1} servicio)`;
+  }
+
+  if (services.length > 2) {
+    label += ` (+${services.length - 1} servicios)`;
+  }
+
+  return label;
+}
 
 function handleCloseModal() {
   nuevoServicioModal.value = false;
-  formRef.value.reset();
 }
 
 async function handleAddService() {

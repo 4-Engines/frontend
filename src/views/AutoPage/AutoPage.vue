@@ -7,9 +7,9 @@
     }}</v-breadcrumbs-item>
   </v-breadcrumbs>
 
-  <h1>Detalle del Auto {{ car?.carid }}</h1>
+  <h1>Auto {{ car?.carid }}</h1>
 
-  <p>Responsable: {{ car?.owner }}</p>
+  <!-- <p>Titular: {{ car?.owner }}</p> -->
 
   <v-card class="mt-4" style="overflow: hidden">
     <v-tabs
@@ -20,14 +20,6 @@
       :background-color="store.isLightTheme ? '#E1E1E1' : '#333333'"
       color="primary"
     >
-      <v-tab
-        value="detalle"
-        @click="router.push({ path: route.path, query: { t: 'detalle' } })"
-      >
-        <v-icon>mdi-car</v-icon>
-        <span class="d-none d-sm-inline-block">Detalle</span>
-      </v-tab>
-
       <v-tab
         value="turnos"
         @click="router.push({ path: route.path, query: { t: 'turnos' } })"
@@ -43,22 +35,9 @@
         <v-icon>mdi-hammer-wrench</v-icon>
         <span class="d-none d-sm-inline-block">Servicios</span>
       </v-tab>
-
-      <v-tab
-        value="administrar"
-        @click="router.push({ path: route.path, query: { t: 'administrar' } })"
-      >
-        <v-icon>mdi-cog</v-icon>
-        <span class="d-none d-sm-inline-block">Administrar</span>
-      </v-tab>
     </v-tabs>
 
     <v-window v-model="tab" class="px-4 py-4">
-      <v-window-item value="detalle">
-        <h2 class="mb-4">Detalle</h2>
-        <p>Detalle</p>
-      </v-window-item>
-
       <v-window-item value="turnos">
         <turnos-tab ref="turnosTabRef" :car="car" @reload="fetchCar" />
       </v-window-item>
@@ -66,32 +45,10 @@
       <v-window-item value="servicios">
         <servicio-tab ref="servicioTabRef" :car="car" @reload="fetchCar" />
       </v-window-item>
-
-      <v-window-item value="administrar">
-        <h2 class="mb-4">Administrar</h2>
-        <v-alert color="red" variant="outlined">Eliminar auto</v-alert>
-      </v-window-item>
     </v-window>
   </v-card>
 
-  <!-- <v-btn
-    v-if="tab === 'turnos'"
-    title="Solicitar turno"
-    icon="mdi-calendar-plus"
-    color="primary"
-    size="large"
-    style="position: fixed; right: 20px; bottom: 20px"
-  ></v-btn>
-
-  <v-btn
-    v-if="store.isEmpleado && tab === 'servicios'"
-    title="Agregar nuevo servicio"
-    icon="mdi-cart-plus"
-    color="primary"
-    size="large"
-    style="position: fixed; right: 20px; bottom: 20px"
-    @click="servicioTabRef.nuevoServicioModal = true"
-  ></v-btn> -->
+  <div class="my-16"></div>
 
   <v-fab-transition>
     <v-btn
@@ -118,14 +75,15 @@ import ServicioTab from './ServicioTab.vue';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useOverlay } from '@/composables/useOverlay';
 
-const TABS = ['detalle', 'turnos', 'servicios', 'administrar'];
+const TABS = ['turnos', 'servicios'] as const;
+type Tab = typeof TABS[number];
 
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
 const snackbar = useSnackbar();
 const overlay = useOverlay();
-const tab = ref('detalle');
+const tab = ref<Tab>('turnos');
 const { isMobile } = useMobile();
 const car = ref<Car>();
 const servicioTabRef = ref<any>(null);
@@ -141,7 +99,7 @@ const activeFab = computed(() => {
     case 'servicios':
       return {
         title: 'Agregar nuevo servicio',
-        icon: 'mdi-cart-plus',
+        icon: 'mdi-plus',
         click: () => (servicioTabRef.value.nuevoServicioModal = true),
       };
     default:
@@ -151,12 +109,12 @@ const activeFab = computed(() => {
 
 watch(
   () => route.query.t,
-  (value) => (tab.value = value as string)
+  (value) => (tab.value = value as Tab)
 );
 
 onMounted(() => {
-  if (route.query.t && TABS.includes(route.query.t as string)) {
-    tab.value = route.query.t as string;
+  if (route.query.t && TABS.includes(route.query.t as Tab)) {
+    tab.value = route.query.t as Tab;
   }
 
   fetchCar();

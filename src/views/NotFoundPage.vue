@@ -1,6 +1,6 @@
 <template>
   <div class="text-center mt-2">
-    <img src="@/assets/404.png" />
+    <img src="/404.png" />
     <h1>404</h1>
     <h2>Página no encontrada</h2>
     <p class="mb-3">Parece que te fuiste de pista</p>
