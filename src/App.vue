@@ -72,11 +72,41 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main>
+    <v-main style="min-height: 100vh">
       <v-container fluid>
         <router-view />
       </v-container>
     </v-main>
+
+    <v-divider />
+
+    <v-footer>
+      <v-row justify="center" no-gutters>
+        <v-btn color="primary" variant="text" class="mx-2" rounded="xl" to="/">
+          Inicio
+        </v-btn>
+        <v-btn
+          v-if="store.isLoggedIn"
+          color="primary"
+          variant="text"
+          class="mx-2"
+          rounded="xl"
+          to="/autos"
+        >
+          {{ store.isCliente ? 'Mis autos' : 'Autos' }}
+        </v-btn>
+        <v-btn color="primary" variant="text" class="mx-2" rounded="xl">
+          Reportar error
+        </v-btn>
+        <v-btn color="primary" variant="text" class="mx-2" rounded="xl">
+          Contacto
+        </v-btn>
+        <v-col class="text-center mt-4" cols="12">
+          Copyright &copy; {{ new Date().getFullYear() }}
+          <strong>Four Engines</strong>
+        </v-col>
+      </v-row>
+    </v-footer>
   </v-app>
 
   <v-snackbar :model-value="snackbar.visible.value" left>{{
