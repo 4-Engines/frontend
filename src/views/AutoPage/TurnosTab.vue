@@ -1,9 +1,31 @@
 <template>
   <h2 class="mb-4">Turnos</h2>
 
-  <p class="mb-6">
+  <p v-if="turnos.length === 0" class="mb-6">
     Este auto no tiene ningún turno, para solicitar uno llená el formulario.
   </p>
+
+  <p v-else class="mb-6">Estos son los turnos encontrados para este auto.</p>
+
+  <v-card
+    v-for="turno in turnos"
+    :key="`${turno.fecha}-${turno.turno}`"
+    class="mb-4"
+  >
+    <v-list-item>
+      <v-list-item-avatar start color="primary">
+        <v-icon :class="{ 'text-grey-darken-4': !store.isLightTheme }"
+          >mdi-calendar-check</v-icon
+        >
+      </v-list-item-avatar>
+      <v-list-item-header>
+        <v-list-item-title>
+          {{ turno.fecha }} {{ turno.turno }}
+        </v-list-item-title>
+        <v-list-item-subtitle> Titular: {{ turno.id }} </v-list-item-subtitle>
+      </v-list-item-header>
+    </v-list-item>
+  </v-card>
 
   <v-dialog v-model="turnoModal" scrollable persistent>
     <v-form ref="formRef" @submit.prevent="handleNewAppointment">
@@ -45,18 +67,25 @@
           >
           </v-select>
 
-          <p class="mt-3 text-right font-weight-bold">
-            TOTAL: {{ totalAmount }}
+          <p
+            class="mt-5 font-weight-bold text-right rounded pa-4 mb-2 d-flex"
+            :class="
+              store.isLightTheme ? 'bg-grey-lighten-2' : 'bg-grey-darken-3'
+            "
+          >
+            TOTAL
+            <v-spacer />
+            {{ totalAmount }}
           </p>
 
-          <v-textarea
-            v-model="form.comments"
+          <!-- <v-textarea
+            v-model="form.details"
             class="mt-4"
             rows="3"
             variant="outlined"
             :label="`Observaciones ${isOtherSelected ? '' : '(opcional)'}`"
             :rules="isOtherSelected ? [rules.required] : undefined"
-          ></v-textarea>
+          ></v-textarea> -->
         </v-card-text>
 
         <v-divider />
@@ -83,9 +112,11 @@ import { useSnackbar } from '@/composables/useSnackbar';
 import { useMobile } from '@/composables/useMobile';
 import { SERVICES } from '@/constants/Services';
 import { currencyFormatter } from '@/utils/currencyFormatter';
+import { Appointment } from '@/types/Appointment';
 
 const props = defineProps({
   car: { type: Object as PropType<Car>, default: undefined },
+  turnos: { type: Array as PropType<Appointment[]>, default: () => [] },
 });
 const emit = defineEmits(['reload']);
 
@@ -96,22 +127,22 @@ const snackbar = useSnackbar();
 const turnoModal = ref(false);
 const formRef = ref<any>(null);
 const times = ref([
-  '9:00 am',
-  '10:00 am',
-  '11:00 am',
-  '12:00 pm',
-  '15:00 pm',
-  '16:00 pm',
-  '17:00 pm',
-  '18:00 pm',
+  '9:00',
+  '10:00',
+  '11:00',
+  '12:00',
+  '15:00',
+  '16:00',
+  '17:00',
+  '18:00',
 ]);
 const form = reactive({
   date: '',
   time: '',
-  comments: '',
+  details: '',
   services: [] as number[],
 });
-const isOtherSelected = computed(() => form.services.includes(0));
+// const isOtherSelected = computed(() => form.services.includes(0));
 const formattedServices = computed(() =>
   SERVICES.map((service) => ({
     value: service.value,
@@ -138,12 +169,16 @@ async function handleNewAppointment() {
 
   try {
     overlay.show('Solicitando turno...');
+
+    const fecha = form.date.split('-').reverse().join('/');
+    const hora = times.value[parseInt(form.time)];
+
     await newAppointment({
-      id_owner: store.user?.id as string,
-      id_car: props.car?._id as string,
-      date: form.date,
-      time: form.time,
-      comments: form.comments,
+      user: store.user?.username as string,
+      carid: props.car?.carid as string,
+      fecha,
+      hora,
+      // details: form.details,
     });
     snackbar.show('¡Turno solicitado con éxito!');
     turnoModal.value = false;
