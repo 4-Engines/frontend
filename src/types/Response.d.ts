@@ -42,12 +42,14 @@ type GetCarResponse = DefaultResponse<{
 }>;
 
 type SelectAllTurnosResponse = DefaultResponse<{
-  turnos: [
-    {
-      fecha: string;
-      turnos: Record<string, boolean>;
-    }
-  ];
+  turnos:
+    | [
+        {
+          fecha: string;
+          turnos: Record<string, boolean>;
+        }
+      ]
+    | [];
 }>;
 
 export {

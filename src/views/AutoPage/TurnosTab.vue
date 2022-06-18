@@ -37,6 +37,7 @@
         <v-card-text>
           <v-text-field
             v-model="form.date"
+            autofocus
             type="date"
             label="Fecha"
             variant="outlined"
@@ -59,6 +60,7 @@
             v-model="form.time"
             selected-class="text-primary"
             column
+            :disabled="loadingTurnos"
           >
             <v-chip v-for="label in times" :key="label" filter>{{
               label
@@ -174,6 +176,7 @@ const loadingTurnos = ref(false);
 
 function handleCloseModal() {
   times.value = [];
+  form.services = [];
   turnoModal.value = false;
 }
 
@@ -192,9 +195,19 @@ async function handleDateInput(e: Event) {
       user: store.user?.username as string,
     });
 
+    if (data[0].turnos.length === 0) {
+      throw Error('Ocurrió un error al traer los turnos disponibles');
+    }
+
     times.value = Object.entries(data[0].turnos[0].turnos)
       .filter((item) => item[1])
-      .map((item) => item[0]);
+      .map((item) => item[0])
+      .sort((a, b) => {
+        const [hourA] = a.split(':');
+        const [hourB] = b.split(':');
+
+        return hourA.localeCompare(hourB, undefined, { numeric: true });
+      });
   } catch (error: any) {
     snackbar.show(error.message);
   } finally {
@@ -226,7 +239,9 @@ async function handleNewAppointment() {
     });
     snackbar.show('¡Turno solicitado con éxito!');
     turnoModal.value = false;
+    times.value = [];
     formRef.value.reset();
+    form.services = [];
     emit('reload');
   } catch (error: any) {
     snackbar.show(error.message || 'Ocurrió un error al solicitar el turno');
