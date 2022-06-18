@@ -287,7 +287,7 @@ async function handleAddService() {
     await newService({
       details: form.details,
       services: form.services,
-      id_car: props.car?._id as string,
+      id_car: props.car?.carid as string,
       id_user: store.user?.username as string,
     });
     snackbar.show('¡Servicio cargado con éxito!');

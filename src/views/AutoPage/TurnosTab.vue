@@ -170,13 +170,16 @@ async function handleNewAppointment() {
   try {
     overlay.show('Solicitando turno...');
 
-    const fecha = form.date.split('-').reverse().join('/');
+    const fechaArr = form.date.split('-').reverse();
+    if (parseInt(fechaArr[1]) < 10) {
+      fechaArr[1] = fechaArr[1].charAt(1);
+    }
     const hora = times.value[parseInt(form.time)];
 
     await newAppointment({
       user: store.user?.username as string,
       carid: props.car?.carid as string,
-      fecha,
+      fecha: fechaArr.join('/'),
       hora,
       // details: form.details,
     });
