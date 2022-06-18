@@ -39,7 +39,12 @@
 
     <v-window v-model="tab" class="px-4 py-4">
       <v-window-item value="turnos">
-        <turnos-tab ref="turnosTabRef" :car="car" @reload="fetchCar" />
+        <turnos-tab
+          ref="turnosTabRef"
+          :car="car"
+          :turnos="turnos"
+          @reload="fetchCar"
+        />
       </v-window-item>
 
       <v-window-item value="servicios">
@@ -74,6 +79,7 @@ import TurnosTab from './TurnosTab.vue';
 import ServicioTab from './ServicioTab.vue';
 import { useSnackbar } from '@/composables/useSnackbar';
 import { useOverlay } from '@/composables/useOverlay';
+import { Appointment } from '@/types/Appointment';
 
 const TABS = ['turnos', 'servicios'] as const;
 type Tab = typeof TABS[number];
@@ -86,6 +92,7 @@ const overlay = useOverlay();
 const tab = ref<Tab>('turnos');
 const { isMobile } = useMobile();
 const car = ref<Car>();
+const turnos = ref<Appointment[]>();
 const servicioTabRef = ref<any>(null);
 const turnosTabRef = ref<any>(null);
 const activeFab = computed(() => {
@@ -125,6 +132,7 @@ async function fetchCar() {
     overlay.show('Cargando auto...');
     const { data } = await getCar(route.params.id as string);
     car.value = data[0].car;
+    turnos.value = data[0].turnos.reverse();
   } catch (error: any) {
     snackbar.show(
       error.message || 'Ocurrió un error al obtener la información del auto'

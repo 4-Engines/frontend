@@ -1,5 +1,7 @@
 import type { AxiosResponse } from 'axios';
+import type { Appointment } from './Appointment';
 import type { Car } from './Car';
+import type { Service } from './Service';
 import type { User } from './User';
 
 type DefaultResponse<T = {}> = AxiosResponse<
@@ -35,6 +37,8 @@ type GetMyCarResponse = DefaultResponse<{
 
 type GetCarResponse = DefaultResponse<{
   car: Car;
+  services: Service[];
+  turnos: Appointment[];
 }>;
 
 export {

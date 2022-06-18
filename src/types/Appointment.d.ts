@@ -1,9 +1,9 @@
 interface Appointment {
-  id_owner: string;
-  id_car: string;
-  date: string;
-  time: string;
-  comments: string;
+  id: string;
+  carid: string;
+  fecha: string;
+  turno: string;
+  details: string;
 }
 
 export { Appointment };
