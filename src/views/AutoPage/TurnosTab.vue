@@ -41,10 +41,21 @@
             label="Fecha"
             variant="outlined"
             :rules="[rules.required]"
+            :disabled="loadingTurnos"
+            @input="handleDateInput"
           />
 
-          <label>Hora</label>
+          <label class="font-weight-bold">Hora</label>
+
+          <div v-show="loadingTurnos">
+            <v-progress-circular indeterminate></v-progress-circular>
+          </div>
+
+          <p v-if="times.length === 0 && !loadingTurnos">
+            Seleccioná una fecha para ver los turnos diponibles para ese día
+          </p>
           <v-chip-group
+            v-else
             v-model="form.time"
             selected-class="text-primary"
             column
@@ -60,6 +71,7 @@
             label="Servicios"
             :items="formattedServices"
             :rules="[rules.required]"
+            :disabled="loadingTurnos"
             multiple
             chips
             variant="outlined"
@@ -91,10 +103,18 @@
         <v-divider />
 
         <v-card-actions>
-          <v-btn color="dark" text type="reset" @click="handleCloseModal">
+          <v-btn
+            color="dark"
+            :disabled="loadingTurnos"
+            text
+            type="reset"
+            @click="handleCloseModal"
+          >
             Cerrar
           </v-btn>
-          <v-btn color="primary" text type="submit">Solicitar turno</v-btn>
+          <v-btn color="primary" :disabled="loadingTurnos" text type="submit"
+            >Solicitar turno</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-form>
@@ -104,7 +124,10 @@
 <script setup lang="ts">
 import { computed, PropType, reactive, ref } from 'vue';
 import { useStore } from '@/store';
-import { newAppointment } from '@/services/Appointment.service';
+import {
+  newAppointment,
+  selectAllTurnos,
+} from '@/services/Appointment.service';
 import type { Car } from '@/types/Car';
 import * as rules from '@/rules';
 import { useOverlay } from '@/composables/useOverlay';
@@ -126,16 +149,7 @@ const overlay = useOverlay();
 const snackbar = useSnackbar();
 const turnoModal = ref(false);
 const formRef = ref<any>(null);
-const times = ref([
-  '9:00',
-  '10:00',
-  '11:00',
-  '12:00',
-  '15:00',
-  '16:00',
-  '17:00',
-  '18:00',
-]);
+const times = ref<string[]>([]);
 const form = reactive({
   date: '',
   time: '',
@@ -156,9 +170,36 @@ const totalAmount = computed(() => {
 
   return currencyFormatter.format(amount);
 });
+const loadingTurnos = ref(false);
 
 function handleCloseModal() {
+  times.value = [];
   turnoModal.value = false;
+}
+
+async function handleDateInput(e: Event) {
+  times.value = [];
+  form.time = '';
+  const fechaArr = (e.target as HTMLInputElement)?.value.split('-').reverse();
+  if (parseInt(fechaArr[1]) < 10) {
+    fechaArr[1] = fechaArr[1].charAt(1);
+  }
+
+  loadingTurnos.value = true;
+  try {
+    const { data } = await selectAllTurnos({
+      fecha: fechaArr.join('/'),
+      user: store.user?.username as string,
+    });
+
+    times.value = Object.entries(data[0].turnos[0].turnos)
+      .filter((item) => item[1])
+      .map((item) => item[0]);
+  } catch (error: any) {
+    snackbar.show(error.message);
+  } finally {
+    loadingTurnos.value = false;
+  }
 }
 
 async function handleNewAppointment() {

@@ -41,6 +41,15 @@ type GetCarResponse = DefaultResponse<{
   turnos: Appointment[];
 }>;
 
+type SelectAllTurnosResponse = DefaultResponse<{
+  turnos: [
+    {
+      fecha: string;
+      turnos: Record<string, boolean>;
+    }
+  ];
+}>;
+
 export {
   DefaultResponse,
   LoginResponse,
@@ -49,4 +58,5 @@ export {
   GetAllCarsResponse,
   GetMyCarResponse,
   GetCarResponse,
+  SelectAllTurnosResponse,
 };
