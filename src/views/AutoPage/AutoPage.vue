@@ -104,6 +104,10 @@ const activeFab = computed(() => {
         click: () => (turnosTabRef.value.turnoModal = true),
       };
     case 'servicios':
+      if (store.isCliente) {
+        return null;
+      }
+
       return {
         title: 'Agregar nuevo servicio',
         icon: 'mdi-plus',
